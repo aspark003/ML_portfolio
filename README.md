@@ -102,19 +102,15 @@ Risk categories
 
 Final fraud score
 
-KPI cards tracking fraud volume and severity
-
-Slicers enabling model & category filtering
+Cards tracking fraud volume and severity
 
 Automated alerts for high-risk anomalies
 
 Technologies Used
 
-Python: pandas, numpy, sklearn, hdbscan
+Python: pandas, numpy, sklearn
 
 Machine Learning: PCA, DBSCAN, OPTICS, HDBSCAN
-
-Visualization: Power BI
 
 Data Engineering: Pipelines, ColumnTransformer
 
@@ -143,8 +139,7 @@ Dashboard Pages
 - Final Risk Score View** – visualizes total identifiers and final severity levels using `final.csv`.
 
 Key Dashboard Features
-- KPI cards for anomaly counts and risk levels  
-- Interactive slicers for model, risk category, severity, and transaction-level filtering  
+- Cards for anomaly counts and risk levels  
 - Outlier vs. non-outlier filtering  
 - Trend and distribution analysis  
 - Real-time alerting for critical anomalies  
