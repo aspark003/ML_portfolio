@@ -152,6 +152,9 @@ Key Dashboard Features
 Purpose
 This dashboard completes the full ML→BI workflow by taking the machine learning outputs and transforming them into a visual analytics tool that supports fraud analysis, decision-making, and model explainability.
 
+Power BI Visuals (PDF)
+[Click here to view the Power BI dashboard screenshots](agency_fraud_screenshot.pdf)
+
 
 By:
 Antonio Park
