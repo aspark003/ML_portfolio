@@ -1,219 +1,212 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from sklearn.cluster import DBSCAN, OPTICS, HDBSCAN
+from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
-from sklearn.decomposition import PCA
-from yellowbrick.features import PCA as PCAVisualizer
-from yellowbrick.cluster import SilhouetteVisualizer, KElbowVisualizer
 
-class FinalFraud:
+class CDbscan:
     def __init__(self, file_path, model_name):
         try:
             self.model_name = model_name
             self.df = pd.read_csv(file_path, encoding='utf-8-sig', engine='python')
-            self.df = self.df.drop(columns=['risk category', 'is fraud', 'urgency flag', 'holiday period'])
-            self.pca_copy = self.df.copy()
+            self.df = self.df.drop(columns=['urgency flag', 'geo distance to vendor', 'invoice match score', 'risk category', 'holiday period', 'is fraud'])
+            self.f = self.df.copy()
+            self.f.insert(0, 'ID', self.f.index +1)
+            #print(self.f.head().to_string())
             self.copy = self.df.copy()
 
             self.scaler = MinMaxScaler()
             self.encoder = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
             self.num = self.copy.select_dtypes(include=['number', 'complex']).columns.tolist()
-            self.obj = self.copy.select_dtypes(include=['object', 'string', 'bool', 'category']).columns.tolist()
+            self.obj = self.copy.select_dtypes(include=['category', 'string', 'object', 'bool']).columns.tolist()
             self.preprocessor = ColumnTransformer([('scaler', self.scaler, self.num),
                                                    ('encoder', self.encoder, self.obj)])
-            self.dbscan = Pipeline([('preprocessor', self.preprocessor),
-                                    ('pca', PCA(n_components=12)),
-                                    ('dbscan', DBSCAN(eps=0.5, min_samples=3))])
+            self.pipeline = Pipeline([('preprocessor', self.preprocessor),
+                                      ('pca', PCA(n_components=11)),
+                                      ('dbscan', DBSCAN(eps=0.4, min_samples=5))])
             self.optics = Pipeline([('preprocessor', self.preprocessor),
-                                    ('pca', PCA(n_components=12)),
-                                    ('optics', OPTICS(min_samples=5, xi=0.07))])
-            self.hdbscan = Pipeline([('preprocessor', self.preprocessor),
-                                     ('pca', PCA(n_components=12)),
-                                     ('hdbscan', HDBSCAN(min_samples=3, min_cluster_size=3))])
+                                    ('pca', PCA(n_components=11)),
+                                    ('optics', OPTICS(min_samples=5, xi=0.5))])
+            self.hd = Pipeline([('preprocessor', self.preprocessor),
+                                ('pca', PCA(n_components=11)),
+                                ('hdbscan', HDBSCAN(min_samples=5, min_cluster_size=5))])
+
             self.scores = ([silhouette_score, calinski_harabasz_score, davies_bouldin_score])
 
         except Exception as e: print(f'invalid file path: {e}')
 
-    def db_scan(self):
+    def pc_db(self):
         try:
-            self.dbscan.fit(self.copy)
-            x = self.dbscan.named_steps['preprocessor'].transform(self.copy)
-            x_pca = self.dbscan.named_steps['pca'].transform(x)
-            variance = self.dbscan.named_steps['pca'].explained_variance_ratio_
-            c_variance = np.cumsum(variance)
+            self.pipeline.fit(self.copy)
+            x = self.pipeline.named_steps['preprocessor'].transform(self.copy)
+            x_pca = self.pipeline.named_steps['pca'].transform(x)
 
-            pc_col = ([f'PC {i + 1}' for i in range(len(variance))])
+            variance = self.pipeline.named_steps['pca'].explained_variance_ratio_
+            cumsum = np.cumsum(variance)
+            vr_col = pd.Series([i+1 for i in range(len(variance))])
+            vr_pc = pd.Series([i+1 for i in range(x_pca.shape[1])])
+            varcum_file = pd.DataFrame({'ID': vr_col,
+                                        'PC': vr_pc,
+                                        'VARIANCE': variance,
+                                        'CUMULATIVE': cumsum})
+            varcum_file.to_csv('c:/Users/anton/OneDrive/var_cumsum.csv', index=False)
+            #print(varcum_file)
 
-            cum_var_file = pd.DataFrame({'PC': pc_col,
-                                         'VARIANCE' : variance,
-                                         'CUMULATIVE' : c_variance})
+            pca_db_file = pd.DataFrame(x_pca, columns=[f'PC {i + 1}' for i in range(x_pca.shape[1])])
 
-            cum_var_file.to_csv('c:/Users/anton/OneDrive/cumsum_variance.csv', index=False)
+            pca_db_file.insert(0, 'ID', pca_db_file.index +1)
+            y = self.pipeline.named_steps['dbscan'].labels_
+            pca_db_file['DBSCAN LABELS'] = y
+            pca_db_file['DBSCAN IDENTIFIER'] = (pca_db_file['DBSCAN LABELS'] == -1).astype(int)
+            pca_db_file['DBSCAN CATEGORY'] = (pca_db_file['DBSCAN IDENTIFIER'].apply(lambda x: 'OUTLIER' if x==1 else 'NOT OUTLIER'))
+            pca_db_file.to_csv('c:/Users/anton/OneDrive/pca_db_file.csv', index=False)
 
-            y = self.dbscan.named_steps['dbscan'].labels_
+            self.f['dbscan labels'] = y
+            self.f['dbscan identifier'] = pca_db_file['DBSCAN IDENTIFIER']
+            self.f['dbscan category'] = pca_db_file['DBSCAN CATEGORY']
+            print(self.f.head().to_string())
+
+            self.f.to_csv('c:/Users/anton/OneDrive/final.csv', index=False)
+
+            #print(pca_db_file)
+
             for scores in self.scores:
                 s = scores(x_pca, y)
                 print(f'{scores.__name__}: {s}')
 
-            self.pca_copy['dbscan label'] = y
-            self.pca_copy['dbscan fraud label'] = (self.pca_copy['dbscan label'] == -1).astype(int)
-            db_fraud = self.pca_copy['dbscan fraud label'].apply(lambda x: 'fraud' if x == 1 else 'not fraud')
+            s = 0.9062980588772327
+            c = 220.6406285038193
+            d = 1.0665630128813612
 
-            self.pca_copy['dbscan fraud category'] = db_fraud
+            score_df = pd.DataFrame({'Silhouette score': s,
+                                     'Calinski score': c,
+                                     'Davies scores': d}, index=[1])
+            score_df.insert(0, 'ID', score_df.index)
+            score_df.to_csv('c:/Users/anton/OneDrive/cluster_db_scores.csv', index=False)
+            #print(score_df)
 
-            print(self.pca_copy.head().to_string())
+        except Exception as e: print(f'invalid pca-dbscan: {e}')
 
-            self.pca_copy.to_csv('c:/Users/anton/OneDrive/dbscan_label.csv', index=False)
-
-            ss = 0.94864612848988
-            chs = 2376.771263564452
-            dbs = 0.9306725583814839
-
-            dbscan_scores = pd.DataFrame({'dbscan silhouette': ss,
-                                          'dbscan calinski': chs,
-                                          'dbscan davies': dbs,}, index=[0])
-
-            dbscan_scores.to_csv('c:/Users/anton/OneDrive/dbscan_scores.csv', index=False)
-
-            print(dbscan_scores)
-        except Exception as e: print(f'invalid dbscan scores: {e}')
-
-    def op_tics(self):
+    def pc_op(self):
         try:
-            optic_scores = pd.read_csv('c:/Users/anton/OneDrive/dbscan_scores.csv')
-            optic_labels = pd.read_csv('c:/Users/anton/OneDrive/dbscan_label.csv')
-
             self.optics.fit(self.copy)
             x = self.optics.named_steps['preprocessor'].transform(self.copy)
             x_pca = self.optics.named_steps['pca'].transform(x)
+
+            reachability = self.optics.named_steps['optics'].reachability_
+            ordering = self.optics.named_steps['optics'].ordering_
+            reach = pd.Series(reachability)
+            reach_max = reach[~np.isinf(reach)].max()
+            reach_replace = reach.replace([np.inf, -np.inf], reach_max)
+            reach_df = pd.Series(reach_replace)
+
+
+            reach_file = pd.DataFrame({'REACHABILITY': reach_df,
+                                       'ORDERING': ordering})
+
             y = self.optics.named_steps['optics'].labels_
+            reach_file['OPTICS LABELS'] = y
+            reach_file['OPTICS IDENTIFIER'] = (reach_file['OPTICS LABELS'] == -1).astype(int)
+            reach_file.insert(0, 'ID', reach_file.index + 1)
 
-            optic_labels['optics label'] = y
-            optic_labels['optics fraud label'] = (optic_labels['optics label'] == -1).astype(int)
+            reach_category = pd.qcut(reach_replace, q=4, labels=['low', 'medium', 'high', 'critical'])
+            reach_file['RISK CATEGORY'] = reach_category
 
-            order = self.optics.named_steps['optics'].ordering_
-            reach = self.optics.named_steps['optics'].reachability_
-            reach_series = pd.Series(reach)
-            reach_max = reach_series[~np.isinf(reach_series)].max()
-            reach_replace = reach_series.replace([np.inf, -np.inf], reach_max)
+            self.f = pd.read_csv('c:/Users/anton/OneDrive/final.csv')
 
-            reach_risk_cat = pd.qcut(reach_replace, q=4, labels=['low', 'medium', 'high', 'critical'])
+            self.f['optics labels'] = reach_file['OPTICS LABELS']
+            self.f['optics identifier'] = reach_file['OPTICS IDENTIFIER']
+            self.f['optics identifier category'] = (self.f['optics identifier'].apply(lambda x: 'OUTLIER' if x == 1 else 'NOT OUTLIER'))
 
-            reach_file = pd.DataFrame({'reachability': reach_replace,
-                                       'ordering': order,
-                                       'risk category': reach_risk_cat})
-            reach_file.to_csv('c:/Users/anton/OneDrive/optics_risk.csv', index=False)
+            self.f['optics risk category'] = reach_file['RISK CATEGORY']
+            self.f.to_csv('c:/Users/anton/OneDrive/final.csv', index=False)
 
-            optic_labels['optics fraud category'] = optic_labels['optics fraud label'].apply(lambda x: 'fraud' if x == 1 else 'not fraud')
-
-            optic_labels['optics reachability category'] = reach_risk_cat
-            print(optic_labels.head().to_string())
-            print(reach_file.head().to_string())
-            for scores in self.scores:
-                s = scores(x_pca, y)
-                print(f'{scores.__name__}:{s}')
-
-            optic_labels.to_csv('c:/Users/anton/OneDrive/optic_reach_scores.csv', index=False)
-            ss = 0.8670729481702407
-            chs = 156.0125369478855
-            dbs = 1.0455596451663733
-
-            o_score = pd.DataFrame({'silhouette': ss,
-                                        'calinski': chs,
-                                        'davis': dbs}, index=[0])
-            o_score.to_csv('c:/Users/anton/OneDrive/optic_scores.csv', index=False)
-
-        except Exception as e: print(f'invalid optics score: {e}')
-
-    def hd_bscan(self):
-        try:
-            self.hdbscan.fit(self.copy)
-            x = self.hdbscan.named_steps['preprocessor'].transform(self.copy)
-            x_pca = self.hdbscan.named_steps['pca'].transform(x)
-            y = self.hdbscan.named_steps['hdbscan'].labels_
-            probability = self.hdbscan.named_steps['hdbscan'].probabilities_
-            prob_file = pd.Series(probability)
-            hd_prob = pd.cut(prob_file, bins=[-0.1, 0.1, 0.5, 0.7, 1.0],
-                             labels=['critical', 'high', 'medium', 'low'])
-
-            prob_risk = pd.DataFrame({'probability': prob_file,
-                                      'probability risk': hd_prob})
-            prob_risk.to_csv('c:/Users/anton/OneDrive/hdbscan_prob.csv', index=False)
 
             for scores in self.scores:
                 s = scores(x_pca, y)
                 print(f'{scores.__name__}: {s}')
 
-            ss = 0.9479455467541876
-            chs = 3065.743513701147
-            dbs = 0.9124938715546878
-            hdbscan_scores = pd.DataFrame({'hd silhouette': ss,
-                                           'hd calinski': chs,
-                                           'hd davies': dbs}, index=[0])
-            hdbscan_scores.to_csv('c:/Users/anton/OneDrive/hdbscan_score.csv', index=False)
-            print(hdbscan_scores)
+            s = 0.905164568415732
+            c = 218.57960580240714
+            d = 1.0602041995370377
 
-            hd = pd.read_csv('c:/Users/anton/OneDrive/optic_reach_scores.csv')
-            hd['hdbscan label'] = y
-            hd['hdbscan fraud label'] = (hd['hdbscan label'] == -1).astype(int)
-            hd['hdbscan fraud category'] = (hd['hdbscan fraud label'].apply(lambda x: 'fraud' if x == 1 else 'not fraud'))
-            hd.to_csv('c:/Users/anton/OneDrive/hdbscan_join.csv', index=False)
-            hd_join = pd.read_csv('c:/Users/anton/OneDrive/hdbscan_join.csv')
-            hdbscan_file = hd_join.join(prob_risk)
-            hdbscan_file.to_csv('c:/Users/anton/OneDrive/hdbscan_prob_final.csv', index=False)
-            print(hdbscan_file.head().to_string())
+            score_df = pd.DataFrame({'Silhouette score': s,
+                                     'Calinski score': c,
+                                     'Davies score': d}, index=[1])
+            score_df.insert(0, 'ID', score_df.index)
+
+
+            score_df.to_csv('c:/Users/anton/OneDrive/optics_score.csv', index=False)
+            reach_file.to_csv('c:/Users/anton/OneDrive/optics_risk.csv', index=False)
+
+        except Exception as e: print(f'invalid pca - optics: {e}')
+
+    def pc_hd(self):
+        try:
+            self.hd.fit(self.copy)
+            x = self.hd.named_steps['preprocessor'].transform(self.copy)
+            x_pca = self.hd.named_steps['pca'].transform(x)
+            probability = self.hd.named_steps['hdbscan'].probabilities_
+            prob_series = pd.Series(probability)
+            prob_col = pd.cut(prob_series, bins=[-0.1, 0.15, 0.30, 0.50, 0.70, 1.00], labels=['critical', 'high', 'medium', 'low', 'stable'])
+
+            prob_df = pd.DataFrame({'PROBABILITY': prob_series})
+            y = self.hd.named_steps['hdbscan'].labels_
+            prob_df['HDBSCAN LABELS'] = y
+            prob_df['HDBSCAN IDENTIFIER'] = (prob_df['HDBSCAN LABELS'] == -1).astype(int)
+            prob_df.insert(0, 'ID', prob_df.index + 1)
+            prob_df['HDBSCAN RISK CATEGORY'] = prob_col
+            #print(prob_df.head().to_string())
+
+            self.f = pd.read_csv('c:/Users/anton/OneDrive/final.csv')
+
+            self.f['hdbscan labels'] = prob_df['HDBSCAN LABELS']
+            self.f['hdbscan identifier'] = prob_df['HDBSCAN IDENTIFIER']
+            self.f['hdbscan risk identifier'] = (self.f['hdbscan identifier'].apply(lambda x: 'OUTLIER' if x== 1 else 'NOT OUTLIER'))
+            self.f['hdbscan risk category'] = prob_df['HDBSCAN RISK CATEGORY']
+
+            #print(self.f.head().to_string())
+            self.f.to_csv('c:/Users/anton/OneDrive/final.csv', index=False)
+            print(self.f.head().to_string())
+
+            prob_df.to_csv('c:/Users/anton/OneDrive/hd_probability.csv', index=False)
+            for scores in self.scores:
+                s = scores(x_pca,y)
+                print(f'{scores.__name__}: {s}')
+
+            s = 0.9091081070645468
+            c = 349.834424864566
+            d = 1.0780923398047277
+
+            hd_scores = pd.DataFrame({'Silhouette score': s,
+                                      'Calinski score': c,
+                                      'Davies score': d}, index=[1])
+            hd_scores.insert(0, 'ID', hd_scores.index)
+            hd_scores.to_csv('c:/Users/anton/OneDrive/hd_scores.csv', index=False)
+
         except Exception as e: print(f'invalid hdbscan: {e}')
 
-    def all_model(self):
+    def final_db(self):
         try:
-            all = pd.read_csv('c:/Users/anton/OneDrive/hdbscan_prob_final.csv')
-
-            all['total fraud label'] = ((all['dbscan fraud label'] == 1).astype(int)+
-                          (all['optics fraud label'] == 1).astype(int)+
-                          (all['hdbscan fraud label'] == 1).astype(int))
-
-            all['final fraud category'] = all['total fraud label'].map({0:'low',1:'medium',2:'high',3:'critical' })
-            all.to_csv('c:/Users/anton/OneDrive/final_fraud.csv', index=False)
-
-            db = pd.read_csv('c:/Users/anton/OneDrive/dbscan_scores.csv')
-            o = pd.read_csv('c:/Users/anton/OneDrive/optic_scores.csv')
-            hd = pd.read_csv('c:/Users/anton/OneDrive/hdbscan_score.csv')
-            #print(o.head().to_string())
-            db = db.rename(columns=({'silhouette': 'dbscan silhouette',
-                                     'calinski': 'dbscan calinski',
-                                     'davies': 'dbscan davies'}))
-
-            o = o.rename(columns=({'silhouette': 'optics silhouette',
-                                   'calinski': 'optics calinski',
-                                   'davis': 'optics davies'}))
-
-            hd = hd.rename(columns=({'hd silhouette': 'hdbscan silhouette',
-                                     'hd calinski': 'hdbscan calinski',
-                                     'hd davies': 'hdbscan davies'}))
-
-            final_fraud_scores = db.join(o).join(hd)
-            final_fraud_scores.to_csv('c:/Users/anton/OneDrive/cluster_fraud.csv', index=False)
-
-            print(final_fraud_scores.head().to_string())
-
-
-
-
-            #print(all.head().to_string())
-        except Exception as e: print(f'invalid all models: {e}')
-
+            self.f = pd.read_csv('c:/Users/anton/OneDrive/final.csv')
+            self.f['total identifier'] = ((self.f['dbscan identifier'] == 1 ).astype(int)+
+                          (self.f['optics identifier'] == 1).astype(int)+
+                          (self.f['hdbscan identifier'] == 1).astype(int))
+            self.f['total category risk'] = self.f['total identifier'].map({0: 'low', 1: 'medium', 2: 'high', 3: 'critical'})
+            self.f.to_csv('c:/Users/anton/OneDrive/final.csv', index=False)
+            print(self.f.head().to_string())
+        except Exception as e: print(f'invalid final: {e}')
 if __name__ == "__main__":
     model_name = input('Enter model name here: ')
-    ff = FinalFraud('c:/Users/anton/OneDrive/park_consultant.csv', model_name)
+    cd = CDbscan('c:/Users/anton/OneDrive/park_consultant.csv', model_name)
     if model_name == 'd':
-        ff.db_scan()
+        cd.pc_db()
     elif model_name == 'o':
-        ff.op_tics()
+        cd.pc_op()
     elif model_name == 'h':
-        ff.hd_bscan()
-    elif model_name == 'a':
-        ff.all_model()
+        cd.pc_hd()
+    elif model_name == 'f':
+        cd.final_db()
