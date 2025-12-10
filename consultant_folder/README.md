@@ -1,127 +1,131 @@
-# Consultant Folder
+CDbscan: Multi-Model Unsupervised Fraud & Risk Detection Pipeline
 
-This folder contains consulting-related dashboards, scripts, and documentation for portfolio and project use.
-CDbscan: Multi-Model Unsupervised Fraud and Risk Detection Pipeline
-
-This directory contains the implementation of the CDbscan class, an end-to-end unsupervised machine learning workflow designed to identify anomalies and classify operational risk using three clustering algorithms: DBSCAN, OPTICS, and HDBSCAN. The pipeline standardizes the dataset, applies dimensionality reduction, executes each model, and exports structured outputs suitable for advanced analytics and Power BI dashboards.
+This folder contains the full Python implementation of the CDbscan class.
+The pipeline performs anomaly detection using DBSCAN, OPTICS, and HDBSCAN after data preprocessing and PCA dimensionality reduction.
+All model outputs are exported as CSV files for Power BI dashboards and analysis.
 
 Overview
 
-The workflow performs the following steps:
+The workflow:
 
-Loads and cleans the dataset by removing non-predictive columns.
+Loads and prepares the dataset.
 
-Scales numeric variables and encodes categorical variables.
+Removes non-predictive or leakage columns.
 
-Transforms the dataset using PCA with 11 components.
+Normalizes numeric fields and encodes categorical fields.
 
-Fits DBSCAN, OPTICS, and HDBSCAN models for anomaly detection.
+Applies PCA with 11 components.
 
-Generates risk labels, identifiers, and supporting evaluation metrics.
+Fits DBSCAN, OPTICS, and HDBSCAN models.
 
-Exports all outputs to CSV files for reporting and dashboard integration.
+Generates labels, identifiers, and risk categories for each model.
 
-Combines model results to produce a final risk category.
+Exports full results to CSV for downstream reporting.
 
-This design supports fraud detection, operational risk monitoring, and data-driven decision making.
+Produces a final combined risk score using all three models.
 
-Removed Non-Predictive Columns
+Removed Columns
 
-The following fields are excluded to avoid leakage and maintain unsupervised learning integrity:
+The following columns are dropped before modeling:
 
 urgency flag
+
 geo distance to vendor
+
 invoice match score
+
 risk category
+
 holiday period
+
 is fraud
+
+These fields either leak target information or are not predictive for unsupervised modeling.
 
 Preprocessing Steps
 
-The preprocessing architecture uses a consistent framework for all three clustering models:
+MinMaxScaler scales all numeric variables.
 
-Numeric features are normalized with MinMaxScaler.
+OneHotEncoder encodes categorical variables.
 
-Categorical features are encoded using OneHotEncoder.
+ColumnTransformer merges numeric and categorical pipelines.
 
-PCA reduces dimensionality while retaining key variance.
+PCA (11 components) reduces dimensionality.
 
-Each clustering model uses identical preprocessed inputs for consistent comparison.
+PCA output is then passed to DBSCAN, OPTICS, and HDBSCAN pipelines.
 
-Model Output Files
-DBSCAN (pc_db)
+Model Outputs (Saved to OneDrive)
+1. DBSCAN Outputs
 
-var_cumsum.csv
-pca_db_file.csv
-cluster_db_scores.csv
-final.csv updated with DBSCAN labels, identifiers, and categories
+var_cumsum.csv — variance and cumulative explained variance
 
-OPTICS (pc_op)
+pca_db_file.csv — PCA components + DBSCAN labels and identifiers
 
-optics_risk.csv
-optics_score.csv
-final.csv updated with OPTICS labels, identifiers, and risk categories
+final.csv — original data with DBSCAN fields appended
 
-HDBSCAN (pc_hd)
+cluster_db_scores.csv — Silhouette, Calinski, and Davies metrics
 
-hd_probability.csv
-hd_scores.csv
-final.csv updated with HDBSCAN labels, probability scores, and risk categories
+2. OPTICS Outputs
 
-Combined Risk Output (final_db)
+optics_risk.csv — reachability, ordering, labels, identifiers, risk categories
 
-The final step aggregates DBSCAN, OPTICS, and HDBSCAN results to compute a total risk identifier and a mapped risk category:
+optics_score.csv — OPTICS model evaluation metrics
 
-0 = low
-1 = medium
-2 = high
-3 = critical
+final.csv — updated with OPTICS labels and categories
 
-These combined classifications are written back into final.csv.
+3. HDBSCAN Outputs
+
+hd_probability.csv — probability scores + probability risk bins
+
+hd_scores.csv — evaluation metrics for HDBSCAN
+
+final.csv — updated with HDBSCAN labels, identifiers, and categories
+
+4. Final Combined Risk (final_db)
+
+A combined risk score is created using the sum of all anomaly identifiers:
+
+total identifier = DBSCAN + OPTICS + HDBSCAN
+
+
+Risk mapping:
+
+3 → critical
+
+2 → high
+
+1 → medium
+
+0 → low
+
+Final results are saved back into final.csv.
 
 How to Run the Script
 
-Run the file and enter a model selection when prompted.
+When executed, the script prompts:
 
-Model options:
+Enter model name here:
 
-d runs DBSCAN
-o runs OPTICS
-h runs HDBSCAN
-f runs the combined risk model
 
-Example:
+Valid inputs:
 
-Enter model name here: d
+d → run DBSCAN
 
-Constructor example:
+o → run OPTICS
 
+h → run HDBSCAN
+
+f → generate the final combined risk file
+
+Constructor Format
 cd = CDbscan('c:/Users/anton/OneDrive/park_consultant.csv', model_name)
 
 Notes
 
-All outputs are saved to the OneDrive directory.
-Outliers are identified when model labels equal minus one.
-PCA with 11 components ensures consistency across DBSCAN, OPTICS, and HDBSCAN.
-The combined risk score reflects agreement across all three models.
+All files export automatically to your OneDrive directory.
 
-Power BI Dashboards
+PCA uses 11 components for consistency across all models.
 
-This pipeline is paired with a full suite of Power BI dashboards that visualize the detection results and provide an enterprise-grade monitoring interface.
+Outliers are flagged when labels = −1.
 
-Included dashboards:
-
-DBSCAN and PCA Dashboard
-Displays DBSCAN clusters, PCA projections, explained variance, and model evaluation scores.
-
-OPTICS Reachability Dashboard
-Shows reachability plots, ordering structures, OPTICS cluster labels, and risk segmentation.
-
-HDBSCAN Probability Dashboard
-Visualizes probability-based risk categories, label distributions, and cluster stability metrics.
-
-Final Anomaly Summary Dashboard
-Aggregates all three models into a unified operational view.
-Shows total anomalies, category counts, and model score comparisons across DBSCAN, OPTICS, and HDBSCAN.
-
-These dashboards are designed for fraud detection teams, financial auditors, program managers, and operational oversight groups.
+Final combined risk is produced only when model name = f.
