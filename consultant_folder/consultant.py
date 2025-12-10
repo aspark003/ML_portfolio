@@ -112,7 +112,7 @@ class CDbscan:
             reach_file['OPTICS IDENTIFIER'] = (reach_file['OPTICS LABELS'] == -1).astype(int)
             reach_file.insert(0, 'ID', reach_file.index + 1)
 
-            reach_category = pd.qcut(reach_replace, q=4, labels=['low', 'medium', 'high', 'critical'])
+            reach_category = pd.qcut(reach_replace, q=4, labels=['critical', 'high', 'medium', 'low'])
             reach_file['RISK CATEGORY'] = reach_category
 
             self.f = pd.read_csv('c:/Users/anton/OneDrive/final.csv')
