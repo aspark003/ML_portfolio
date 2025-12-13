@@ -1,27 +1,29 @@
 Gov Finance Fraud Detection Dashboard
 Project Overview
 
-This project implements an end-to-end fraud detection system using unsupervised machine learning techniques. It identifies anomalous financial transactions and assigns fraud identifiers and risk categories (Critical, Medium, Low, None) for monitoring and review.
+Implements an end-to-end fraud detection system using unsupervised machine learning.
 
-The system uses the following models:
+Identifies anomalous financial transactions and assigns fraud identifiers with risk categories (Critical, Medium, Low, None).
 
-PCA (Principal Component Analysis) – reduces dimensionality and highlights key features
+Models Used
 
-DBSCAN – detects local density anomalies
+PCA (Principal Component Analysis): reduces dimensionality and highlights key features
 
-OPTICS – identifies clusters of varying density
+DBSCAN: detects local density anomalies
 
-HDBSCAN – finds hierarchical clusters and outliers
+OPTICS: identifies clusters of varying density
 
-Isolation Forest – isolates anomalies probabilistically
+HDBSCAN: finds hierarchical clusters and outliers
 
-The dashboard includes the following measures:
+Isolation Forest: isolates anomalies probabilistically
 
-Fraud Count – total number of transactions flagged as fraud
+Dashboard Measures
 
-Total Records – total number of transactions in the dataset
+Fraud Count: total number of transactions flagged as fraud
 
-Fraud Rate – proportion of transactions flagged as fraud
+Total Records: total number of transactions in the dataset
+
+Fraud Rate: proportion of transactions flagged as fraud
 
 Features
 
@@ -29,37 +31,50 @@ Detects anomalies using PCA + DBSCAN, OPTICS, HDBSCAN, and Isolation Forest.
 
 Assigns fraud identifiers and risk categories based on model agreement.
 
-Generates a Power BI dashboard including:
+Generates a Power BI dashboard with:
 
-Row-level audit table with all identifiers, detectors, and categories
+Row-level audit table including all identifiers, detectors, and categories
 
-Summary Cards for Fraud Count, Total Records, and Fraud Rate
+Summary cards for Fraud Count, Total Records, and Fraud Rate
 
 Dataset context notes (FY, Account Code, Fund, Budget Line Item)
 
-Supports alerts on Fraud Count or Fraud Rate for real-time monitoring of new fraud occurrences.
+Alerts for Fraud Count or Fraud Rate for real-time monitoring of new fraud occurrences
 
 Folder Structure
 
 anomaly_fraud/
 
-gov_clean_cluster.csv — input raw dataset for processing
+raw_data/
 
-clusterF_pipeline.py — Python scripts that run the anomaly/fraud detection pipeline (DBSCAN, OPTICS, HDBSCAN, Isolation Forest, PCA)
+gov_clean_cluster.csv – input raw dataset for processing
 
-gov_soft_gl_auto_dash_file4.csv — final processed dataset including fraud identifiers, anomaly categories, and computed scores
+processed_data/
 
-dashboard.pbix — Power BI dashboard showing row-level audit table, summary cards, and dataset context notes
+gov_soft_gl_auto_dash_file4.csv – final dataset including fraud identifiers and scores
 
-README.md — this documentation file
+scripts/
+
+clean.py – data cleaning and preprocessing
+
+full_script.py – full anomaly/fraud detection pipeline
+
+load_file.py – utility to load datasets into pipeline
+
+docs/
+
+dashboard.pbix – Power BI dashboard
+
+powerbi_screenshot.pdf – dashboard screenshot for reference
+
+README.md – this documentation file
 
 Instructions
+Python Preprocessing
 
-Python preprocessing
+Run full_script.py to process new datasets.
 
-Run clusterF_pipeline.py to process new datasets.
-
-Output is saved to gov_soft_gl_auto_dash_file4.csv.
+Output is automatically saved to gov_soft_gl_auto_dash_file4.csv.
 
 Power BI
 
@@ -69,17 +84,16 @@ Refresh dataset to include new rows.
 
 Cards and tables update automatically.
 
-Monitoring
+Monitoring & Alerts
 
-Set alerts on Fraud Count or Fraud Rate cards in Power BI to notify when thresholds are exceeded (e.g., when new fraud is detected).
+Set alerts on Fraud Count or Fraud Rate cards to notify when thresholds are exceeded.
 
-Alerts trigger automatically whenever new rows are processed through the Python pipeline and meet the alert condition.
+Alerts are triggered automatically whenever new rows are processed through the Python pipeline and meet the alert conditions.
 
 Notes
 
 Do not modify the dataset schema; only add new rows. Columns and their order must remain unchanged.
 
-All anomaly identifiers and fraud labels (DBSCAN, OPTICS, HDBSCAN, Isolation Forest) are computed automatically by the Python pipeline.
+All anomaly identifiers and fraud labels (DBSCAN, OPTICS, HDBSCAN, Isolation Forest, PCA) are computed automatically.
 
 Dashboard visuals (table, cards, text boxes) are designed for auditability, clarity, and real-time monitoring.
-
