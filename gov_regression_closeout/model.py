@@ -1,151 +1,181 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
-from sklearn.linear_model import LinearRegression
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LinearRegression, Lasso, LassoCV, Ridge, RidgeCV, ElasticNetCV
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from xgboost import XGBRegressor
+from sklearn.impute import SimpleImputer
 
-class GovRegression:
-    def __init__(self, file_path, model_name):
+class CleanFile:
+    def __init__(self, file,header=2):
         try:
+            self.df = pd.read_csv(file, encoding='utf-8-sig', engine='python', header=header)
+            self.df.columns = self.df.columns.str.replace('-', ' ', regex=True).str.lower().str.strip()
+            self.df.insert(0, 'id', self.df.index+1)
+            self.df = self.df.drop(self.df.index[473:]).reset_index(drop=True)
 
-            self.start1 = pd.read_csv('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto3.csv')
-            #print(self.start1.head().to_string())
-            self.model_name = model_name
-            self.df = pd.read_csv(file_path, encoding='utf-8-sig', engine='python')
-            self.df.columns = self.df.columns.str.strip()
-            self.copy = self.df.copy()
+            self.df1 = self.df.copy()
 
-            self.num = self.copy.select_dtypes(include=['number', 'complex']).columns.tolist()
-            self.obj = self.copy.select_dtypes(include=['object', 'string', 'bool', 'category']).columns.tolist()
+            self.use = self.df1.copy()
 
-            self.scaler = MinMaxScaler()
-            self.encoder = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
+            self.use = self.use.drop(columns=['task organization', 'bfy', 'ba bsa bli', 'fund', 'limit', 'project number', 'task number', 'expenditure type', 'class category', 'class code', 'budget authority', 'commitments', 'obligations', 'non labor expenditures'])
 
-            self.num_input = Pipeline([('num_input', SimpleImputer(strategy='median')),
-                                       ('scaler', self.scaler)])
-
-            self.obj_input = Pipeline([('obj_input', SimpleImputer(strategy='constant', fill_value='missing')),
-                                       ('encoder', self.encoder)])
-
-            self.preprocessor = ColumnTransformer([('scaler', self.num_input, self.num),
-                                                   ('encoder', self.obj_input, self.obj)])
-
+            self.use.to_csv('c:/Users/anton/OneDrive/test1.csv', index=False)
+            self.use1 = self.use.copy()
             self.scores = ([r2_score, mean_absolute_error, mean_squared_error])
-
-
         except Exception as e: print(f'invalid file: {e}')
 
-    def linear_reg(self):
+    def linear_model(self):
         try:
-            self.copy = self.preprocessor.fit_transform(self.copy)
-            self.copy1 = pd.DataFrame(self.copy, columns=self.preprocessor.get_feature_names_out())
+            si = SimpleImputer(strategy='median')
+            self.use2 = si.fit_transform(self.use1)
+            self.use2 = pd.DataFrame(self.use2, columns=self.use1.columns)
+            #self.use2.to_csv('c:/Users/anton/OneDrive/test3.csv', index=False)
 
-            self.copy1.columns = self.copy1.columns.str.replace('scaler__', '', regex=True).str.lower().str.strip()
-            self.X = self.copy1.drop(columns=['funds used'])
-            self.y = self.copy1['funds used']
+            X = self.use2.drop(columns='funds used')
+            y = self.use2['funds used']
+
+            mm = MinMaxScaler()
+
+
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+            X_train = mm.fit_transform(X_train)
             lr = LinearRegression()
-
-            X_train, X_test, y_train, y_test = train_test_split(self.X,self.y, test_size=0.2, random_state=42)
-
             lr.fit(X_train, y_train)
+            X_test = mm.transform(X_test)
             lr_predict = lr.predict(X_test)
-            l_df = pd.DataFrame({'actual': y_test,
-                                 'predict': lr_predict}).reset_index(drop=True)
-            #print(l_df.head())
-            for score in self.scores:
-                s = score(y_test, lr_predict)
-                print(f'{score.__name__}: {s}')
 
-            cvs = cross_val_score(lr, self.X,self.y, cv=5, scoring='r2').mean()
+            for scores in self.scores:
+                s = scores(y_test, lr_predict)
+                #print(f'{scores.__name__}:{s}')
 
-            print(f'mean cross val score: {cvs}')
-        except Exception as e:
-            print(f'invalid linear regression model: {e}')
+            cvs = cross_val_score(lr, X,y, cv=8, scoring='r2').mean()
+            #print(f'mean cross val score: {cvs}')
 
-    def random_forest(self):
-        try:
-            #print(self.start1.head().to_string())
-            self.start2 = pd.read_csv('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto6.csv')
+            la = LassoCV()
+            la.fit(X_train, y_train)
+            lasso_predict = la.predict(X_test)
+            for sc in self.scores:
+                sa = sc(y_test, lasso_predict)
+                #print(f'{sc.__name__}:{sa}')
 
-            #print(self.start2.shape)
-            #print(self.start2.head().to_string())
-            self.copy = self.preprocessor.fit_transform(self.copy)
-            self.copy1 = pd.DataFrame(self.copy, columns=self.preprocessor.get_feature_names_out())
+            ri = RidgeCV()
+            ri.fit(X_train,y_train)
+            ri_predict = ri.predict(X_test)
+            for rs in self.scores:
+                r =rs(y_test, ri_predict)
+                #print(f'{rs.__name__}:{r}')
 
-            self.copy1.columns = self.copy1.columns.str.replace('scaler__', '', regex=True).str.lower().str.strip()
-            X = self.copy1.drop(columns=['funds used'])
-            y = self.copy1['funds used']
+            cri = cross_val_score(ri, X,y, cv=5, scoring='r2').mean()
+            #print(f'mean cross val score: {cri}')
 
+            self.df1['actual linear score'] = y_test
+            pre = pd.Series(ri_predict)
+            self.df1['predicted linear score'] = pre
 
-            rf = RandomForestRegressor(n_estimators=100, max_depth=None, min_samples_split=5, min_samples_leaf=3,random_state=42)
-
-            rf.fit(X,y)
-            rf_predict = rf.predict(X)
-            self.start2['actual funds used'] = y
-
-            self.start1['actual funds used'] = y
-            self.start1['predicted funds used'] = rf_predict
-            self.start2['predicted funds used'] = rf_predict
-            residual = (self.start1['actual funds used'] - self.start1['predicted funds used'])
-            residual = (self.start2['actual funds used'] - self.start2['predicted funds used'])
-            self.start1['residual'] = residual
-            self.start2['residual'] = residual
-            #print(self.start1.head().to_string())
-            self.start1.to_csv('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto4.csv',index=False)
-
-            rf_df = pd.DataFrame({'actual': y,
-                                  'predict': rf_predict}).reset_index(drop=True)
-
-            for score in self.scores:
-                s = score(y, rf_predict)
-                #print(f'{score.__name__}: {s}')
-
-            r2 = r2_score(y, rf_predict)
-            mae = mean_absolute_error(y,rf_predict)
-            mse = mean_squared_error(y,rf_predict)
-            cvs = cross_val_score(rf, X, y, cv=5, scoring='r2').mean()
-            #print(f'r2: {r2}, mae: {mae}, mse: {mse}, mean cross val scores: {cvs}')
-
-            # example thresholds
-            print(self.start1['residual'].describe())
-
-            q1 = self.start1['residual'].quantile(0.25)
-            q3 = self.start1['residual'].quantile(0.75)
-
-            self.start1['residual label'] = np.select(
-                [self.start1['residual'] > q3,self.start1['residual'] >= q1],[3, 2],default=1)
-            self.start1['residual category'] = self.start1['residual label'].apply(lambda x: 'high' if x == 3 else 'medium' if x == 2 else 'low' if x == 1 else 0)
-            print(self.start1.head().to_string())
+            act_pre = (self.df1['actual linear score'] - self.df1['predicted linear score'])
+            self.df1['residual'] = act_pre
 
 
-            self.start1.to_csv('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto5.csv', index=False)
+            top = self.df1['residual'].quantile(0.75)
 
-            q1 = self.start2['residual'].quantile(0.25)
-            q3 = self.start2['residual'].quantile(0.75)
+            bottom = self.df1['residual'].quantile(0.25)
+            self.df1['residual labels'] = np.select(
+                [
+                    self.df1['residual'] >= top,
+                    (self.df1['residual'] >= bottom) & (self.df1['residual'] < top)],[3,2],default=1)
 
-            self.start2['residual label'] = np.select(
-                [self.start2['residual'] > q3, self.start2['residual'] >= q1], [3, 2], default=1)
-            self.start2['residual category'] = self.start2['residual label'].apply(
-                lambda x: 'high' if x == 3 else 'medium' if x == 2 else 'low' if x == 1 else 0)
-
-            #print(self.start1.head().to_string())
-            self.start2 = self.start2.drop(index=[474]).reset_index(drop=True)
-
-            self.start2.to_csv('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto6.csv', index=False)
-
-        except Exception as e: print(f'invalid random forest model: {e}')
+            self.df1['residual category'] = self.df1['residual labels'].map({3: 'high', 2:'average', 1: 'low'})
 
 
+            #print(self.df1['residual'].describe())
+
+            #print(self.df1.head().to_string())
+            self.df1.to_csv('c:/Users/anton/OneDrive/test0.csv', index=False)
+
+            random_f = RandomForestRegressor(n_estimators=100, max_depth=None, min_samples_split=5, min_samples_leaf=4, random_state=42)
+            random_f.fit(X_train, y_train)
+            ra_pre = random_f.predict(X_test)
+            for ra_score in self.scores:
+                ras = ra_score(y_test, ra_pre)
+                #print(f'{ra_score.__name__}:{ras}')
+
+            c_v = cross_val_score(random_f,X,y, cv=5, scoring='r2').mean()
+            #print(f'mean cross val score: {c_v}')
+
+            param_grid = {
+                'n_estimators': [100, 200],
+                'max_depth': [None, 10, 20],
+                'min_samples_split': [2, 5]
+            }
+            gs = GridSearchCV(estimator=RandomForestRegressor(random_state=42), param_grid=param_grid, cv=5, scoring='r2')
+            gs.fit(X_train, y_train)
+            gs_predict = gs.predict(X_test)
+            for gcore in self.scores:
+                gc = gcore(y_test, gs_predict)
+                #print(f'{gcore.__name__}:{gc}')
+
+            gsv = cross_val_score(gs, X, y, cv=5, scoring='r2').mean()
+            print(f'mean cross val scores: {gsv}')
+
+            self.df1['gridsearch actual score'] = y_test
+            g_pre = pd.Series(gs_predict)
+            self.df1['gridsearch predict score'] = g_pre
+
+            act_pre = (self.df1['gridsearch actual score'] - self.df1['gridsearch predict score'])
+            self.df1['gridsearch residual'] = act_pre
+
+            top = self.df1['gridsearch residual'].quantile(0.75)
+
+            bottom = self.df1['gridsearch residual'].quantile(0.25)
+
+            self.df1['gridsearch labels'] = np.select([self.df1['gridsearch residual'] >=top, (self.df1['gridsearch residual']<top)], [3,2], default=1)
+            self.df1['gridsearch category'] = self.df1['gridsearch labels'].map({3: 'high', 2: 'average', 1: 'low'})
+
+            self.df1.to_csv('c:/Users/anton/OneDrive/test0.csv', index=False)
+
+            xgb = XGBRegressor(n_estimators=200, learning_rate=0.1, max_depth=5, random_state=42)
+            xgb.fit(X_train,y_train)
+            xe_predict = xgb.predict(X_test)
+
+            for xscore in self.scores:
+                xu = xscore(y_test, xe_predict)
+                print(f'{xscore.__name__}:{xu}')
+
+            xcvs = cross_val_score(xgb, X, y, cv=5, scoring='r2').mean()
+            print(f'mean cross val score: {xcvs}')
+
+            self.df1['xgb actual score'] = y_test
+            xpre = pd.Series(xe_predict)
+            self.df1['xgb predict score'] = xpre
+
+            a = self.df1['xgb actual score']
+            b = self.df1['xgb predict score']
+            self.df1['xgb final score'] = a - b
+
+            top = self.df1['xgb final score'].quantile(0.75)
+            low = self.df1['xgb final score'].quantile(0.25)
+
+            self.df1['xgb labels'] = np.select([self.df1['xgb final score'] >= top, (self.df1['xgb final score'] < top)], [3, 2], default=1)
+
+            self.df1['xgb category'] = self.df1['xgb labels'].map({3: 'high', 2: 'average', 1: 'low'})
+
+            print(self.df1.head().to_string())
+
+            t_top = self.df1['xgb final score'].quantile(0.75)
+            b_low = self.df1['xgb final score'].quantile(0.25)
+            self.df1['final label'] = np.select([self.df1['xgb final score']>=t_top, (self.df1['xgb final score']<t_top)], [3, 2], default=1)
+            self.df1['final category'] = self.df1['final label'].map({3: 'high', 2: 'average', 1: 'low'})
+
+            self.df1.to_csv('c:/Users/anton/OneDrive/test0.csv', index=False)
+        except Exception as e: print(f'invalid linear model: {e}')
 
 if __name__ == "__main__":
-    model_name = input('Enter model name here: ')
-    gr = GovRegression('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto2.csv', model_name)
-    if model_name == 'l':
-        gr.linear_reg()
-    elif model_name == 'r':
-        gr.random_forest()
+
+    cf = CleanFile('c:/Users/anton/OneDrive/test11.csv')
+    cf.linear_model()
