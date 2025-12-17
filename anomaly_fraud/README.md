@@ -1,103 +1,159 @@
-https://github.com/aspark003/ML_portfolio/blob/main/anomaly_fraud/README.md
-https://app.powerbi.com/groups/me/dashboards/e510cda9-219c-4975-bf8c-15f8642f02bc?experience=power-bi
-https://app.powerbi.com/groups/me/reports/a0c64750-63a1-4db1-b1e4-43373211c443/d9dc5400cc3c48c3b283?experience=power-bi
 
-Gov Finance Fraud Detection Dashboard
+https://app.powerbi.com/groups/me/dashboards/1c7a9c3e-5f14-4414-90ed-923cdc4e7027?experience=power-bi
+
+
+Anomaly Detection & Fraud Risk Dashboard
+
+Unsupervised ML Pipeline + Power BI Analytics
+
 Project Overview
 
-Implements an end-to-end fraud detection system using unsupervised machine learning.
+This project implements an end-to-end unsupervised anomaly detection system for financial and ledger-style data.
+The pipeline detects unusual spending patterns using multiple density-based clustering algorithms, aggregates anomaly signals, and presents results in an interactive Power BI dashboard designed for audit, compliance, and financial oversight use cases.
 
-Identifies anomalous financial transactions and assigns fraud identifiers with risk categories (Critical, Medium, Low, None).
+The goal is not prediction, but risk discovery, validation, and prioritization.
 
-Models Used
+🧠 Modeling Approach
 
-PCA (Principal Component Analysis): reduces dimensionality and highlights key features
+The system uses model consensus, not a single algorithm, to reduce false positives and improve confidence.
 
-DBSCAN: detects local density anomalies
+Algorithms implemented:
 
-OPTICS: identifies clusters of varying density
+DBSCAN – density-based anomaly detection
 
-HDBSCAN: finds hierarchical clusters and outliers
+OPTICS – variable density clustering for irregular structures
 
-Isolation Forest: isolates anomalies probabilistically
+HDBSCAN – hierarchical density-based clustering
 
-Dashboard Measures
+PCA – dimensionality reduction for clustering stability
 
-Fraud Count: total number of transactions flagged as fraud
+Isolation Forest (optional reference model)
 
-Total Records: total number of transactions in the dataset
+Each model produces:
 
-Fraud Rate: proportion of transactions flagged as fraud
+cluster labels
 
-Features
+anomaly identifiers
 
-Detects anomalies using PCA + DBSCAN, OPTICS, HDBSCAN, and Isolation Forest.
+categorical flags
 
-Assigns fraud identifiers and risk categories based on model agreement.
+These are combined into a unified severity score.
 
-Generates a Power BI dashboard with:
+⚙️ Pipeline Architecture
 
-Row-level audit table including all identifiers, detectors, and categories
+1. Data Ingestion
 
-Summary cards for Fraud Count, Total Records, and Fraud Rate
+Supports Excel, CSV, TSV, JSON, and TXT
 
-Dataset context notes (FY, Account Code, Fund, Budget Line Item)
+Automatic validation and safe loading
 
-Alerts for Fraud Count or Fraud Rate for real-time monitoring of new fraud occurrences
+Preserves original data for audit traceability
 
-Folder Structure
+2. Preprocessing
 
-anomaly_fraud/
+Median imputation for numeric features
 
-raw_data/
+Constant imputation for categorical features
 
-gov_clean_cluster.csv – input raw dataset for processing
+Min-Max scaling
 
-processed_data/
+One-Hot Encoding
 
-gov_soft_gl_auto_dash_file4.csv – final dataset including fraud identifiers and scores
+Managed through ColumnTransformer
 
-scripts/
+3. Modeling
 
-clean.py – data cleaning and preprocessing
+PCA applied per model (configurable components)
 
-full_script.py – full anomaly/fraud detection pipeline
+Independent pipelines for:
 
-load_file.py – utility to load datasets into pipeline
+DBSCAN
 
-docs/
+OPTICS
 
-dashboard.pbix – Power BI dashboard
+HDBSCAN
 
-powerbi_screenshot.pdf – dashboard screenshot for reference
+Cluster evaluation using:
 
-README.md – this documentation file
+Silhouette Score
 
-Instructions
-Python Preprocessing
+Calinski-Harabasz Index
 
-Run full_script.py to process new datasets.
+Davies-Bouldin Index
 
-Output is automatically saved to gov_soft_gl_auto_dash_file4.csv.
+4. Consensus Scoring
+
+Total Identifiers = DBSCAN + OPTICS + HDBSCAN
+Severity Levels:
+0 → None
+1 → Low
+2 → Medium
+3 → High
+
+📈 Dashboard Features (Power BI)
+
+Interactive anomaly table
+
+Row-level anomaly highlighting
+
+Severity cards (None / Low / Medium / High)
+
+Drill-down by:
+
+fund
+
+organization
+
+project
+
+account code
+
+Supports audit review and investigation workflows
+
+📂 Output Artifacts
+
+original.csv – enriched dataset with all anomaly labels
+
+Model metrics printed per algorithm
+
+Power BI report connected to final dataset
+
+🧪 Model Performance (Example)
+Model	Silhouette	Calinski-Harabasz	Davies-Bouldin
+DBSCAN	~0.70	~47	~1.00
+OPTICS	~0.50	~15	~1.56
+HDBSCAN	~0.72	~90	~0.68
+
+HDBSCAN provided the strongest clustering separation, reinforcing the multi-model consensus strategy.
+
+Key Takeaways
+
+Unsupervised models must be interpreted, not trusted blindly
+
+Consensus across models dramatically improves reliability
+
+PCA + density methods are effective for financial anomaly detection
+
+Dashboards turn models into decision tools, not experiments
+
+Use Cases
+
+Fraud detection
+
+Financial audit support
+
+Budget anomaly discovery
+
+Compliance monitoring
+
+Risk prioritization
+
+Tech Stack
+
+Python (pandas, scikit-learn, numpy)
+
+PCA, DBSCAN, OPTICS, HDBSCAN
 
 Power BI
 
-Open dashboard.pbix.
-
-Refresh dataset to include new rows.
-
-Cards and tables update automatically.
-
-Monitoring & Alerts
-
-Set alerts on Fraud Count or Fraud Rate cards to notify when thresholds are exceeded.
-
-Alerts are triggered automatically whenever new rows are processed through the Python pipeline and meet the alert conditions.
-
-Notes
-
-Do not modify the dataset schema; only add new rows. Columns and their order must remain unchanged.
-
-All anomaly identifiers and fraud labels (DBSCAN, OPTICS, HDBSCAN, Isolation Forest, PCA) are computed automatically.
-
-Dashboard visuals (table, cards, text boxes) are designed for auditability, clarity, and real-time monitoring.
+GitHub version control
