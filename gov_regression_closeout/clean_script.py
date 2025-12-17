@@ -1,36 +1,90 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
-from sklearn.linear_model import LinearRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.ensemble import RandomForestRegressor
+import os
+from zipfile import BadZipFile, ZipFile
+import openpyxl
 
-class GovRegression:
-    def __init__(self, file_path, header=2):
+class FileLoader:
+    def __init__(self, file=None):
+        self.file = file
+        self.df = None
+
+    def load(self, file=None):
+        # Update file path if a new one is provided
+        if file:
+            self.file = file
+
+        if not self.file:
+            raise ValueError("File path not available")
+
+        # Get file extension
+        extension = os.path.splitext(self.file)[1].lower()
+
         try:
-            self.df = pd.read_csv(file_path, encoding='utf-8-sig', engine='python', header=header)
-            self.df.insert(0, 'id', self.df.index+1)
-            self.df.columns = self.df.columns.str.replace('-', ' ', regex=True).str.lower().str.strip()
-            self.df.to_csv('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto6.csv',index=False)
-            #print(self.df.head().to_string())
+            # ---------- Excel ----------
+            if extension == ".xlsx":
+                try:
+                    # Ensure the file is a proper zip (xlsx)
+                    with ZipFile(self.file, 'r') as zip_ref:
+                        corrupt_file = zip_ref.testzip()
+                        if corrupt_file:
+                            raise BadZipFile(f"Corrupt file inside archive: {corrupt_file}")
+                    # File is valid Excel, load it
+                    self.df = pd.read_excel(self.file, engine='openpyxl')
+                    print("Excel file loaded successfully.")
 
-            self.copy = self.df.copy()
-            self.start = self.copy.copy()
-            self.start = self.start.drop(columns=['task organization', 'bfy', 'ba bsa bli', 'fund', 'limit'])
-            self.start.to_csv('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto3.csv',index=False)
-            print(self.start.head().to_string())
-            print(self.start.shape)
+                except BadZipFile:
+                    raise ValueError(f"Excel file is corrupted or not a valid .xlsx: {self.file}")
 
-            self.copy = self.copy.drop(columns=['task organization', 'bfy', 'ba bsa bli', 'fund', 'limit', 'project number', 'task number', 'expenditure type', 'class category', 'class code', 'budget authority', 'commitments', 'obligations', 'non labor expenditures'])
-            #print(self.copy.head().to_string())
-            #print(self.copy.dtypes)
-            self.copy.to_csv('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto2.csv',index=False)
+            # ---------- CSV ----------
+            elif extension == ".csv":
+                self.df = pd.read_csv(self.file)
+                print("CSV file loaded successfully.")
 
-        except Exception as e: print(f'invalid file: {e}')
+            # ---------- TSV ----------
+            elif extension == ".tsv":
+                self.df = pd.read_csv(self.file, sep="\t")
+                print("TSV file loaded successfully.")
+
+            # ---------- JSON ----------
+            elif extension in [".json", ".jsonl"]:
+                try:
+                    if extension == ".jsonl":
+                        self.df = pd.read_json(self.file, lines=True)
+                    else:
+                        self.df = pd.read_json(self.file)
+                    print("JSON file loaded successfully.")
+                except ValueError as e:
+                    raise ValueError(f"Invalid JSON file: {e}")
+
+            # ---------- TXT ----------
+            elif extension in [".txt", ".text"]:
+                with open(self.file, "r", encoding="utf-8", errors="ignore") as f:
+                    self.df = pd.DataFrame([line.strip() for line in f.readlines()], columns=["text"])
+                print("Text file loaded successfully.")
+
+            else:
+                raise ValueError(f"Unsupported file type: {extension}")
+
+        except Exception as e:
+            raise ValueError(f"Failed to load file: {e}")
+
+        # Print first few rows
+        if self.df is not None:
+            print(self.df.head().to_string())
+        self.df.to_csv('c:/Users/anton/OneDrive/test11.csv', index=False)
+        return self.df
+
 
 
 if __name__ == "__main__":
-    rc = GovRegression('c:/Users/anton/OneDrive/gov_finance_regression_model/gov_pt_auto1.csv')
+    fc = FileLoader('c:/Users/anton/OneDrive/test.xlsx')
+    df = fc.load()
+
+
