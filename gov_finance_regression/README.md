@@ -1,5 +1,6 @@
 https://github.com/aspark003/ML_portfolio/
-https://app.powerbi.com/groups/me/dashboards/e78ef086-66e9-40a9-85ad-58e93ce99644?experience=power-bi
+
+https://app.fabric.microsoft.com/groups/me/reports/2cd556e7-790a-40f6-9ddc-f419f7757bbc/9e114e6d25d600f6b156?experience=fabric-developer
 
 Residual-Based Financial Anomaly Detection
 Overview
