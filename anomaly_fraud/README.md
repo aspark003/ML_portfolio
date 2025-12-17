@@ -13,7 +13,7 @@ The pipeline detects unusual spending patterns using multiple density-based clus
 
 The goal is not prediction, but risk discovery, validation, and prioritization.
 
-🧠 Modeling Approach
+Modeling Approach
 
 The system uses model consensus, not a single algorithm, to reduce false positives and improve confidence.
 
@@ -110,7 +110,7 @@ account code
 
 Supports audit review and investigation workflows
 
-📂 Output Artifacts
+Output Artifacts
 
 original.csv – enriched dataset with all anomaly labels
 
