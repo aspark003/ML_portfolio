@@ -1,186 +1,188 @@
 https://github.com/aspark003/ML_portfolio/
+https://app.powerbi.com/groups/me/dashboards/e78ef086-66e9-40a9-85ad-58e93ce99644?experience=power-bi
 
-https://app.fabric.microsoft.com/groups/me/dashboards/46109454-2c02-4f57-81d8-533ddb1b16d3?experience=fabric-developer
-
-
-FY26 Funds Closeout Risk Dashboard
+Residual-Based Financial Anomaly Detection
 Overview
 
-This project builds a data-driven fiscal year (FY) closeout review system that helps identify overspending, underspending, and unusual fund usage patterns before the fiscal year closes.
+This project implements an end-to-end residual-based financial anomaly detection pipeline using supervised regression.
+Rather than relying on unsupervised anomaly detection alone, the system builds an expectation model, measures deviations from that expectation, and classifies severity using distribution-based thresholds.
 
-It uses multiple regression models to estimate expected spending behavior and then measures how far actual spending deviates from those expectations.
-The results are summarized into simple risk categories that support audit review, budget reconciliation, and closeout decisions.
+The output is a record-level anomaly dataset designed for direct use in Power BI dashboards and audit workflows.
 
-The final output is visualized in a Power BI dashboard titled:
+Pipeline Architecture
 
-“FY 26 Close Out Dashboard”
+The workflow is intentionally modular and executed in stages:
 
-What Problem This Solves
+Raw File → Load → Clean → Model → Residuals → Severity Labels → Dashboard
 
-At the end of a fiscal year:
+1. File Loading (FileLoader)
 
-Unused funds can be lost
+Supports multiple file types:
 
-Rushed spending can increase risk
+Excel (.xlsx)
 
-Manual review is slow and subjective
+Text Files (CSV)
 
-This system answers:
+Features:
 
-Where was more money used than expected?
+Validates Excel files as proper ZIP archives
 
-Where was less money used than expected?
+Normalizes ingestion into Pandas DataFrames
 
-Which records need review before closeout?
+Saves a standardized intermediate CSV (practice1.csv)
 
-How the System Works (Plain Language)
-Step 1: Load and Validate Data
+Purpose:
 
-The FileLoader class:
+Ensure reliable ingestion regardless of source format.
 
-Safely loads Excel, CSV, TSV, JSON, or text files
+2. Data Cleaning & Preparation (CleanFile)
 
-Verifies Excel file integrity
+Key steps:
 
-Standardizes the input into a clean DataFrame
+Applies a custom header offset
 
-Saves a normalized CSV for modeling
+Normalizes column names
 
-Purpose: Ensure the data is usable and consistent.
+Removes trailing non-data rows
 
-Step 2: Clean and Prepare Data
+Adds a stable record ID
 
-The CleanFile class:
+Saves a preserved original snapshot for later reconciliation
 
-Standardizes column names
+Uses ColumnTransformer for:
 
-Creates a unique id
+Numeric median imputation
 
-Removes non-modeling fields
+Categorical missing-value handling
 
-Handles missing values using median imputation
+Outputs:
 
-Prepares the dataset for regression modeling
+practice_original.csv (pre-model reference)
 
-Purpose: Remove noise and focus on spending behavior.
+practice0.csv (model-ready dataset)
 
-Step 3: Predict Expected Spending
+Purpose:
 
-Three different regression models are used to estimate how much funding should have been used:
+Prepare a leakage-free, model-safe dataset while preserving raw financial context.
 
-Ridge Regression
+3. Expectation Modeling (LinearModel)
 
-Linear, conservative baseline
+Models tested:
 
-Captures normal spending trends
+Linear Regression
 
-GridSearch-Tuned Random Forest
+LassoCV
 
-Nonlinear, pattern-aware
+RidgeCV
 
-Captures structured deviations
+ElasticNetCV (available)
 
-XGBoost
+Evaluation strategy:
 
-Boosted, error-focused
+Train/Test split
 
-Captures complex spending behavior
+Cross-validation (CV)
 
-Each model answers:
+Full-dataset fit for expectation generation
 
-“Based on similar records, how much money should have been used?”
+Important design choice:
 
-Step 4: Measure Deviation (Residuals)
+Cross-validation is used to validate realism, not maximize scores.
 
-For each model:
+4. Leakage Control
 
-Residual = Actual Funds Used − Predicted Funds Used
+Post-event and outcome-derived financial fields are explicitly excluded from modeling, including:
 
+Commitments
 
-This tells us:
+Budget authority
 
-Positive residual → more money used than expected
+Limits
 
-Negative residual → less money used than expected
+Organizational rollups
 
-Residuals are the core signal of this system.
+These fields remain available for dashboard explanation, but not for prediction.
 
-Step 5: Convert Residuals into Risk Labels
+Purpose:
 
-Residuals are converted into relative risk labels using data-driven percentiles:
+Prevent artificial performance inflation and ensure real-world validity.
 
-High → Top 25% of deviations
+5. Residual Calculation
 
-Average → Middle range
+Residuals are computed as:
 
-Low → Bottom range
+residual = actual − predicted
 
-This avoids hard-coded thresholds and adapts to the data.
 
-Step 6: Final Risk Classification
+This produces an interpretable deviation from expected spending.
 
-The final decision layer:
+6. Severity Classification
 
-Uses the distribution of model deviations
+Residuals are categorized using quantile thresholds:
 
-Assigns a final risk category:
+Under: ≤ 25th percentile
 
-High
+Normal: 25th–75th percentile
 
-Average
+Over: ≥ 75th percentile
 
-Low
+Outputs:
 
-This produces a clear, audit-friendly outcome for each record.
+Numeric residual identifier
 
-What Was Found
+Human-readable severity label
 
-The system identified:
+Purpose:
 
-Records where funds were used far above expectations (High)
+Convert numeric deviation into actionable audit signals.
 
-Records where funds were partially or not fully used (Low)
+7. Output for Visualization
 
-Records that behaved normally (Average)
+Final output is written back to practice_original.csv with:
 
-This does not label fraud.
-It identifies where attention is needed during FY closeout.
+Original financial context
 
-Dashboard Output
+Model predictions
 
-The Power BI dashboard displays:
+Residual values
 
-Total records reviewed
+Severity categories
 
-Total funds analyzed
+This file is designed for direct ingestion into Power BI.
 
-Overall risk indicator
+Power BI Dashboard
 
-Detailed transaction-level table
+The dashboard supports:
 
-Clear high / average / low classification
+Record-level inspection
 
-This allows:
+Severity filtering
 
-Rapid closeout review
+Accounting-formatted financial fields
 
-Targeted follow-up
+Residual-driven prioritization
 
-Reduced manual effort
+Audit-ready interpretation
 
-Why This Approach Is Useful
+No model logic is duplicated in Power BI — all intelligence is upstream.
 
-Uses multiple independent models
+Why This Approach
 
-Avoids single-model bias
+Many financial anomaly systems fail due to:
 
-Data-driven thresholds (no guessing)
+Data leakage
 
-Easy to explain to non-technical users
+Overfitting
 
-Scales to future fiscal years
+Uninterpretable anomaly scores
 
-Key Takeaway
+This project prioritizes:
 
-This system helps ensure fiscal year closeout is intentional, balanced, and reviewable by highlighting where funds were overused, underused, or behaved unusually.
+Model honesty
+
+Explainability
+
+Practical decision support
+
+Residual-based anomalies provide a transparent and defensible signal suitable for financial review and governance contexts.
 
