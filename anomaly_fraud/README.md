@@ -1,5 +1,6 @@
+https://app.fabric.microsoft.com/groups/me/dashboards/1c7a9c3e-5f14-4414-90ed-923cdc4e7027?experience=fabric-developer
 
-https://app.powerbi.com/groups/me/dashboards/1c7a9c3e-5f14-4414-90ed-923cdc4e7027?experience=power-bi
+
 
 
 Anomaly Detection & Fraud Risk Dashboard
