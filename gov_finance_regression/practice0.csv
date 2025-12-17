@@ -1,0 +1,475 @@
+id,task organization,bfy,ba bsa bli,fund,project number,task number,expenditure type,id,limit,budget authority,commitments,obligations,non labor expenditures,labor expenditures,total expenditures,funds used,funds available
+1,"100A - NDU COS, OFC OF THE CHIEF OF STAFF",2026,030000333PL1000000000000,9701002626D,NDU_CIVPAY_COS_26,0100D_0804798JCA_26,111.1-Labor-Regular,1.0,1200.0,0.0,0.0,0.0,0.0,33411.44,33411.44,33411.44,-33411.44
+2,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,2.0,1200.0,0.0,0.0,0.0,0.0,2615.04,2615.04,2615.04,-2615.04
+3,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,3.0,1200.0,0.0,0.0,0.0,0.0,15713.04,15713.04,15713.04,-15713.04
+4,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,4.0,1200.0,0.0,0.0,0.0,0.0,1496.48,1496.48,1496.48,-1496.48
+5,missing,missing,missing,missing,missing,missing,121.4-Medicare,5.0,1200.0,0.0,0.0,0.0,0.0,705.32,705.32,705.32,-705.32
+6,missing,missing,missing,missing,missing,missing,121.5-TSP,6.0,1200.0,0.0,0.0,0.0,0.0,2447.88,2447.88,2447.88,-2447.88
+7,missing,missing,missing,missing,missing,missing,121.6-FERS,7.0,1200.0,0.0,0.0,0.0,0.0,8375.05,8375.05,8375.05,-8375.05
+8,missing,missing,missing,missing,missing,missing,121.7-FEGLI,8.0,1200.0,0.0,0.0,0.0,0.0,68.08,68.08,68.08,-68.08
+9,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,9.0,1200.0,0.0,0.0,0.0,0.0,2948.37,2948.37,2948.37,-2948.37
+10,missing,missing,missing,missing,missing,missing,missing,10.0,1200.0,157466.1,0.0,0.0,0.0,0.0,0.0,0.0,157466.1
+11,missing,missing,missing,missing,NDU_CIVPAY_COS_26 Total,missing,missing,11.0,1200.0,157466.1,0.0,0.0,0.0,67780.7,67780.7,67780.7,89685.4
+12,missing,missing,missing,missing,NDU_CIVPAY_PROC_26,0100D_0804750JCA_26,111.1-Labor-Regular,12.0,1200.0,0.0,0.0,0.0,0.0,30406.7,30406.7,30406.7,-30406.7
+13,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,13.0,1200.0,0.0,0.0,0.0,0.0,-8708.0,-8708.0,-8708.0,8708.0
+14,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,14.0,1200.0,0.0,0.0,0.0,0.0,1244.0,1244.0,1244.0,-1244.0
+15,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,15.0,1200.0,0.0,0.0,0.0,0.0,-307.28,-307.28,-307.28,307.28
+16,missing,missing,missing,missing,missing,missing,121.3-FEHB,16.0,1200.0,0.0,0.0,0.0,0.0,1735.74,1735.74,1735.74,-1735.74
+17,missing,missing,missing,missing,missing,missing,121.4-Medicare,17.0,1200.0,0.0,0.0,0.0,0.0,290.93,290.93,290.93,-290.93
+18,missing,missing,missing,missing,missing,missing,121.5-TSP,18.0,1200.0,0.0,0.0,0.0,0.0,1043.49,1043.49,1043.49,-1043.49
+19,missing,missing,missing,missing,missing,missing,121.6-FERS,19.0,1200.0,0.0,0.0,0.0,0.0,3443.58,3443.58,3443.58,-3443.58
+20,missing,missing,missing,missing,missing,missing,121.7-FEGLI,20.0,1200.0,0.0,0.0,0.0,0.0,42.24,42.24,42.24,-42.24
+21,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,21.0,1200.0,0.0,0.0,0.0,0.0,1244.0,1244.0,1244.0,-1244.0
+22,missing,missing,missing,missing,missing,missing,missing,22.0,1200.0,167319.27,0.0,0.0,0.0,0.0,0.0,0.0,167319.27
+23,missing,missing,missing,missing,missing,0100D_0804798JCA_26,111.1-Labor-Regular,23.0,1200.0,0.0,0.0,0.0,0.0,18024.0,18024.0,18024.0,-18024.0
+24,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,24.0,1200.0,0.0,0.0,0.0,0.0,-5257.0,-5257.0,-5257.0,5257.0
+25,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,25.0,1200.0,0.0,0.0,0.0,0.0,751.0,751.0,751.0,-751.0
+26,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,26.0,1200.0,0.0,0.0,0.0,0.0,-204.37,-204.37,-204.37,204.37
+27,missing,missing,missing,missing,missing,missing,121.3-FEHB,27.0,1200.0,0.0,0.0,0.0,0.0,1430.59,1430.59,1430.59,-1430.59
+28,missing,missing,missing,missing,missing,missing,121.4-Medicare,28.0,1200.0,0.0,0.0,0.0,0.0,172.05,172.05,172.05,-172.05
+29,missing,missing,missing,missing,missing,missing,121.5-TSP,29.0,1200.0,0.0,0.0,0.0,0.0,619.58,619.58,619.58,-619.58
+30,missing,missing,missing,missing,missing,missing,121.6-FERS,30.0,1200.0,0.0,0.0,0.0,0.0,2044.6,2044.6,2044.6,-2044.6
+31,missing,missing,missing,missing,missing,missing,121.7-FEGLI,31.0,1200.0,0.0,0.0,0.0,0.0,25.44,25.44,25.44,-25.44
+32,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,32.0,1200.0,0.0,0.0,0.0,0.0,735.67,735.67,735.67,-735.67
+33,missing,missing,missing,missing,missing,missing,missing,33.0,1200.0,52488.7,0.0,0.0,0.0,0.0,0.0,0.0,52488.7
+34,missing,missing,missing,missing,NDU_CIVPAY_PROC_26 Total,missing,missing,34.0,1200.0,219807.97,0.0,0.0,0.0,48776.96,48776.96,48776.96,171031.01
+35,missing,missing,missing,missing,NDU_CIVPAY_RMD_26,0100D_0804750JCA_26,111.1-Labor-Regular,35.0,1200.0,0.0,0.0,0.0,0.0,150333.71,150333.71,150333.71,-150333.71
+36,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,36.0,1200.0,0.0,0.0,0.0,0.0,-42250.9,-42250.9,-42250.9,42250.9
+37,missing,missing,missing,missing,missing,missing,111.3-Sick Leave Taken,37.0,1200.0,0.0,0.0,0.0,0.0,768.47,768.47,768.47,-768.47
+38,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,38.0,1200.0,0.0,0.0,0.0,0.0,5357.84,5357.84,5357.84,-5357.84
+39,missing,missing,missing,missing,missing,missing,111.A-Comp Time Taken,39.0,1200.0,0.0,0.0,0.0,0.0,-527.02,-527.02,-527.02,527.02
+40,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,40.0,1200.0,0.0,0.0,0.0,0.0,-664.43,-664.43,-664.43,664.43
+41,missing,missing,missing,missing,missing,missing,121.3-FEHB,41.0,1200.0,0.0,0.0,0.0,0.0,3734.27,3734.27,3734.27,-3734.27
+42,missing,missing,missing,missing,missing,missing,121.4-Medicare,42.0,1200.0,0.0,0.0,0.0,0.0,1473.13,1473.13,1473.13,-1473.13
+43,missing,missing,missing,missing,missing,missing,121.5-TSP,43.0,1200.0,0.0,0.0,0.0,0.0,5172.92,5172.92,5172.92,-5172.92
+44,missing,missing,missing,missing,missing,missing,121.6-FERS,44.0,1200.0,0.0,0.0,0.0,0.0,17820.76,17820.76,17820.76,-17820.76
+45,missing,missing,missing,missing,missing,missing,121.7-FEGLI,45.0,1200.0,0.0,0.0,0.0,0.0,210.0,210.0,210.0,-210.0
+46,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,46.0,1200.0,0.0,0.0,0.0,0.0,6298.77,6298.77,6298.77,-6298.77
+47,missing,missing,missing,missing,missing,missing,missing,47.0,1200.0,534740.16,0.0,0.0,0.0,0.0,0.0,0.0,534740.16
+48,missing,missing,missing,missing,missing,0100D_0804798JCA_26,111.1-Labor-Regular,48.0,1200.0,0.0,0.0,0.0,0.0,66186.05,66186.05,66186.05,-66186.05
+49,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,49.0,1200.0,0.0,0.0,0.0,0.0,-13447.83,-13447.83,-13447.83,13447.83
+50,missing,missing,missing,missing,missing,missing,111.3-Sick Leave Taken,50.0,1200.0,0.0,0.0,0.0,0.0,317.47,317.47,317.47,-317.47
+51,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,51.0,1200.0,0.0,0.0,0.0,0.0,3240.38,3240.38,3240.38,-3240.38
+52,missing,missing,missing,missing,missing,missing,111.8-Other Leave Taken,52.0,1200.0,0.0,0.0,0.0,0.0,955.2,955.2,955.2,-955.2
+53,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,53.0,1200.0,0.0,0.0,0.0,0.0,-755.36,-755.36,-755.36,755.36
+54,missing,missing,missing,missing,missing,missing,121.3-FEHB,54.0,1200.0,0.0,0.0,0.0,0.0,4795.76,4795.76,4795.76,-4795.76
+55,missing,missing,missing,missing,missing,missing,121.4-Medicare,55.0,1200.0,0.0,0.0,0.0,0.0,705.45,705.45,705.45,-705.45
+56,missing,missing,missing,missing,missing,missing,121.5-TSP,56.0,1200.0,0.0,0.0,0.0,0.0,2064.59,2064.59,2064.59,-2064.59
+57,missing,missing,missing,missing,missing,missing,121.6-FERS,57.0,1200.0,0.0,0.0,0.0,0.0,9286.52,9286.52,9286.52,-9286.52
+58,missing,missing,missing,missing,missing,missing,121.7-FEGLI,58.0,1200.0,0.0,0.0,0.0,0.0,100.16,100.16,100.16,-100.16
+59,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,59.0,1200.0,0.0,0.0,0.0,0.0,3016.49,3016.49,3016.49,-3016.49
+60,missing,missing,missing,missing,missing,missing,missing,60.0,1200.0,314932.2,0.0,0.0,0.0,0.0,0.0,0.0,314932.2
+61,missing,missing,missing,missing,NDU_CIVPAY_RMD_26 Total,missing,missing,61.0,1200.0,849672.36,0.0,0.0,0.0,224192.4,224192.4,224192.4,625479.96
+62,missing,missing,missing,missing,NDU_COS_26,0100D_COS_FRONT_OFFICE_26,251.10 Management Prof Srvc,62.0,1200.0,0.0,104285.15,0.0,0.0,0.0,0.0,104285.15,-104285.15
+63,missing,missing,missing,missing,missing,missing,missing,63.0,1200.0,110000.0,0.0,0.0,0.0,0.0,0.0,0.0,110000.0
+64,missing,missing,missing,missing,NDU_COS_26 Total,missing,missing,64.0,1200.0,110000.0,104285.15,0.0,0.0,0.0,0.0,104285.15,5714.85
+65,missing,missing,missing,missing,NDU_NDUP_26,0100D_OPS_26,210.00 Trvl & Trans of Persons,65.0,1200.0,0.0,0.0,615.54,0.0,0.0,0.0,615.54,-615.54
+66,missing,missing,missing,missing,missing,missing,missing,66.0,1200.0,25000.0,0.0,0.0,0.0,0.0,0.0,0.0,25000.0
+67,missing,missing,missing,missing,NDU_NDUP_26 Total,missing,missing,67.0,1200.0,25000.0,0.0,615.54,0.0,0.0,0.0,615.54,24384.46
+68,missing,missing,missing,missing,NDU_ORF_26,0100D_ORF_26,missing,68.0,1200.0,25000.01,0.0,0.0,0.0,0.0,0.0,0.0,25000.01
+69,missing,missing,missing,missing,NDU_ORF_26 Total,missing,missing,69.0,1200.0,25000.01,0.0,0.0,0.0,0.0,0.0,0.0,25000.01
+70,missing,missing,missing,missing,NDU_PROC_26,0100D_OPS_26,251.10 Management Prof Srvc,70.0,1200.0,0.0,225000.0,0.0,0.0,0.0,0.0,225000.0,-225000.0
+71,missing,missing,missing,missing,missing,missing,missing,71.0,1200.0,230000.0,0.0,0.0,0.0,0.0,0.0,0.0,230000.0
+72,missing,missing,missing,missing,NDU_PROC_26 Total,missing,missing,72.0,1200.0,230000.0,225000.0,0.0,0.0,0.0,0.0,225000.0,5000.0
+73,missing,missing,missing,missing,NDU_RMD_26,0100D_OPS_26,251.10 Management Prof Srvc,73.0,1200.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+74,missing,missing,missing,missing,missing,missing,253.2A IA DFAS,74.0,1200.0,0.0,0.0,300000.0,0.0,0.0,0.0,300000.0,-300000.0
+75,missing,missing,missing,missing,missing,missing,missing,75.0,1200.0,560000.0,0.0,0.0,0.0,0.0,0.0,0.0,560000.0
+76,missing,missing,missing,missing,NDU_RMD_26 Total,missing,missing,76.0,1200.0,560000.0,0.0,300000.0,0.0,0.0,0.0,300000.0,260000.0
+77,missing,2026 Total,missing,missing,missing,missing,missing,77.0,1200.0,2176946.44,329285.15,300615.54,0.0,340750.06,340750.06,970650.75,1206295.69
+78,"400A- NDU CSO, FACILITIES AND ENGINEERING DIRECTORATE",2026,030000333PL1000000000000,9701002626D,NDU_CIVPAY_CSO_26,0100D_0804798JCA_26,111.1-Labor-Regular,78.0,1200.0,0.0,0.0,0.0,0.0,65970.99,65970.99,65970.99,-65970.99
+79,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,79.0,1200.0,0.0,0.0,0.0,0.0,1544.56,1544.56,1544.56,-1544.56
+80,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,80.0,1200.0,0.0,0.0,0.0,0.0,5148.33,5148.33,5148.33,-5148.33
+81,missing,missing,missing,missing,missing,missing,111.8-Other Leave Taken,81.0,1200.0,0.0,0.0,0.0,0.0,81.08,81.08,81.08,-81.08
+82,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,82.0,1200.0,0.0,0.0,0.0,0.0,24227.12,24227.12,24227.12,-24227.12
+83,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,83.0,1200.0,0.0,0.0,0.0,0.0,-7033.68,-7033.68,-7033.68,7033.68
+84,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,84.0,1200.0,0.0,0.0,0.0,0.0,781.52,781.52,781.52,-781.52
+85,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,85.0,1200.0,0.0,0.0,0.0,0.0,-267.13,-267.13,-267.13,267.13
+86,missing,missing,missing,missing,missing,missing,121.3-FEHB,86.0,1200.0,0.0,0.0,0.0,0.0,3102.32,3102.32,3102.32,-3102.32
+87,missing,missing,missing,missing,missing,missing,121.4-Medicare,87.0,1200.0,0.0,0.0,0.0,0.0,1050.05,1050.05,1050.05,-1050.05
+88,missing,missing,missing,missing,missing,missing,121.5-TSP,88.0,1200.0,0.0,0.0,0.0,0.0,3279.42,3279.42,3279.42,-3279.42
+89,missing,missing,missing,missing,missing,missing,121.6-FERS,89.0,1200.0,0.0,0.0,0.0,0.0,12677.43,12677.43,12677.43,-12677.43
+90,missing,missing,missing,missing,missing,missing,121.7-FEGLI,90.0,1200.0,0.0,0.0,0.0,0.0,155.12,155.12,155.12,-155.12
+91,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,91.0,1200.0,0.0,0.0,0.0,0.0,3342.85,3342.85,3342.85,-3342.85
+92,missing,missing,missing,missing,missing,missing,missing,92.0,1200.0,209954.8,0.0,0.0,0.0,0.0,0.0,0.0,209954.8
+93,missing,missing,missing,missing,NDU_CIVPAY_CSO_26 Total,missing,missing,93.0,1200.0,209954.8,0.0,0.0,0.0,114059.98,114059.98,114059.98,95894.82
+94,missing,missing,missing,missing,NDU_CIVPAY_FED_26,0100D_0804750JCA_26,111.1-Labor-Regular,94.0,1200.0,0.0,0.0,0.0,0.0,45569.01,45569.01,45569.01,-45569.01
+95,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,95.0,1200.0,0.0,0.0,0.0,0.0,-7334.3,-7334.3,-7334.3,7334.3
+96,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,96.0,1200.0,0.0,0.0,0.0,0.0,554.67,554.67,554.67,-554.67
+97,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,97.0,1200.0,0.0,0.0,0.0,0.0,-1329.97,-1329.97,-1329.97,1329.97
+98,missing,missing,missing,missing,missing,missing,121.3-FEHB,98.0,1200.0,0.0,0.0,0.0,0.0,7524.16,7524.16,7524.16,-7524.16
+99,missing,missing,missing,missing,missing,missing,121.4-Medicare,99.0,1200.0,0.0,0.0,0.0,0.0,628.35,628.35,628.35,-628.35
+100,missing,missing,missing,missing,missing,missing,121.5-TSP,100.0,1200.0,0.0,0.0,0.0,0.0,1926.81,1926.81,1926.81,-1926.81
+101,missing,missing,missing,missing,missing,missing,121.6-FERS,101.0,1200.0,0.0,0.0,0.0,0.0,8236.73,8236.73,8236.73,-8236.73
+102,missing,missing,missing,missing,missing,missing,121.7-FEGLI,102.0,1200.0,0.0,0.0,0.0,0.0,96.16,96.16,96.16,-96.16
+103,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,103.0,1200.0,0.0,0.0,0.0,0.0,2686.82,2686.82,2686.82,-2686.82
+104,missing,missing,missing,missing,missing,missing,missing,104.0,1200.0,524887.0,0.0,0.0,0.0,0.0,0.0,0.0,524887.0
+105,missing,missing,missing,missing,NDU_CIVPAY_FED_26 Total,missing,missing,105.0,1200.0,524887.0,0.0,0.0,0.0,58558.44,58558.44,58558.44,466328.56
+106,missing,missing,missing,missing,NDU_CIVPAY_HRD_26,0100D_0804750JCA_26,111.1-Labor-Regular,106.0,1200.0,0.0,0.0,0.0,0.0,138699.14,138699.14,138699.14,-138699.14
+107,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,107.0,1200.0,0.0,0.0,0.0,0.0,822.89,822.89,822.89,-822.89
+108,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,108.0,1200.0,0.0,0.0,0.0,0.0,10771.94,10771.94,10771.94,-10771.94
+109,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,109.0,1200.0,0.0,0.0,0.0,0.0,-1780.88,-1780.88,-1780.88,1780.88
+110,missing,missing,missing,missing,missing,missing,121.3-FEHB,110.0,1200.0,0.0,0.0,0.0,0.0,14727.73,14727.73,14727.73,-14727.73
+111,missing,missing,missing,missing,missing,missing,121.4-Medicare,111.0,1200.0,0.0,0.0,0.0,0.0,1995.99,1995.99,1995.99,-1995.99
+112,missing,missing,missing,missing,missing,missing,121.5-TSP,112.0,1200.0,0.0,0.0,0.0,0.0,6261.53,6261.53,6261.53,-6261.53
+113,missing,missing,missing,missing,missing,missing,121.6-FERS,113.0,1200.0,0.0,0.0,0.0,0.0,25655.9,25655.9,25655.9,-25655.9
+114,missing,missing,missing,missing,missing,missing,121.7-FEGLI,114.0,1200.0,0.0,0.0,0.0,0.0,265.52,265.52,265.52,-265.52
+115,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,115.0,1200.0,0.0,0.0,0.0,0.0,8534.53,8534.53,8534.53,-8534.53
+116,missing,missing,missing,missing,missing,missing,missing,116.0,1200.0,577375.72,0.0,0.0,0.0,0.0,0.0,0.0,577375.72
+117,missing,missing,missing,missing,missing,0100D_0804798JCA_26,111.1-Labor-Regular,117.0,1200.0,0.0,0.0,0.0,0.0,32707.1,32707.1,32707.1,-32707.1
+118,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,118.0,1200.0,0.0,0.0,0.0,0.0,374.12,374.12,374.12,-374.12
+119,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,119.0,1200.0,0.0,0.0,0.0,0.0,2170.08,2170.08,2170.08,-2170.08
+120,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,120.0,1200.0,0.0,0.0,0.0,0.0,-303.61,-303.61,-303.61,303.61
+121,missing,missing,missing,missing,missing,missing,121.3-FEHB,121.0,1200.0,0.0,0.0,0.0,0.0,2749.91,2749.91,2749.91,-2749.91
+122,missing,missing,missing,missing,missing,missing,121.4-Medicare,122.0,1200.0,0.0,0.0,0.0,0.0,323.86,323.86,323.86,-323.86
+123,missing,missing,missing,missing,missing,missing,121.5-TSP,123.0,1200.0,0.0,0.0,0.0,0.0,462.4,462.4,462.4,-462.4
+124,missing,missing,missing,missing,missing,missing,121.6-FERS,124.0,1200.0,0.0,0.0,0.0,0.0,4254.19,4254.19,4254.19,-4254.19
+125,missing,missing,missing,missing,missing,missing,121.7-FEGLI,125.0,1200.0,0.0,0.0,0.0,0.0,47.52,47.52,47.52,-47.52
+126,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,126.0,1200.0,0.0,0.0,0.0,0.0,1305.67,1305.67,1305.67,-1305.67
+127,missing,missing,missing,missing,missing,missing,missing,127.0,1200.0,104977.4,0.0,0.0,0.0,0.0,0.0,0.0,104977.4
+128,missing,missing,missing,missing,NDU_CIVPAY_HRD_26 Total,missing,missing,128.0,1200.0,682353.12,0.0,0.0,0.0,250045.53,250045.53,250045.53,432307.59
+129,missing,missing,missing,missing,NDU_CIVPAY_ITD_26,0100D_0804750JCA_26,111.1-Labor-Regular,129.0,1200.0,0.0,0.0,0.0,0.0,297441.33,297441.33,297441.33,-297441.33
+130,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,130.0,1200.0,0.0,0.0,0.0,0.0,204.92,204.92,204.92,-204.92
+131,missing,missing,missing,missing,missing,missing,111.3-Sick Leave Taken,131.0,1200.0,0.0,0.0,0.0,0.0,1914.8,1914.8,1914.8,-1914.8
+132,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,132.0,1200.0,0.0,0.0,0.0,0.0,21252.83,21252.83,21252.83,-21252.83
+133,missing,missing,missing,missing,missing,missing,111.8-Other Leave Taken,133.0,1200.0,0.0,0.0,0.0,0.0,600.88,600.88,600.88,-600.88
+134,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,134.0,1200.0,0.0,0.0,0.0,0.0,6594.48,6594.48,6594.48,-6594.48
+135,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,135.0,1200.0,0.0,0.0,0.0,0.0,732.72,732.72,732.72,-732.72
+136,missing,missing,missing,missing,missing,missing,115.1-Overtime Worked,136.0,1200.0,0.0,0.0,0.0,0.0,901.32,901.32,901.32,-901.32
+137,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,137.0,1200.0,0.0,0.0,0.0,0.0,-4121.83,-4121.83,-4121.83,4121.83
+138,missing,missing,missing,missing,missing,missing,121.3-FEHB,138.0,1200.0,0.0,0.0,0.0,0.0,31935.35,31935.35,31935.35,-31935.35
+139,missing,missing,missing,missing,missing,missing,121.4-Medicare,139.0,1200.0,0.0,0.0,0.0,0.0,4177.88,4177.88,4177.88,-4177.88
+140,missing,missing,missing,missing,missing,missing,121.5-TSP,140.0,1200.0,0.0,0.0,0.0,0.0,13880.67,13880.67,13880.67,-13880.67
+141,missing,missing,missing,missing,missing,missing,121.6-FERS,141.0,1200.0,0.0,0.0,0.0,0.0,51635.16,51635.16,51635.16,-51635.16
+142,missing,missing,missing,missing,missing,missing,121.7-FEGLI,142.0,1200.0,0.0,0.0,0.0,0.0,579.6,579.6,579.6,-579.6
+143,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,143.0,1200.0,0.0,0.0,0.0,0.0,17864.02,17864.02,17864.02,-17864.02
+144,missing,missing,missing,missing,missing,missing,121.N-Retention Allowances,144.0,1200.0,0.0,0.0,0.0,0.0,6156.56,6156.56,6156.56,-6156.56
+145,missing,missing,missing,missing,missing,missing,missing,145.0,1200.0,1049774.0,0.0,0.0,0.0,0.0,0.0,0.0,1049774.0
+146,missing,missing,missing,missing,missing,0100D_0804798JCA_26,111.1-Labor-Regular,146.0,1200.0,0.0,0.0,0.0,0.0,3731.76,3731.76,3731.76,-3731.76
+147,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,147.0,1200.0,0.0,0.0,0.0,0.0,414.64,414.64,414.64,-414.64
+148,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,148.0,1200.0,0.0,0.0,0.0,0.0,9085.44,9085.44,9085.44,-9085.44
+149,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,149.0,1200.0,0.0,0.0,0.0,0.0,757.12,757.12,757.12,-757.12
+150,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,150.0,1200.0,0.0,0.0,0.0,0.0,-274.14,-274.14,-274.14,274.14
+151,missing,missing,missing,missing,missing,missing,121.3-FEHB,151.0,1200.0,0.0,0.0,0.0,0.0,2288.37,2288.37,2288.37,-2288.37
+152,missing,missing,missing,missing,missing,missing,121.4-Medicare,152.0,1200.0,0.0,0.0,0.0,0.0,350.95,350.95,350.95,-350.95
+153,missing,missing,missing,missing,missing,missing,121.5-TSP,153.0,1200.0,0.0,0.0,0.0,0.0,1125.61,1125.61,1125.61,-1125.61
+154,missing,missing,missing,missing,missing,missing,121.6-FERS,154.0,1200.0,0.0,0.0,0.0,0.0,4000.57,4000.57,4000.57,-4000.57
+155,missing,missing,missing,missing,missing,missing,121.7-FEGLI,155.0,1200.0,0.0,0.0,0.0,0.0,49.28,49.28,49.28,-49.28
+156,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,156.0,1200.0,0.0,0.0,0.0,0.0,1394.57,1394.57,1394.57,-1394.57
+157,missing,missing,missing,missing,missing,missing,missing,157.0,1200.0,104977.4,0.0,0.0,0.0,0.0,0.0,0.0,104977.4
+158,missing,missing,missing,missing,NDU_CIVPAY_ITD_26 Total,missing,missing,158.0,1200.0,1154751.4,0.0,0.0,0.0,474674.86,474674.86,474674.86,680076.54
+159,missing,missing,missing,missing,NDU_CIVPAY_OPS_26,0100D_0804750JCA_26,111.1-Labor-Regular,159.0,1200.0,0.0,0.0,0.0,0.0,207881.1,207881.1,207881.1,-207881.1
+160,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,160.0,1200.0,0.0,0.0,0.0,0.0,-1414.04,-1414.04,-1414.04,1414.04
+161,missing,missing,missing,missing,missing,missing,111.5-Admin Leave Taken,161.0,1200.0,0.0,0.0,0.0,0.0,69.33,69.33,69.33,-69.33
+162,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,162.0,1200.0,0.0,0.0,0.0,0.0,11456.28,11456.28,11456.28,-11456.28
+163,missing,missing,missing,missing,missing,missing,115.2-Holiday Premium,163.0,1200.0,0.0,0.0,0.0,0.0,-505.36,-505.36,-505.36,505.36
+164,missing,missing,missing,missing,missing,missing,115.9-Holiday Premium(H),164.0,1200.0,0.0,0.0,0.0,0.0,-505.36,-505.36,-505.36,505.36
+165,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,165.0,1200.0,0.0,0.0,0.0,0.0,-2533.39,-2533.39,-2533.39,2533.39
+166,missing,missing,missing,missing,missing,missing,121.3-FEHB,166.0,1200.0,0.0,0.0,0.0,0.0,19441.04,19441.04,19441.04,-19441.04
+167,missing,missing,missing,missing,missing,missing,121.4-Medicare,167.0,1200.0,0.0,0.0,0.0,0.0,2849.18,2849.18,2849.18,-2849.18
+168,missing,missing,missing,missing,missing,missing,121.5-TSP,168.0,1200.0,0.0,0.0,0.0,0.0,7869.79,7869.79,7869.79,-7869.79
+169,missing,missing,missing,missing,missing,missing,121.6-FERS,169.0,1200.0,0.0,0.0,0.0,0.0,35908.76,35908.76,35908.76,-35908.76
+170,missing,missing,missing,missing,missing,missing,121.7-FEGLI,170.0,1200.0,0.0,0.0,0.0,0.0,399.28,399.28,399.28,-399.28
+171,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,171.0,1200.0,0.0,0.0,0.0,0.0,12182.61,12182.61,12182.61,-12182.61
+172,missing,missing,missing,missing,missing,missing,missing,172.0,1200.0,892307.9,0.0,0.0,0.0,0.0,0.0,0.0,892307.9
+173,missing,missing,missing,missing,missing,0100D_0804798JCA_26,111.1-Labor-Regular,173.0,1200.0,0.0,0.0,0.0,0.0,47406.94,47406.94,47406.94,-47406.94
+174,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,174.0,1200.0,0.0,0.0,0.0,0.0,3091.32,3091.32,3091.32,-3091.32
+175,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,175.0,1200.0,0.0,0.0,0.0,0.0,-478.42,-478.42,-478.42,478.42
+176,missing,missing,missing,missing,missing,missing,121.3-FEHB,176.0,1200.0,0.0,0.0,0.0,0.0,3993.77,3993.77,3993.77,-3993.77
+177,missing,missing,missing,missing,missing,missing,121.4-Medicare,177.0,1200.0,0.0,0.0,0.0,0.0,714.55,714.55,714.55,-714.55
+178,missing,missing,missing,missing,missing,missing,121.5-TSP,178.0,1200.0,0.0,0.0,0.0,0.0,2525.57,2525.57,2525.57,-2525.57
+179,missing,missing,missing,missing,missing,missing,121.6-FERS,179.0,1200.0,0.0,0.0,0.0,0.0,9294.12,9294.12,9294.12,-9294.12
+180,missing,missing,missing,missing,missing,missing,121.7-FEGLI,180.0,1200.0,0.0,0.0,0.0,0.0,60.0,60.0,60.0,-60.0
+181,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,181.0,1200.0,0.0,0.0,0.0,0.0,3003.94,3003.94,3003.94,-3003.94
+182,missing,missing,missing,missing,missing,missing,missing,182.0,1200.0,157466.1,0.0,0.0,0.0,0.0,0.0,0.0,157466.1
+183,missing,missing,missing,missing,NDU_CIVPAY_OPS_26 Total,missing,missing,183.0,1200.0,1049774.0,0.0,0.0,0.0,362711.01,362711.01,362711.01,687062.99
+184,missing,missing,missing,missing,NDU_CIVPAY_SEC_26,0100D_0804750JCA_26,111.1-Labor-Regular,184.0,1200.0,0.0,0.0,0.0,0.0,54603.22,54603.22,54603.22,-54603.22
+185,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,185.0,1200.0,0.0,0.0,0.0,0.0,-3965.04,-3965.04,-3965.04,3965.04
+186,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,186.0,1200.0,0.0,0.0,0.0,0.0,3452.96,3452.96,3452.96,-3452.96
+187,missing,missing,missing,missing,missing,missing,111.8-Other Leave Taken,187.0,1200.0,0.0,0.0,0.0,0.0,307.5,307.5,307.5,-307.5
+188,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,188.0,1200.0,0.0,0.0,0.0,0.0,-1137.27,-1137.27,-1137.27,1137.27
+189,missing,missing,missing,missing,missing,missing,121.3-FEHB,189.0,1200.0,0.0,0.0,0.0,0.0,8589.74,8589.74,8589.74,-8589.74
+190,missing,missing,missing,missing,missing,missing,121.4-Medicare,190.0,1200.0,0.0,0.0,0.0,0.0,712.73,712.73,712.73,-712.73
+191,missing,missing,missing,missing,missing,missing,121.5-TSP,191.0,1200.0,0.0,0.0,0.0,0.0,2667.42,2667.42,2667.42,-2667.42
+192,missing,missing,missing,missing,missing,missing,121.6-FERS,192.0,1200.0,0.0,0.0,0.0,0.0,9344.48,9344.48,9344.48,-9344.48
+193,missing,missing,missing,missing,missing,missing,121.7-FEGLI,193.0,1200.0,0.0,0.0,0.0,0.0,110.24,110.24,110.24,-110.24
+194,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,194.0,1200.0,0.0,0.0,0.0,0.0,3047.56,3047.56,3047.56,-3047.56
+195,missing,missing,missing,missing,missing,missing,missing,195.0,1200.0,314932.2,0.0,0.0,0.0,0.0,0.0,0.0,314932.2
+196,missing,missing,missing,missing,NDU_CIVPAY_SEC_26 Total,missing,missing,196.0,1200.0,314932.2,0.0,0.0,0.0,77733.54,77733.54,77733.54,237198.66
+197,missing,missing,missing,missing,NDU_CSO_26,0100D_CSO_FRONT OFFICE_26,missing,197.0,1200.0,10000.0,0.0,0.0,0.0,0.0,0.0,0.0,10000.0
+198,missing,missing,missing,missing,NDU_CSO_26 Total,missing,missing,198.0,1200.0,10000.0,0.0,0.0,0.0,0.0,0.0,0.0,10000.0
+199,missing,missing,missing,missing,NDU_FED_26,0100D_FED_NORTH_26,254.24 Janitorial Service,199.0,1200.0,0.0,0.0,23052.0,0.0,0.0,0.0,23052.0,-23052.0
+200,missing,missing,missing,missing,missing,missing,missing,200.0,1200.0,26000.0,0.0,0.0,0.0,0.0,0.0,0.0,26000.0
+201,missing,missing,missing,missing,missing,0100D_FED_PLUSUP_26,254.20 O&M Buildings,201.0,1200.0,0.0,54654.27,0.0,0.0,0.0,0.0,54654.27,-54654.27
+202,missing,missing,missing,missing,missing,0100D_FED_SOUTH_26,254.22 O&M Grounds,202.0,1200.0,0.0,17076.6,0.0,0.0,0.0,0.0,17076.6,-17076.6
+203,missing,missing,missing,missing,missing,missing,260.A0 Materials & Parts,203.0,1200.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+204,missing,missing,missing,missing,missing,0100D_OPS_26,missing,204.0,1200.0,8474000.0,0.0,0.0,0.0,0.0,0.0,0.0,8474000.0
+205,missing,missing,missing,missing,NDU_FED_26 Total,missing,missing,205.0,1200.0,8500000.0,71730.87,23052.0,0.0,0.0,0.0,94782.87,8405217.13
+206,missing,missing,missing,missing,NDU_HRD_26,0100D_OPS_26,missing,206.0,1200.0,150000.0,0.0,0.0,0.0,0.0,0.0,0.0,150000.0
+207,missing,missing,missing,missing,NDU_HRD_26 Total,missing,missing,207.0,1200.0,150000.0,0.0,0.0,0.0,0.0,0.0,0.0,150000.0
+208,missing,missing,missing,missing,NDU_ITD_26,0100D_OPS_26,233.11 Comm Circuits & Eqpmnt,208.0,1200.0,0.0,130000.0,0.0,0.0,0.0,0.0,130000.0,-130000.0
+209,missing,missing,missing,missing,missing,missing,233.20 IT Services,209.0,1200.0,0.0,602564.0,0.0,0.0,0.0,0.0,602564.0,-602564.0
+210,missing,missing,missing,missing,missing,missing,251.30 Engineering & Tech Srvc,210.0,1200.0,0.0,0.0,1029013.0,0.0,0.0,0.0,1029013.0,-1029013.0
+211,missing,missing,missing,missing,missing,missing,257.31 IT Contract Sppt Srvcs,211.0,1200.0,0.0,0.0,1851509.04,0.0,0.0,0.0,1851509.04,-1851509.04
+212,missing,missing,missing,missing,missing,missing,310.72 IT Software,212.0,1200.0,0.0,196737.57,0.0,33278.22,0.0,33278.22,230015.79,-230015.79
+213,missing,missing,missing,missing,missing,missing,missing,213.0,1200.0,7000000.0,0.0,0.0,0.0,0.0,0.0,0.0,7000000.0
+214,missing,missing,missing,missing,NDU_ITD_26 Total,missing,missing,214.0,1200.0,7000000.0,929301.57,2880522.04,33278.22,0.0,33278.22,3843101.83,3156898.17
+215,missing,missing,missing,missing,NDU_OPS_26,0100D_LOGISTICS_26,220.10 Common Carrier Freight,215.0,1200.0,0.0,0.0,730.42,0.0,0.0,0.0,730.42,-730.42
+216,missing,missing,missing,missing,missing,missing,260.10 Office Supplies,216.0,1200.0,0.0,4504.85,0.0,0.0,0.0,0.0,4504.85,-4504.85
+217,missing,missing,missing,missing,missing,missing,missing,217.0,1200.0,130000.0,0.0,0.0,0.0,0.0,0.0,0.0,130000.0
+218,missing,missing,missing,missing,missing,0100D_TRANSPORTATION_26,210.41 GSA Vehicle Lease,218.0,1200.0,0.0,0.0,10538.17,0.0,0.0,0.0,10538.17,-10538.17
+219,missing,missing,missing,missing,NDU_OPS_26 Total,missing,missing,219.0,1200.0,130000.0,4504.85,11268.59,0.0,0.0,0.0,15773.44,114226.56
+220,missing,missing,missing,missing,NDU_SEC_26,0100D_OPS_26,253.20 Interagency Agreements,220.0,1200.0,0.0,145000.0,0.0,0.0,0.0,0.0,145000.0,-145000.0
+221,missing,missing,missing,missing,missing,missing,missing,221.0,1200.0,500000.0,0.0,0.0,0.0,0.0,0.0,0.0,500000.0
+222,missing,missing,missing,missing,NDU_SEC_26 Total,missing,missing,222.0,1200.0,500000.0,145000.0,0.0,0.0,0.0,0.0,145000.0,355000.0
+223,missing,2026 Total,missing,missing,missing,missing,missing,223.0,1200.0,20226652.52,1150537.29,2914842.63,33278.22,1337783.36,1371061.58,5436441.5,14790211.02
+224,NDU AA - Academic Affairs,2026,030000333PL1000000000000,9701002626D,NDU_AA_26,0100D_OPS_26,310.72 IT Software,224.0,1200.0,0.0,15444.0,0.0,0.0,0.0,0.0,15444.0,-15444.0
+225,missing,missing,missing,missing,missing,missing,missing,225.0,1200.0,30000.0,0.0,0.0,0.0,0.0,0.0,0.0,30000.0
+226,missing,missing,missing,missing,missing,0100D_PRO_DEV_26,210.00 Trvl & Trans of Persons,226.0,1200.0,0.0,0.0,5427.45,0.0,0.0,0.0,5427.45,-5427.45
+227,missing,missing,missing,missing,NDU_AA_26 Total,missing,missing,227.0,1200.0,30000.0,15444.0,5427.45,0.0,0.0,0.0,20871.45,9128.55
+228,missing,missing,missing,missing,NDU_CIVPAY_AA_26,0100D_0804750JCA_26,111.1-Labor-Regular,228.0,1200.0,0.0,0.0,0.0,0.0,91097.26,91097.26,91097.26,-91097.26
+229,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,229.0,1200.0,0.0,0.0,0.0,0.0,-23741.76,-23741.76,-23741.76,23741.76
+230,missing,missing,missing,missing,missing,missing,111.3-Sick Leave Taken,230.0,1200.0,0.0,0.0,0.0,0.0,987.7,987.7,987.7,-987.7
+231,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,231.0,1200.0,0.0,0.0,0.0,0.0,3874.8,3874.8,3874.8,-3874.8
+232,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,232.0,1200.0,0.0,0.0,0.0,0.0,111442.5,111442.5,111442.5,-111442.5
+233,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,233.0,1200.0,0.0,0.0,0.0,0.0,-18642.52,-18642.52,-18642.52,18642.52
+234,missing,missing,missing,missing,missing,missing,113.5-Admin Leave Taken,234.0,1200.0,0.0,0.0,0.0,0.0,-274.84,-274.84,-274.84,274.84
+235,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,235.0,1200.0,0.0,0.0,0.0,0.0,3829.27,3829.27,3829.27,-3829.27
+236,missing,missing,missing,missing,missing,missing,113.8-Other Leave Taken,236.0,1200.0,0.0,0.0,0.0,0.0,671.68,671.68,671.68,-671.68
+237,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,237.0,1200.0,0.0,0.0,0.0,0.0,-804.05,-804.05,-804.05,804.05
+238,missing,missing,missing,missing,missing,missing,121.3-FEHB,238.0,1200.0,0.0,0.0,0.0,0.0,3961.17,3961.17,3961.17,-3961.17
+239,missing,missing,missing,missing,missing,missing,121.4-Medicare,239.0,1200.0,0.0,0.0,0.0,0.0,1946.53,1946.53,1946.53,-1946.53
+240,missing,missing,missing,missing,missing,missing,121.5-TSP,240.0,1200.0,0.0,0.0,0.0,0.0,6617.59,6617.59,6617.59,-6617.59
+241,missing,missing,missing,missing,missing,missing,121.6-FERS,241.0,1200.0,0.0,0.0,0.0,0.0,23970.14,23970.14,23970.14,-23970.14
+242,missing,missing,missing,missing,missing,missing,121.7-FEGLI,242.0,1200.0,0.0,0.0,0.0,0.0,273.6,273.6,273.6,-273.6
+243,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,243.0,1200.0,0.0,0.0,0.0,0.0,6250.22,6250.22,6250.22,-6250.22
+244,missing,missing,missing,missing,missing,missing,missing,244.0,1200.0,682353.1,0.0,0.0,0.0,0.0,0.0,0.0,682353.1
+245,missing,missing,missing,missing,NDU_CIVPAY_AA_26 Total,missing,missing,245.0,1200.0,682353.1,0.0,0.0,0.0,211459.29,211459.29,211459.29,470893.81
+246,missing,missing,missing,missing,NDU_CIVPAY_HF_26,0100D_0804750JCA_26,111.1-Labor-Regular,246.0,1200.0,0.0,0.0,0.0,0.0,61327.92,61327.92,61327.92,-61327.92
+247,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,247.0,1200.0,0.0,0.0,0.0,0.0,-14398.12,-14398.12,-14398.12,14398.12
+248,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,248.0,1200.0,0.0,0.0,0.0,0.0,2247.84,2247.84,2247.84,-2247.84
+249,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,249.0,1200.0,0.0,0.0,0.0,0.0,-698.79,-698.79,-698.79,698.79
+250,missing,missing,missing,missing,missing,missing,121.3-FEHB,250.0,1200.0,0.0,0.0,0.0,0.0,3427.25,3427.25,3427.25,-3427.25
+251,missing,missing,missing,missing,missing,missing,121.4-Medicare,251.0,1200.0,0.0,0.0,0.0,0.0,637.69,637.69,637.69,-637.69
+252,missing,missing,missing,missing,missing,missing,121.5-TSP,252.0,1200.0,0.0,0.0,0.0,0.0,2292.57,2292.57,2292.57,-2292.57
+253,missing,missing,missing,missing,missing,missing,121.6-FERS,253.0,1200.0,0.0,0.0,0.0,0.0,7926.38,7926.38,7926.38,-7926.38
+254,missing,missing,missing,missing,missing,missing,121.7-FEGLI,254.0,1200.0,0.0,0.0,0.0,0.0,85.28,85.28,85.28,-85.28
+255,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,255.0,1200.0,0.0,0.0,0.0,0.0,2726.6,2726.6,2726.6,-2726.6
+256,missing,missing,missing,missing,missing,missing,missing,256.0,1200.0,209954.8,0.0,0.0,0.0,0.0,0.0,0.0,209954.8
+257,missing,missing,missing,missing,NDU_CIVPAY_HF_26 Total,missing,missing,257.0,1200.0,209954.8,0.0,0.0,0.0,65574.62,65574.62,65574.62,144380.18
+258,missing,missing,missing,missing,NDU_CIVPAY_LIB_26,0100D_0804750JCA_26,111.1-Labor-Regular,258.0,1200.0,0.0,0.0,0.0,0.0,182710.27,182710.27,182710.27,-182710.27
+259,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,259.0,1200.0,0.0,0.0,0.0,0.0,2888.48,2888.48,2888.48,-2888.48
+260,missing,missing,missing,missing,missing,missing,111.3-Sick Leave Taken,260.0,1200.0,0.0,0.0,0.0,0.0,1107.05,1107.05,1107.05,-1107.05
+261,missing,missing,missing,missing,missing,missing,111.5-Admin Leave Taken,261.0,1200.0,0.0,0.0,0.0,0.0,88.76,88.76,88.76,-88.76
+262,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,262.0,1200.0,0.0,0.0,0.0,0.0,15338.16,15338.16,15338.16,-15338.16
+263,missing,missing,missing,missing,missing,missing,111.8-Other Leave Taken,263.0,1200.0,0.0,0.0,0.0,0.0,73.18,73.18,73.18,-73.18
+264,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,264.0,1200.0,0.0,0.0,0.0,0.0,124331.43,124331.43,124331.43,-124331.43
+265,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,265.0,1200.0,0.0,0.0,0.0,0.0,10521.6,10521.6,10521.6,-10521.6
+266,missing,missing,missing,missing,missing,missing,113.8-Other Leave Taken,266.0,1200.0,0.0,0.0,0.0,0.0,451.84,451.84,451.84,-451.84
+267,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,267.0,1200.0,0.0,0.0,0.0,0.0,-3987.16,-3987.16,-3987.16,3987.16
+268,missing,missing,missing,missing,missing,missing,121.2-CSRS,268.0,1200.0,0.0,0.0,0.0,0.0,1328.72,1328.72,1328.72,-1328.72
+269,missing,missing,missing,missing,missing,missing,121.3-FEHB,269.0,1200.0,0.0,0.0,0.0,0.0,25739.15,25739.15,25739.15,-25739.15
+270,missing,missing,missing,missing,missing,missing,121.4-Medicare,270.0,1200.0,0.0,0.0,0.0,0.0,3730.47,3730.47,3730.47,-3730.47
+271,missing,missing,missing,missing,missing,missing,121.5-TSP,271.0,1200.0,0.0,0.0,0.0,0.0,12184.66,12184.66,12184.66,-12184.66
+272,missing,missing,missing,missing,missing,missing,121.6-FERS,272.0,1200.0,0.0,0.0,0.0,0.0,42868.52,42868.52,42868.52,-42868.52
+273,missing,missing,missing,missing,missing,missing,121.7-FEGLI,273.0,1200.0,0.0,0.0,0.0,0.0,514.4,514.4,514.4,-514.4
+274,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,274.0,1200.0,0.0,0.0,0.0,0.0,14787.18,14787.18,14787.18,-14787.18
+275,missing,missing,missing,missing,missing,missing,missing,275.0,1200.0,1574661.01,0.0,0.0,0.0,0.0,0.0,0.0,1574661.01
+276,missing,missing,missing,missing,NDU_CIVPAY_LIB_26 Total,missing,missing,276.0,1200.0,1574661.01,0.0,0.0,0.0,434676.71,434676.71,434676.71,1139984.3
+277,missing,missing,missing,missing,NDU_CIVPAY_NDWC_26,0100D_0804750JCA_26,111.1-Labor-Regular,277.0,1200.0,0.0,0.0,0.0,0.0,26739.68,26739.68,26739.68,-26739.68
+278,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,278.0,1200.0,0.0,0.0,0.0,0.0,1215.44,1215.44,1215.44,-1215.44
+279,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,279.0,1200.0,0.0,0.0,0.0,0.0,82184.94,82184.94,82184.94,-82184.94
+280,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,280.0,1200.0,0.0,0.0,0.0,0.0,-14439.36,-14439.36,-14439.36,14439.36
+281,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,281.0,1200.0,0.0,0.0,0.0,0.0,1780.24,1780.24,1780.24,-1780.24
+282,missing,missing,missing,missing,missing,missing,113.A-Comp Time Taken,282.0,1200.0,0.0,0.0,0.0,0.0,-225.92,-225.92,-225.92,225.92
+283,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,283.0,1200.0,0.0,0.0,0.0,0.0,-613.1,-613.1,-613.1,613.1
+284,missing,missing,missing,missing,missing,missing,121.3-FEHB,284.0,1200.0,0.0,0.0,0.0,0.0,4891.35,4891.35,4891.35,-4891.35
+285,missing,missing,missing,missing,missing,missing,121.4-Medicare,285.0,1200.0,0.0,0.0,0.0,0.0,2018.65,2018.65,2018.65,-2018.65
+286,missing,missing,missing,missing,missing,missing,121.5-TSP,286.0,1200.0,0.0,0.0,0.0,0.0,6642.46,6642.46,6642.46,-6642.46
+287,missing,missing,missing,missing,missing,missing,121.6-FERS,287.0,1200.0,0.0,0.0,0.0,0.0,24299.64,24299.64,24299.64,-24299.64
+288,missing,missing,missing,missing,missing,missing,121.7-FEGLI,288.0,1200.0,0.0,0.0,0.0,0.0,262.0,262.0,262.0,-262.0
+289,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,289.0,1200.0,0.0,0.0,0.0,0.0,8563.01,8563.01,8563.01,-8563.01
+290,missing,missing,missing,missing,missing,missing,missing,290.0,1200.0,682353.1,0.0,0.0,0.0,0.0,0.0,0.0,682353.1
+291,missing,missing,missing,missing,NDU_CIVPAY_NDWC_26 Total,missing,missing,291.0,1200.0,682353.1,0.0,0.0,0.0,143319.03,143319.03,143319.03,539034.07
+292,missing,missing,missing,missing,NDU_HF_26,0100D_OPS_26,missing,292.0,1200.0,5000.0,0.0,0.0,0.0,0.0,0.0,0.0,5000.0
+293,missing,missing,missing,missing,NDU_HF_26 Total,missing,missing,293.0,1200.0,5000.0,0.0,0.0,0.0,0.0,0.0,0.0,5000.0
+294,missing,missing,missing,missing,NDU_LIB_26,0100D_OPS_26,missing,294.0,1200.0,850000.0,0.0,0.0,0.0,0.0,0.0,0.0,850000.0
+295,missing,missing,missing,missing,NDU_LIB_26 Total,missing,missing,295.0,1200.0,850000.0,0.0,0.0,0.0,0.0,0.0,0.0,850000.0
+296,missing,missing,missing,missing,NDU_NDWC_26,0100D_OPS_26,210.00 Trvl & Trans of Persons,296.0,1200.0,0.0,0.0,1426.81,0.0,0.0,0.0,1426.81,-1426.81
+297,missing,missing,missing,missing,missing,missing,missing,297.0,1200.0,50000.0,0.0,0.0,0.0,0.0,0.0,0.0,50000.0
+298,missing,missing,missing,missing,NDU_NDWC_26 Total,missing,missing,298.0,1200.0,50000.0,0.0,1426.81,0.0,0.0,0.0,1426.81,48573.19
+299,missing,2026 Total,missing,missing,missing,missing,missing,299.0,1200.0,4084322.01,15444.0,6854.26,0.0,855029.65,855029.65,877327.91,3206994.1
+300,NDU CAP - Capstone,2026,030000333PL1000000000000,9701002626D,NDU_CAP_26,0100D_CAP_26,210.00 Trvl & Trans of Persons,300.0,1200.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+301,missing,missing,missing,missing,missing,0100D_CAP_26,210.11 Per Diem CONUS,301.0,1200.0,0.0,0.0,19388.0,0.0,0.0,0.0,19388.0,-19388.0
+302,missing,missing,missing,missing,missing,missing,251.10 Management Prof Srvc,302.0,1200.0,0.0,846293.81,0.0,0.0,0.0,0.0,846293.81,-846293.81
+303,missing,missing,missing,missing,missing,missing,missing,303.0,1200.0,1500000.0,0.0,0.0,0.0,0.0,0.0,0.0,1500000.0
+304,missing,missing,missing,missing,missing,0100D_PIN_26,210.11 Per Diem CONUS,304.0,1200.0,0.0,0.0,17600.0,0.0,0.0,0.0,17600.0,-17600.0
+305,missing,missing,missing,missing,NDU_CAP_26 Total,missing,missing,305.0,1200.0,1500000.0,846293.81,36988.0,0.0,0.0,0.0,883281.81,616718.19
+306,missing,missing,missing,missing,NDU_CIVPAY_CAP_26,0100D_0804750JCA_26,113.1-Labor-Regular,306.0,1200.0,0.0,0.0,0.0,0.0,47129.6,47129.6,47129.6,-47129.6
+307,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,307.0,1200.0,0.0,0.0,0.0,0.0,1528.0,1528.0,1528.0,-1528.0
+308,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,308.0,1200.0,0.0,0.0,0.0,0.0,3139.2,3139.2,3139.2,-3139.2
+309,missing,missing,missing,missing,missing,missing,115.2-Holiday Premium,309.0,1200.0,0.0,0.0,0.0,0.0,-481.28,-481.28,-481.28,481.28
+310,missing,missing,missing,missing,missing,missing,115.9-Holiday Premium(H),310.0,1200.0,0.0,0.0,0.0,0.0,-481.28,-481.28,-481.28,481.28
+311,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,311.0,1200.0,0.0,0.0,0.0,0.0,-113.16,-113.16,-113.16,113.16
+312,missing,missing,missing,missing,missing,missing,121.3-FEHB,312.0,1200.0,0.0,0.0,0.0,0.0,1120.56,1120.56,1120.56,-1120.56
+313,missing,missing,missing,missing,missing,missing,121.4-Medicare,313.0,1200.0,0.0,0.0,0.0,0.0,694.02,694.02,694.02,-694.02
+314,missing,missing,missing,missing,missing,missing,121.5-TSP,314.0,1200.0,0.0,0.0,0.0,0.0,2425.03,2425.03,2425.03,-2425.03
+315,missing,missing,missing,missing,missing,missing,121.6-FERS,315.0,1200.0,0.0,0.0,0.0,0.0,8451.15,8451.15,8451.15,-8451.15
+316,missing,missing,missing,missing,missing,missing,121.7-FEGLI,316.0,1200.0,0.0,0.0,0.0,0.0,51.6,51.6,51.6,-51.6
+317,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,317.0,1200.0,0.0,0.0,0.0,0.0,2579.2,2579.2,2579.2,-2579.2
+318,missing,missing,missing,missing,missing,missing,missing,318.0,1200.0,157466.1,0.0,0.0,0.0,0.0,0.0,0.0,157466.1
+319,missing,missing,missing,missing,NDU_CIVPAY_CAP_26 Total,missing,missing,319.0,1200.0,157466.1,0.0,0.0,0.0,66042.64,66042.64,66042.64,91423.46
+320,missing,2026 Total,missing,missing,missing,missing,missing,320.0,1200.0,1657466.1,846293.81,36988.0,0.0,66042.64,66042.64,949324.45,708141.65
+321,NDU CIC - College of Information & Cyber,2026,030000333PL1000000000000,9701002626D,NDU_CIC_26,0100D_OPS_26,missing,321.0,1200.0,560000.0,0.0,0.0,0.0,0.0,0.0,0.0,560000.0
+322,missing,missing,missing,missing,NDU_CIC_26 Total,missing,missing,322.0,1200.0,560000.0,0.0,0.0,0.0,0.0,0.0,0.0,560000.0
+323,missing,missing,missing,missing,NDU_CIVPAY_CIC_26,0100D_0804750JCA_26,111.1-Labor-Regular,323.0,1200.0,0.0,0.0,0.0,0.0,21664.08,21664.08,21664.08,-21664.08
+324,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,324.0,1200.0,0.0,0.0,0.0,0.0,-3055.65,-3055.65,-3055.65,3055.65
+325,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,325.0,1200.0,0.0,0.0,0.0,0.0,906.96,906.96,906.96,-906.96
+326,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,326.0,1200.0,0.0,0.0,0.0,0.0,358208.86,358208.86,358208.86,-358208.86
+327,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,327.0,1200.0,0.0,0.0,0.0,0.0,-43228.27,-43228.27,-43228.27,43228.27
+328,missing,missing,missing,missing,missing,missing,113.3-Sick Leave Taken,328.0,1200.0,0.0,0.0,0.0,0.0,1044.88,1044.88,1044.88,-1044.88
+329,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,329.0,1200.0,0.0,0.0,0.0,0.0,19992.96,19992.96,19992.96,-19992.96
+330,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,330.0,1200.0,0.0,0.0,0.0,0.0,-1678.4,-1678.4,-1678.4,1678.4
+331,missing,missing,missing,missing,missing,missing,121.3-FEHB,331.0,1200.0,0.0,0.0,0.0,0.0,16171.72,16171.72,16171.72,-16171.72
+332,missing,missing,missing,missing,missing,missing,121.4-Medicare,332.0,1200.0,0.0,0.0,0.0,0.0,4425.42,4425.42,4425.42,-4425.42
+333,missing,missing,missing,missing,missing,missing,121.5-TSP,333.0,1200.0,0.0,0.0,0.0,0.0,13886.75,13886.75,13886.75,-13886.75
+334,missing,missing,missing,missing,missing,missing,121.6-FERS,334.0,1200.0,0.0,0.0,0.0,0.0,52942.91,52942.91,52942.91,-52942.91
+335,missing,missing,missing,missing,missing,missing,121.7-FEGLI,335.0,1200.0,0.0,0.0,0.0,0.0,580.96,580.96,580.96,-580.96
+336,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,336.0,1200.0,0.0,0.0,0.0,0.0,18299.48,18299.48,18299.48,-18299.48
+337,missing,missing,missing,missing,missing,missing,missing,337.0,1200.0,1732127.11,0.0,0.0,0.0,0.0,0.0,0.0,1732127.11
+338,missing,missing,missing,missing,NDU_CIVPAY_CIC_26 Total,missing,missing,338.0,1200.0,1732127.11,0.0,0.0,0.0,460162.66,460162.66,460162.66,1271964.45
+339,missing,2026 Total,missing,missing,missing,missing,missing,339.0,1200.0,2292127.11,0.0,0.0,0.0,460162.66,460162.66,460162.66,1831964.45
+340,NDU CISA - College of International Security Affairs,2026,030000333PL1000000000000,9701002626D,NDU_CISA_26,0100D_OPS_26,missing,340.0,1200.0,230000.0,0.0,0.0,0.0,0.0,0.0,0.0,230000.0
+341,missing,missing,missing,missing,NDU_CISA_26 Total,missing,missing,341.0,1200.0,230000.0,0.0,0.0,0.0,0.0,0.0,0.0,230000.0
+342,missing,missing,missing,missing,NDU_CIVPAY_CISA_26,0100D_0804750JCA_26,111.1-Labor-Regular,342.0,1200.0,0.0,0.0,0.0,0.0,25932.88,25932.88,25932.88,-25932.88
+343,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,343.0,1200.0,0.0,0.0,0.0,0.0,-6518.16,-6518.16,-6518.16,6518.16
+344,missing,missing,missing,missing,missing,missing,111.3-Sick Leave Taken,344.0,1200.0,0.0,0.0,0.0,0.0,36.69,36.69,36.69,-36.69
+345,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,345.0,1200.0,0.0,0.0,0.0,0.0,1394.48,1394.48,1394.48,-1394.48
+346,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,346.0,1200.0,0.0,0.0,0.0,0.0,140598.8,140598.8,140598.8,-140598.8
+347,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,347.0,1200.0,0.0,0.0,0.0,0.0,-2694.72,-2694.72,-2694.72,2694.72
+348,missing,missing,missing,missing,missing,missing,113.3-Sick Leave Taken,348.0,1200.0,0.0,0.0,0.0,0.0,691.2,691.2,691.2,-691.2
+349,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,349.0,1200.0,0.0,0.0,0.0,0.0,9685.52,9685.52,9685.52,-9685.52
+350,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,350.0,1200.0,0.0,0.0,0.0,0.0,-1844.97,-1844.97,-1844.97,1844.97
+351,missing,missing,missing,missing,missing,missing,121.3-FEHB,351.0,1200.0,0.0,0.0,0.0,0.0,17550.22,17550.22,17550.22,-17550.22
+352,missing,missing,missing,missing,missing,missing,121.4-Medicare,352.0,1200.0,0.0,0.0,0.0,0.0,2829.87,2829.87,2829.87,-2829.87
+353,missing,missing,missing,missing,missing,missing,121.5-TSP,353.0,1200.0,0.0,0.0,0.0,0.0,9420.32,9420.32,9420.32,-9420.32
+354,missing,missing,missing,missing,missing,missing,121.6-FERS,354.0,1200.0,0.0,0.0,0.0,0.0,34612.42,34612.42,34612.42,-34612.42
+355,missing,missing,missing,missing,missing,missing,121.7-FEGLI,355.0,1200.0,0.0,0.0,0.0,0.0,371.12,371.12,371.12,-371.12
+356,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,356.0,1200.0,0.0,0.0,0.0,0.0,12100.29,12100.29,12100.29,-12100.29
+357,missing,missing,missing,missing,missing,missing,missing,357.0,1200.0,734841.8,0.0,0.0,0.0,0.0,0.0,0.0,734841.8
+358,missing,missing,missing,missing,missing,0100D_0804750JCA_JSOMA_26,111.1-Labor-Regular,358.0,1200.0,0.0,0.0,0.0,0.0,6127.23,6127.23,6127.23,-6127.23
+359,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,359.0,1200.0,0.0,0.0,0.0,0.0,587.04,587.04,587.04,-587.04
+360,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,360.0,1200.0,0.0,0.0,0.0,0.0,114535.2,114535.2,114535.2,-114535.2
+361,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,361.0,1200.0,0.0,0.0,0.0,0.0,-197.24,-197.24,-197.24,197.24
+362,missing,missing,missing,missing,missing,missing,113.3-Sick Leave Taken,362.0,1200.0,0.0,0.0,0.0,0.0,147.68,147.68,147.68,-147.68
+363,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,363.0,1200.0,0.0,0.0,0.0,0.0,8928.96,8928.96,8928.96,-8928.96
+364,missing,missing,missing,missing,missing,missing,113.B-Credit Hours Taken,364.0,1200.0,0.0,0.0,0.0,0.0,757.12,757.12,757.12,-757.12
+365,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,365.0,1200.0,0.0,0.0,0.0,0.0,-1077.88,-1077.88,-1077.88,1077.88
+366,missing,missing,missing,missing,missing,missing,121.3-FEHB,366.0,1200.0,0.0,0.0,0.0,0.0,7283.84,7283.84,7283.84,-7283.84
+367,missing,missing,missing,missing,missing,missing,121.4-Medicare,367.0,1200.0,0.0,0.0,0.0,0.0,1151.57,1151.57,1151.57,-1151.57
+368,missing,missing,missing,missing,missing,missing,121.5-TSP,368.0,1200.0,0.0,0.0,0.0,0.0,3977.59,3977.59,3977.59,-3977.59
+369,missing,missing,missing,missing,missing,missing,121.6-FERS,369.0,1200.0,0.0,0.0,0.0,0.0,13556.43,13556.43,13556.43,-13556.43
+370,missing,missing,missing,missing,missing,missing,121.7-FEGLI,370.0,1200.0,0.0,0.0,0.0,0.0,162.16,162.16,162.16,-162.16
+371,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,371.0,1200.0,0.0,0.0,0.0,0.0,4923.88,4923.88,4923.88,-4923.88
+372,missing,missing,missing,missing,missing,missing,missing,372.0,1200.0,419909.6,0.0,0.0,0.0,0.0,0.0,0.0,419909.6
+373,missing,missing,missing,missing,NDU_CIVPAY_CISA_26 Total,missing,missing,373.0,1200.0,1154751.4,0.0,0.0,0.0,405029.54,405029.54,405029.54,749721.86
+374,missing,2026 Total,missing,missing,missing,missing,missing,374.0,1200.0,1384751.4,0.0,0.0,0.0,405029.54,405029.54,405029.54,979721.86
+375,NDU COS - Chief Of Staff,2026,030000333PL1000000000000,9701002626D,NDU_RES_26,0100D_OPS_26,missing,375.0,1200.0,2450220.0,0.0,0.0,0.0,0.0,0.0,0.0,2450220.0
+376,missing,missing,missing,missing,NDU_RES_26 Total,missing,missing,376.0,1200.0,2450220.0,0.0,0.0,0.0,0.0,0.0,0.0,2450220.0
+377,missing,2026 Total,missing,missing,missing,missing,missing,377.0,1200.0,2450220.0,0.0,0.0,0.0,0.0,0.0,0.0,2450220.0
+378,NDU ES - Eisenhower School,2026,030000333PL1000000000000,9701002626D,NDU_CIVPAY_ES_26,0100D_0804750JCA_26,111.1-Labor-Regular,378.0,1200.0,0.0,0.0,0.0,0.0,32690.16,32690.16,32690.16,-32690.16
+379,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,379.0,1200.0,0.0,0.0,0.0,0.0,2204.58,2204.58,2204.58,-2204.58
+380,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,380.0,1200.0,0.0,0.0,0.0,0.0,274005.54,274005.54,274005.54,-274005.54
+381,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,381.0,1200.0,0.0,0.0,0.0,0.0,748.24,748.24,748.24,-748.24
+382,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,382.0,1200.0,0.0,0.0,0.0,0.0,19272.92,19272.92,19272.92,-19272.92
+383,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,383.0,1200.0,0.0,0.0,0.0,0.0,-2389.55,-2389.55,-2389.55,2389.55
+384,missing,missing,missing,missing,missing,missing,121.3-FEHB,384.0,1200.0,0.0,0.0,0.0,0.0,19687.64,19687.64,19687.64,-19687.64
+385,missing,missing,missing,missing,missing,missing,121.4-Medicare,385.0,1200.0,0.0,0.0,0.0,0.0,4217.1,4217.1,4217.1,-4217.1
+386,missing,missing,missing,missing,missing,missing,121.5-TSP,386.0,1200.0,0.0,0.0,0.0,0.0,12359.74,12359.74,12359.74,-12359.74
+387,missing,missing,missing,missing,missing,missing,121.6-FERS,387.0,1200.0,0.0,0.0,0.0,0.0,46911.51,46911.51,46911.51,-46911.51
+388,missing,missing,missing,missing,missing,missing,121.7-FEGLI,388.0,1200.0,0.0,0.0,0.0,0.0,596.16,596.16,596.16,-596.16
+389,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,389.0,1200.0,0.0,0.0,0.0,0.0,16443.87,16443.87,16443.87,-16443.87
+390,missing,missing,missing,missing,missing,missing,missing,390.0,1200.0,1259728.81,0.0,0.0,0.0,0.0,0.0,0.0,1259728.81
+391,missing,missing,missing,missing,NDU_CIVPAY_ES_26 Total,missing,missing,391.0,1200.0,1259728.81,0.0,0.0,0.0,426747.91,426747.91,426747.91,832980.9
+392,missing,missing,missing,missing,NDU_ES_26,0100D_OPS_26,210.00 Trvl & Trans of Persons,392.0,1200.0,0.0,0.0,9366.25,0.0,0.0,0.0,9366.25,-9366.25
+393,missing,missing,missing,missing,missing,missing,missing,393.0,1200.0,900000.0,0.0,0.0,0.0,0.0,0.0,0.0,900000.0
+394,missing,missing,missing,missing,NDU_ES_26 Total,missing,missing,394.0,1200.0,900000.0,0.0,9366.25,0.0,0.0,0.0,9366.25,890633.75
+395,missing,2026 Total,missing,missing,missing,missing,missing,395.0,1200.0,2159728.81,0.0,9366.25,0.0,426747.91,426747.91,436114.16,1723614.65
+396,NDU INSS - Institute for National Strategic Studies,2026,030000333PL1000000000000,9701002626D,NDU_CIVPAY_INSS_26,0100D_0804750JCA_26,111.1-Labor-Regular,396.0,1200.0,0.0,0.0,0.0,0.0,41652.0,41652.0,41652.0,-41652.0
+397,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,397.0,1200.0,0.0,0.0,0.0,0.0,-7669.54,-7669.54,-7669.54,7669.54
+398,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,398.0,1200.0,0.0,0.0,0.0,0.0,1937.34,1937.34,1937.34,-1937.34
+399,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,399.0,1200.0,0.0,0.0,0.0,0.0,378601.64,378601.64,378601.64,-378601.64
+400,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,400.0,1200.0,0.0,0.0,0.0,0.0,-45212.12,-45212.12,-45212.12,45212.12
+401,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,401.0,1200.0,0.0,0.0,0.0,0.0,18618.12,18618.12,18618.12,-18618.12
+402,missing,missing,missing,missing,missing,missing,113.8-Other Leave Taken,402.0,1200.0,0.0,0.0,0.0,0.0,393.12,393.12,393.12,-393.12
+403,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,403.0,1200.0,0.0,0.0,0.0,0.0,-3207.78,-3207.78,-3207.78,3207.78
+404,missing,missing,missing,missing,missing,missing,121.3-FEHB,404.0,1200.0,0.0,0.0,0.0,0.0,22480.35,22480.35,22480.35,-22480.35
+405,missing,missing,missing,missing,missing,missing,121.4-Medicare,405.0,1200.0,0.0,0.0,0.0,0.0,5090.66,5090.66,5090.66,-5090.66
+406,missing,missing,missing,missing,missing,missing,121.5-TSP,406.0,1200.0,0.0,0.0,0.0,0.0,17403.42,17403.42,17403.42,-17403.42
+407,missing,missing,missing,missing,missing,missing,121.6-FERS,407.0,1200.0,0.0,0.0,0.0,0.0,61118.78,61118.78,61118.78,-61118.78
+408,missing,missing,missing,missing,missing,missing,121.7-FEGLI,408.0,1200.0,0.0,0.0,0.0,0.0,655.68,655.68,655.68,-655.68
+409,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,409.0,1200.0,0.0,0.0,0.0,0.0,18357.24,18357.24,18357.24,-18357.24
+410,missing,missing,missing,missing,missing,missing,missing,410.0,1200.0,1154751.4,0.0,0.0,0.0,0.0,0.0,0.0,1154751.4
+411,missing,missing,missing,missing,NDU_CIVPAY_INSS_26 Total,missing,missing,411.0,1200.0,1154751.4,0.0,0.0,0.0,510218.91,510218.91,510218.91,644532.49
+412,missing,missing,missing,missing,NDU_INSS_26,0100D_OPS_26,210.00 Trvl & Trans of Persons,412.0,1200.0,0.0,0.0,17371.32,0.0,0.0,0.0,17371.32,-17371.32
+413,missing,missing,missing,missing,missing,missing,missing,413.0,1200.0,100000.0,0.0,0.0,0.0,0.0,0.0,0.0,100000.0
+414,missing,missing,missing,missing,NDU_INSS_26 Total,missing,missing,414.0,1200.0,100000.0,0.0,17371.32,0.0,0.0,0.0,17371.32,82628.68
+415,missing,2026 Total,missing,missing,missing,missing,missing,415.0,1200.0,1254751.4,0.0,17371.32,0.0,510218.91,510218.91,527590.23,727161.17
+416,NDU ISMO - International Student Management Office,2026,030000333PL1000000000000,9701002626D,NDU_ISMO_26,0100D_OPS_26,missing,416.0,1200.0,40000.0,0.0,0.0,0.0,0.0,0.0,0.0,40000.0
+417,missing,missing,missing,missing,NDU_ISMO_26 Total,missing,missing,417.0,1200.0,40000.0,0.0,0.0,0.0,0.0,0.0,0.0,40000.0
+418,missing,2026 Total,missing,missing,missing,missing,missing,418.0,1200.0,40000.0,0.0,0.0,0.0,0.0,0.0,0.0,40000.0
+419,NDU JFSC - Joint Forces Staff College,2026,030000333PL1000000000000,9701002626D,NDU_CIVPAY_JFSC_26,0100D_0804750JCA_26,111.1-Labor-Regular,419.0,1200.0,0.0,0.0,0.0,0.0,107658.0,107658.0,107658.0,-107658.0
+420,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,420.0,1200.0,0.0,0.0,0.0,0.0,338.88,338.88,338.88,-338.88
+421,missing,missing,missing,missing,missing,missing,111.3-Sick Leave Taken,421.0,1200.0,0.0,0.0,0.0,0.0,-886.41,-886.41,-886.41,886.41
+422,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,422.0,1200.0,0.0,0.0,0.0,0.0,4668.6,4668.6,4668.6,-4668.6
+423,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,423.0,1200.0,0.0,0.0,0.0,0.0,439480.74,439480.74,439480.74,-439480.74
+424,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,424.0,1200.0,0.0,0.0,0.0,0.0,-25505.52,-25505.52,-25505.52,25505.52
+425,missing,missing,missing,missing,missing,missing,113.3-Sick Leave Taken,425.0,1200.0,0.0,0.0,0.0,0.0,1530.05,1530.05,1530.05,-1530.05
+426,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,426.0,1200.0,0.0,0.0,0.0,0.0,24434.96,24434.96,24434.96,-24434.96
+427,missing,missing,missing,missing,missing,missing,113.A-Comp Time Taken,427.0,1200.0,0.0,0.0,0.0,0.0,476.72,476.72,476.72,-476.72
+428,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,428.0,1200.0,0.0,0.0,0.0,0.0,-3252.9,-3252.9,-3252.9,3252.9
+429,missing,missing,missing,missing,missing,missing,121.3-FEHB,429.0,1200.0,0.0,0.0,0.0,0.0,24043.2,24043.2,24043.2,-24043.2
+430,missing,missing,missing,missing,missing,missing,121.4-Medicare,430.0,1200.0,0.0,0.0,0.0,0.0,7489.37,7489.37,7489.37,-7489.37
+431,missing,missing,missing,missing,missing,missing,121.5-TSP,431.0,1200.0,0.0,0.0,0.0,0.0,23601.27,23601.27,23601.27,-23601.27
+432,missing,missing,missing,missing,missing,missing,121.6-FERS,432.0,1200.0,0.0,0.0,0.0,0.0,90935.31,90935.31,90935.31,-90935.31
+433,missing,missing,missing,missing,missing,missing,121.7-FEGLI,433.0,1200.0,0.0,0.0,0.0,0.0,1002.88,1002.88,1002.88,-1002.88
+434,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,434.0,1200.0,0.0,0.0,0.0,0.0,32023.45,32023.45,32023.45,-32023.45
+435,missing,missing,missing,missing,missing,missing,missing,435.0,1200.0,2361991.51,0.0,0.0,0.0,0.0,0.0,0.0,2361991.51
+436,missing,missing,missing,missing,NDU_CIVPAY_JFSC_26 Total,missing,missing,436.0,1200.0,2361991.51,0.0,0.0,0.0,728038.6,728038.6,728038.6,1633952.91
+437,missing,missing,missing,missing,NDU_JFSC_26,0100D_OPS_26,210.00 Trvl & Trans of Persons,437.0,1200.0,0.0,0.0,737.18,0.0,0.0,0.0,737.18,-737.18
+438,missing,missing,missing,missing,missing,missing,missing,438.0,1200.0,470000.0,0.0,0.0,0.0,0.0,0.0,0.0,470000.0
+439,missing,missing,missing,missing,NDU_JFSC_26 Total,missing,missing,439.0,1200.0,470000.0,0.0,737.18,0.0,0.0,0.0,737.18,469262.82
+440,missing,2026 Total,missing,missing,missing,missing,missing,440.0,1200.0,2831991.51,0.0,737.18,0.0,728038.6,728038.6,728775.78,2103215.73
+441,NDU NWC - National War College,2026,030000333PL1000000000000,9701002626D,NDU_CIVPAY_NWC_26,0100D_0804750JCA_26,111.1-Labor-Regular,441.0,1200.0,0.0,0.0,0.0,0.0,32593.11,32593.11,32593.11,-32593.11
+442,missing,missing,missing,missing,missing,missing,111.2-Annual Leave Taken,442.0,1200.0,0.0,0.0,0.0,0.0,-6594.32,-6594.32,-6594.32,6594.32
+443,missing,missing,missing,missing,missing,missing,111.7-Holiday Taken,443.0,1200.0,0.0,0.0,0.0,0.0,1091.36,1091.36,1091.36,-1091.36
+444,missing,missing,missing,missing,missing,missing,113.1-Labor-Regular,444.0,1200.0,0.0,0.0,0.0,0.0,342649.92,342649.92,342649.92,-342649.92
+445,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,445.0,1200.0,0.0,0.0,0.0,0.0,-71879.19,-71879.19,-71879.19,71879.19
+446,missing,missing,missing,missing,missing,missing,113.3-Sick Leave Taken,446.0,1200.0,0.0,0.0,0.0,0.0,549.68,549.68,549.68,-549.68
+447,missing,missing,missing,missing,missing,missing,113.5-Admin Leave Taken,447.0,1200.0,0.0,0.0,0.0,0.0,1245.76,1245.76,1245.76,-1245.76
+448,missing,missing,missing,missing,missing,missing,113.7-Holiday Taken,448.0,1200.0,0.0,0.0,0.0,0.0,13771.92,13771.92,13771.92,-13771.92
+449,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,449.0,1200.0,0.0,0.0,0.0,0.0,-2712.93,-2712.93,-2712.93,2712.93
+450,missing,missing,missing,missing,missing,missing,121.3-FEHB,450.0,1200.0,0.0,0.0,0.0,0.0,10138.71,10138.71,10138.71,-10138.71
+451,missing,missing,missing,missing,missing,missing,121.4-Medicare,451.0,1200.0,0.0,0.0,0.0,0.0,3653.53,3653.53,3653.53,-3653.53
+452,missing,missing,missing,missing,missing,missing,121.5-TSP,452.0,1200.0,0.0,0.0,0.0,0.0,12059.57,12059.57,12059.57,-12059.57
+453,missing,missing,missing,missing,missing,missing,121.6-FERS,453.0,1200.0,0.0,0.0,0.0,0.0,43959.98,43959.98,43959.98,-43959.98
+454,missing,missing,missing,missing,missing,missing,121.7-FEGLI,454.0,1200.0,0.0,0.0,0.0,0.0,456.32,456.32,456.32,-456.32
+455,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,455.0,1200.0,0.0,0.0,0.0,0.0,14339.33,14339.33,14339.33,-14339.33
+456,missing,missing,missing,missing,missing,missing,missing,456.0,1200.0,1049774.0,0.0,0.0,0.0,0.0,0.0,0.0,1049774.0
+457,missing,missing,missing,missing,missing,0100D_0804798JCA_26,113.1-Labor-Regular,457.0,1200.0,0.0,0.0,0.0,0.0,13921.68,13921.68,13921.68,-13921.68
+458,missing,missing,missing,missing,missing,missing,113.2-Annual Leave Taken,458.0,1200.0,0.0,0.0,0.0,0.0,-6594.48,-6594.48,-6594.48,6594.48
+459,missing,missing,missing,missing,missing,missing,121.1-Prepd FEHB,459.0,1200.0,0.0,0.0,0.0,0.0,-88.85,-88.85,-88.85,88.85
+460,missing,missing,missing,missing,missing,missing,121.3-FEHB,460.0,1200.0,0.0,0.0,0.0,0.0,621.99,621.99,621.99,-621.99
+461,missing,missing,missing,missing,missing,missing,121.4-Medicare,461.0,1200.0,0.0,0.0,0.0,0.0,219.48,219.48,219.48,-219.48
+462,missing,missing,missing,missing,missing,missing,121.5-TSP,462.0,1200.0,0.0,0.0,0.0,0.0,612.56,612.56,612.56,-612.56
+463,missing,missing,missing,missing,missing,missing,121.6-FERS,463.0,1200.0,0.0,0.0,0.0,0.0,2526.79,2526.79,2526.79,-2526.79
+464,missing,missing,missing,missing,missing,missing,121.7-FEGLI,464.0,1200.0,0.0,0.0,0.0,0.0,31.04,31.04,31.04,-31.04
+465,missing,missing,missing,missing,missing,missing,121.A-OASDI Employer Contrib,465.0,1200.0,0.0,0.0,0.0,0.0,900.46,900.46,900.46,-900.46
+466,missing,missing,missing,missing,missing,missing,missing,466.0,1200.0,52488.7,0.0,0.0,0.0,0.0,0.0,0.0,52488.7
+467,missing,missing,missing,missing,NDU_CIVPAY_NWC_26 Total,missing,missing,467.0,1200.0,1102262.7,0.0,0.0,0.0,407473.42,407473.42,407473.42,694789.28
+468,missing,missing,missing,missing,NDU_NWC_26,0100D_OPS_26,missing,468.0,1200.0,59150.0,0.0,0.0,0.0,0.0,0.0,0.0,59150.0
+469,missing,missing,missing,missing,missing,0100D_PRO_DEV_26,210.00 Trvl & Trans of Persons,469.0,1200.0,0.0,0.0,6680.18,0.0,0.0,0.0,6680.18,-6680.18
+470,missing,missing,missing,missing,missing,missing,missing,470.0,1200.0,10100.0,0.0,0.0,0.0,0.0,0.0,0.0,10100.0
+471,missing,missing,missing,missing,missing,0100D_STD_PRAC_26,210.00 Trvl & Trans of Persons,471.0,1200.0,0.0,0.0,283.2,0.0,0.0,0.0,283.2,-283.2
+472,missing,missing,missing,missing,missing,missing,missing,472.0,1200.0,750.0,0.0,0.0,0.0,0.0,0.0,0.0,750.0
+473,missing,missing,missing,missing,NDU_NWC_26 Total,missing,missing,473.0,1200.0,70000.0,0.0,6963.38,0.0,0.0,0.0,6963.38,63036.62
+474,missing,2026 Total,missing,missing,missing,missing,missing,474.0,1200.0,1172262.7,0.0,6963.38,0.0,407473.42,407473.42,414436.8,757825.9
