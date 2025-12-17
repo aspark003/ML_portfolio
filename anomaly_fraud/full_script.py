@@ -1,240 +1,211 @@
+import os
+from zipfile import BadZipFile, ZipFile
+import openpyxl
 import pandas as pd
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, StandardScaler
-from sklearn.cluster import DBSCAN, OPTICS, HDBSCAN
-from sklearn.ensemble import IsolationForest
-from sklearn.decomposition import PCA
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
-from sklearn.compose import ColumnTransformer
+
+class FileLoader:
+    def __init__(self, file=None):
+        self.file = file
+        self.df = None
+
+    def load(self, file=None):
+        # Update file path if a new one is provided
+        if file:
+            self.file = file
+
+        if not self.file:
+            raise ValueError("File path not available")
+
+        # Get file extension
+        extension = os.path.splitext(self.file)[1].lower()
+
+        try:
+            # ---------- Excel ----------
+            if extension == ".xlsx":
+                try:
+                    # Ensure the file is a proper zip (xlsx)
+                    with ZipFile(self.file, 'r') as zip_ref:
+                        corrupt_file = zip_ref.testzip()
+                        if corrupt_file:
+                            raise BadZipFile(f"Corrupt file inside archive: {corrupt_file}")
+                    # File is valid Excel, load it
+                    self.df = pd.read_excel(self.file, engine='openpyxl')
+                    print("Excel file loaded successfully.")
+
+                except BadZipFile:
+                    raise ValueError(f"Excel file is corrupted or not a valid .xlsx: {self.file}")
+
+            # ---------- CSV ----------
+            elif extension == ".csv":
+                self.df = pd.read_csv(self.file)
+                print("CSV file loaded successfully.")
+
+            # ---------- TSV ----------
+            elif extension == ".tsv":
+                self.df = pd.read_csv(self.file, sep="\t")
+                print("TSV file loaded successfully.")
+
+            # ---------- JSON ----------
+            elif extension in [".json", ".jsonl"]:
+                try:
+                    if extension == ".jsonl":
+                        self.df = pd.read_json(self.file, lines=True)
+                    else:
+                        self.df = pd.read_json(self.file)
+                    print("JSON file loaded successfully.")
+                except ValueError as e:
+                    raise ValueError(f"Invalid JSON file: {e}")
+
+            # ---------- TXT ----------
+            elif extension in [".txt", ".text"]:
+                with open(self.file, "r", encoding="utf-8", errors="ignore") as f:
+                    self.df = pd.DataFrame([line.strip() for line in f.readlines()], columns=["text"])
+                print("Text file loaded successfully.")
+
+            else:
+                raise ValueError(f"Unsupported file type: {extension}")
+
+        except Exception as e:
+            raise ValueError(f"Failed to load file: {e}")
+
+        # Print first few rows
+        if self.df is not None:
+            print(self.df.head().to_string())
+
+        self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/gl1.csv', index=False)
+        return self.df
+
+
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
+from sklearn.decomposition import PCA
+from sklearn.cluster import DBSCAN, OPTICS, HDBSCAN
+import numpy as np
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
+from sklearn.ensemble import IsolationForest
 
-class ClusterF:
-    def __init__(self, file_path, model_name):
-        try:
-            self.model_name = model_name
-            self.df = pd.read_csv(file_path)
+class DModel:
+    def __init__(self, file, header=3):
+        self.df = pd.read_csv(file, encoding='utf-8-sig', engine='python', header=header)
+        self.df = self.df.drop(self.df.index[58:]).reset_index(drop=True)
+        self.df.columns = self.df.columns.str.lower().str.strip()
+        self.df.insert(0, 'id', self.df.index+1)
+        self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
 
-            self.copy = self.df.copy()
-            self.combine = self.copy.copy()
-            self.num = self.copy.select_dtypes(include=[np.number]).columns.tolist()
-            self.obj = self.copy.select_dtypes(include=['object', 'string', 'bool', 'category']).columns.tolist()
+        self.copy = self.df.copy()
 
-            self.scaler = MinMaxScaler()
-            self.encoder = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
+        self.num = self.copy.select_dtypes(include=['number', 'complex']).columns.tolist()
+        self.obj = self.copy.select_dtypes(include=['object', 'string', 'category', 'bool']).columns.tolist()
+        self.scaler = MinMaxScaler()
+        self.encoder = OneHotEncoder(drop='first', sparse_output=False)
 
-            self.num_imp = Pipeline([('n_imp', SimpleImputer(strategy='median')),
-                                         ('scale', self.scaler)])
+        self.n_impute = Pipeline([('num', SimpleImputer(strategy='median')),
+                                  ('number', self.scaler)])
+        self.o_impute = Pipeline([('obj', SimpleImputer(strategy='constant', fill_value='missing')),
+                                  ('object', self.encoder)])
 
-            self.obj_imp = Pipeline([('o_imp', SimpleImputer(strategy='constant', fill_value='missing')),
-                                         ('encode', self.encoder)])
+        self.preprocessor = ColumnTransformer([('scaler', self.n_impute, self.num),
+                                               ('encoder', self.o_impute, self.obj)])
 
-            self.preprocessor = ColumnTransformer([('scaler', self.num_imp, self.num),
-                                                   ('encoder', self.obj_imp, self.obj)])
+        self.d_pipeline = Pipeline([('preprocessor', self.preprocessor),
+                                    ('pca', PCA(n_components=2)),
+                                    ('dbscan', DBSCAN(eps=0.2, min_samples=5))])
 
-            self.db_pipeline = Pipeline([('preprocessor', self.preprocessor),
-                                      ('pca', PCA(n_components=3)),
-                                      ('dbscan', DBSCAN(eps=0.6, min_samples=5))])
+        self.o_pipeline = Pipeline([('preprocessor', self.preprocessor),
+                                    ('pca', PCA(n_components=8)),
+                                    ('optics', OPTICS(min_samples=4, xi=0.05))])
 
-            self.iso_pipeline = Pipeline([('preprocessor', self.preprocessor),
-                                      ('pca', PCA(n_components=3)),
-                                      ('iso', IsolationForest(contamination=0.2, random_state=42))])
+        self.h_pipeline = Pipeline([('preprocessor', self.preprocessor),
+                                    ('pca', PCA(n_components=2)),
+                                    ('hdbscan', HDBSCAN(min_samples=5, min_cluster_size=5))])
 
-            self.op_pipeline = Pipeline([('preprocessor', self.preprocessor),
-                                         ('pca', PCA(n_components=4)),
-                                         ('optics', OPTICS(min_samples=4, xi=0.05))])
+        self.i_pipeline = Pipeline([('preprocessor', self.preprocessor),
+                                    ('pca', PCA(n_components=2)),
+                                    ('iso', IsolationForest(contamination=0.2, random_state=42))])
 
-            self.iso_optics_pipeline = Pipeline([('preprocessor', self.preprocessor),
-                                        ('pca', PCA(n_components=4)),
-                                        ('iso', IsolationForest(contamination=0.2, random_state=42))])
+        self.scores = ([silhouette_score, calinski_harabasz_score, davies_bouldin_score])
 
-            self.hd_pipeline = Pipeline([('preprocessor', self.preprocessor),
-                                         ('pca', PCA(n_components=4)),
-                                         ('hd', HDBSCAN(min_samples=4, min_cluster_size=4))])
+        self.d_pipeline.fit(self.copy)
+        x = self.d_pipeline.named_steps['preprocessor'].transform(self.copy)
+        x_pca = self.d_pipeline.named_steps['pca'].transform(x)
+        variance = self.d_pipeline.named_steps['pca'].explained_variance_ratio_
+        c_sum = np.cumsum(variance)
 
-            self.hd_iso_pipeline = Pipeline([('preprocessor', self.preprocessor),
-                                             ('pca', PCA(n_components=4)),
-                                             ('iso', IsolationForest(contamination=0.2, random_state=42))])
+        y = self.d_pipeline.named_steps['dbscan'].labels_
 
-            self.scores = ([silhouette_score, calinski_harabasz_score, davies_bouldin_score])
+        self.df['dbscan labels'] = y
+        self.df['dbscan identifier'] = (self.df['dbscan labels'] == -1).astype(int)
+        self.df['dbscan category'] = self.df['dbscan identifier'].apply(lambda x: 'anomaly' if x == 1 else 'not anomaly')
+        self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
 
-            #print(self.copy.head().to_string())
+        #print(self.df.head().to_string())
 
-        except Exception as e: print(f'invalid file path: {e}')
+        for score in self.scores:
+            s = score(x_pca, y)
+            print(f'dbscan: {score.__name__}:{s}')
+        print()
 
+        self.o_pipeline.fit(self.copy)
+        xo = self.o_pipeline.named_steps['preprocessor'].transform(self.copy)
+        xo_pca = self.o_pipeline.named_steps['pca'].transform(xo)
+        yl = self.o_pipeline.named_steps['optics'].labels_
+        for o_core in self.scores:
+            o = o_core(xo_pca, yl)
+            print(f'optics: {o_core.__name__}:{o}')
+        print()
 
-    def db_scan(self):
-        try:
-            self.db_pipeline.fit(self.copy)
-            x = self.db_pipeline.named_steps['preprocessor'].transform(self.copy)
-            x_pca = self.db_pipeline.named_steps['pca'].transform(x)
-
-            variance = self.db_pipeline.named_steps['pca'].explained_variance_ratio_
-            #print(variance)
-
-            cumsum = np.cumsum(variance)
-            #print(cumsum)
-
-            y = self.db_pipeline.named_steps['dbscan'].labels_
-
-            for scores in self.scores:
-                s = scores(x_pca, y)
-                #print(f'{scores.__name__}:{s}')
-            #print(x_pca)
-            #print(set(y))
-
-            self.combine['dbscan labels'] = y
-            self.combine['dbscan identifier'] = (self.combine['dbscan labels'] == -1).astype(int)
-            self.combine['dbscan category'] = self.combine['dbscan identifier'].apply(lambda x: 'Anomaly' if x == 1 else 'Not anomaly')
-
-            #Isolation initiated
-            self.iso_pipeline.fit(self.copy)
-
-            x_iso = self.iso_pipeline.named_steps['preprocessor'].transform(self.copy)
-            pca_iso = self.iso_pipeline.named_steps['pca'].transform(x_iso)
-
-            y_iso = self.iso_pipeline.named_steps['iso'].fit(pca_iso)
-
-            iso_predict = self.iso_pipeline.named_steps['iso'].predict(pca_iso)
-            iso_scores = self.iso_pipeline.named_steps['iso'].decision_function(pca_iso)
-            print(iso_scores)
-            self.combine['dbscan isolation labels'] = iso_predict
-            self.combine['dbscan isolation anomaly identifier'] = (self.combine['dbscan isolation labels'] == -1).astype(int)
-            self.combine['dbscan isolation anomaly category'] = self.combine['dbscan isolation anomaly identifier'].apply(lambda x: 'Anomaly' if x == 1 else 'Not anomaly')
-            iso_plot = pd.DataFrame({'dbscan isolation scores' : iso_scores,
-                                     'dbscan isolation anomaly identifier': iso_predict})
-
-            iso_plot['dbscan isolation anomaly category'] = iso_plot['dbscan isolation anomaly identifier'].apply(lambda x: 'Anomaly' if x == 1 else 'not anomaly')
-            iso_plot.insert(0, 'id', iso_plot.index +1)
-            iso_plot.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_dbscan_iso.csv', index=False)
+        self.df['optics labels'] = yl
+        self.df['optics identifier'] = (self.df['optics labels'] == -1).astype(int)
+        self.df['optics category'] = self.df['optics identifier'].apply(lambda x: 'anomaly' if x == 1 else 'not anomaly')
+        self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
 
 
-            #print(self.combine.head().to_string())
+        self.h_pipeline.fit(self.copy)
+        xh = self.h_pipeline.named_steps['preprocessor'].transform(self.copy)
+        xh_pca = self.h_pipeline.named_steps['pca'].transform(xh)
+        yh = self.h_pipeline.named_steps['hdbscan'].labels_
+
+        for h_score in self.scores:
+            h = h_score(xh_pca, yh)
+            print(f'hdbscan: {h_score.__name__}:{h}')
+        print()
+
+        self.df['hdbscan labels'] = yh
+        self.df['hdbscan identifier'] = (self.df['hdbscan labels'] == -1).astype(int)
+        self.df['hdbscan category'] = self.df['hdbscan identifier'].apply(lambda x: 'anomaly' if x == 1 else 'not anomaly')
+
+        self.df['total identifiers'] = ((self.df['dbscan identifier']).astype(int)+
+                                        (self.df['optics identifier']).astype(int)+
+                                        (self.df['hdbscan identifier'].astype(int)))
+
+        self.df['total category'] = self.df['total identifiers'].map({3: 'high',2: 'medium', 1: 'low', 0: 'none'})
 
 
-            self.combine.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file1.csv', index=False)
+        self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
+        print(self.df.head().to_string())
 
-            print(self.combine.head().to_string())
-        except Exception as e:print(f'invalid dbscan scores: {e}')
+        #print(self.copy.head().to_string())
 
-    def op_tics(self):
-        try:
-            self.combine2 = pd.read_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file1.csv')
-
-            self.op_pipeline.fit(self.copy)
-            x = self.op_pipeline.named_steps['preprocessor'].transform(self.copy)
-            x_pca = self.op_pipeline.named_steps['pca'].transform(x)
-            y = self.op_pipeline.named_steps['optics'].labels_
-            for scores in self.scores:
-                s = scores(x_pca, y)
-                #print(f'{scores.__name__}: {s}')
-
-            self.combine2['optics labels'] = y
-            self.combine2['optics identifier'] = (self.combine2['optics labels'] == -1).astype(int)
-            self.combine2['optics category'] = self.combine2['optics identifier'].apply(lambda x: 'Anomaly' if x == 1 else 'Not anomaly')
-
-            self.iso_optics_pipeline.fit(self.copy)
-            x_iso = self.iso_optics_pipeline.named_steps['preprocessor'].transform(self.copy)
-            x_iso_pca = self.iso_optics_pipeline.named_steps['pca'].transform(x_iso)
-
-            y_iso_fit = self.iso_optics_pipeline.named_steps['iso'].fit(x_iso_pca)
-            y_iso_predict = self.iso_optics_pipeline.named_steps['iso'].predict(x_iso_pca)
-            y_iso_decision = self.iso_optics_pipeline.named_steps['iso'].decision_function(x_iso_pca)
-
-            optics_iso_scores = pd.DataFrame({'Optics isolation scores': y_iso_decision,
-                                              'Optics anomaly detector': y_iso_predict})
-            optics_iso_scores.insert(0, 'id', optics_iso_scores.index+1)
-            optics_iso_scores.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_optics_iso.csv', index=False)
-            #print(optics_iso_scores)
-            #print(self.combine2.head().to_string())
-
-            self.combine2['optics isolation labels'] = y_iso_predict
-            self.combine2['optics isolation anomaly identifier'] = (self.combine2['optics isolation labels'] == -1).astype(int)
-            self.combine2['optics isolation anomaly category'] = self.combine2['optics isolation anomaly identifier'].apply(lambda x: 'Anomaly' if x==1 else 'Not anomaly')
-            self.combine2.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file2.csv', index=False)
-            print(self.combine2.head().to_string())
-        except Exception as e: print(f'invalid optics: {e}')
-
-
-    def hd_scan(self):
-        try:
-            self.combine3 = pd.read_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file2.csv')
-            self.hd_pipeline.fit(self.copy)
-            x = self.hd_pipeline.named_steps['preprocessor'].transform(self.copy)
-            x_pca = self.hd_pipeline.named_steps['pca'].transform(x)
-            y = self.hd_pipeline.named_steps['hd'].labels_
-            for scores in self.scores:
-                s = scores(x_pca, y)
-                #print(f'{scores.__name__}: {s}')
-            self.combine3['hdbscan labels'] = y
-            self.combine3['hdbscan identifier'] = (self.combine3['hdbscan labels'] == -1).astype(int)
-            self.combine3['hdbscan category'] = self.combine3['hdbscan identifier'].apply(lambda x: 'Anomaly' if x==1 else 'Not anomaly')
-
-            self.hd_iso_pipeline.fit(self.copy)
-            x_iso = self.hd_iso_pipeline.named_steps['preprocessor'].transform(self.copy)
-            x_iso_pca = self.hd_iso_pipeline.named_steps['pca'].transform(x_iso)
-
-            x_iso_fit = self.hd_iso_pipeline.named_steps['iso'].fit(x_iso_pca)
-            x_iso_predict = self.hd_iso_pipeline.named_steps['iso'].predict(x_iso_pca)
-            x_iso_scores = self.hd_iso_pipeline.named_steps['iso'].decision_function(x_iso_pca)
-            hd_iso_scores_df = pd.DataFrame({'hdbscan isolation scores': x_iso_scores,
-                                             'hdbscan isolation detector': x_iso_predict})
-            hd_iso_scores_df.insert(0, 'id', hd_iso_scores_df.index+1)
-            hd_iso_scores_df.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_hdbscan_iso.csv', index=False)
-
-            self.combine3['hdbscan isolation labels'] = x_iso_predict
-            self.combine3['hdbscan isolation anomaly identifier'] = (self.combine3['hdbscan isolation labels'] == -1).astype(int)
-            self.combine3['hdbscan isolation anomaly category'] = self.combine3['hdbscan isolation anomaly identifier'].apply(lambda x: 'Anomaly' if x==1 else 'Not anomaly')
-            self.combine3.insert(0, 'id', self.combine3.index+1)
-            self.combine3.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file3.csv', index=False)
-
-            self.total_identifier = pd.Series(
-                        self.combine3['dbscan isolation anomaly identifier'].astype(int) +
-                        self.combine3['optics isolation anomaly identifier'].astype(int) +
-                        self.combine3['hdbscan isolation anomaly identifier'].astype(int))
-
-            self.total_category = self.total_identifier.map({0: 'none',1: 'low', 2: 'medium', 3: 'critical'})
-
-            self.combine3['anomaly identifier'] = self.total_identifier
-            self.combine3['anomaly detector'] = self.total_category
-            self.combine3.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file3.csv', index=False)
-
-            print(self.combine3.head().to_string())
-        except Exception as e: print(f'invalid hdbscan: {e}')
-
-    def flag_fraud(self):
-        try:
-            self.final_fraud = pd.read_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file3.csv')
-            self.final_fraud['fraud identifier'] = self.final_fraud['anomaly detector'].apply(lambda x: 1 if x == 'critical' else 0)
-            self.final_fraud['fraud detector'] = self.final_fraud['fraud identifier'].apply(lambda x: 'is fraud' if x == 1 else 'not fraud')
-            self.final_fraud.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file4_before_drop_isna.csv', index=False)
-
-            self.final_drop_fraud = self.final_fraud.drop(index=[44,45,46]).reset_index(drop=True)
-
-            id_count = self.final_drop_fraud['id'].count()
-            f_identifier = self.final_drop_fraud['fraud identifier'].sum()
-            self.final_drop_fraud['fraud measures'] = f_identifier / id_count
-            print(self.final_drop_fraud.head().to_string())
-            self.final_drop_fraud.to_csv('c:/Users/anton/OneDrive/gov_finance/gov_soft_gl_auto_dash_file4.csv', index=False)
-            #print(self.final_drop_fraud.dtypes)
-            #print(self.final_drop_fraud.head().to_string())
-
-
-
-
-
-        except Exception as e: print(f'invalid flag column: {e}')
 
 
 
 if __name__ == "__main__":
-    model_name = input('Enter model name here: ')
-    cf = ClusterF('c:/Users/anton/OneDrive/gov_finance/gov_clean_cluster.csv', model_name)
-    if model_name == 'd':
-        cf.db_scan()
-    elif model_name == 'o':
-        cf.op_tics()
-    elif model_name == 'h':
-        cf.hd_scan()
-    elif model_name == 'f':
-        cf.flag_fraud()
+    model_name = input('enter model name here: ')
+    fc = FileLoader("c:/Users/anton/OneDrive/fraud_detection/sof_gl_test.xlsx")
+    if model_name == 'a':
+        fc.load()
+
+    dm = DModel('c:/Users/anton/OneDrive/fraud_detection/gl1.csv')
+
+
+
+
+
+
+
+
+
+
+
