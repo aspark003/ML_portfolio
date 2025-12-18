@@ -72,7 +72,7 @@ class FileLoader:
         if self.df is not None:
             print(self.df.head().to_string())
 
-        self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/gl1.csv', index=False)
+        #self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/gl1.csv', index=False)
         return self.df
 
 
@@ -138,7 +138,7 @@ class DModel:
         self.df['dbscan labels'] = y
         self.df['dbscan identifier'] = (self.df['dbscan labels'] == -1).astype(int)
         self.df['dbscan category'] = self.df['dbscan identifier'].apply(lambda x: 'anomaly' if x == 1 else 'not anomaly')
-        self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
+        #self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
 
         #print(self.df.head().to_string())
 
@@ -159,7 +159,7 @@ class DModel:
         self.df['optics labels'] = yl
         self.df['optics identifier'] = (self.df['optics labels'] == -1).astype(int)
         self.df['optics category'] = self.df['optics identifier'].apply(lambda x: 'anomaly' if x == 1 else 'not anomaly')
-        self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
+        #self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
 
 
         self.h_pipeline.fit(self.copy)
@@ -176,11 +176,15 @@ class DModel:
         self.df['hdbscan identifier'] = (self.df['hdbscan labels'] == -1).astype(int)
         self.df['hdbscan category'] = self.df['hdbscan identifier'].apply(lambda x: 'anomaly' if x == 1 else 'not anomaly')
 
-        self.df['total identifiers'] = ((self.df['dbscan identifier']).astype(int)+
+        self.df['anomaly agreement strength'] = ((self.df['dbscan identifier']).astype(int)+
                                         (self.df['optics identifier']).astype(int)+
                                         (self.df['hdbscan identifier'].astype(int)))
 
-        self.df['total category'] = self.df['total identifiers'].map({3: 'high',2: 'medium', 1: 'low', 0: 'none'})
+        self.df['anomaly category'] = self.df['anomaly agreement strength'].map({3: 'high',2: 'medium', 1: 'low', 0: 'none'})
+
+
+        self.df['investigation required'] = self.df['anomaly agreement strength'].apply(lambda x: 'needs review' if x >= 2 else 'none')
+        self.df['fraud candidate'] = self.df['investigation required'].apply(lambda x: 'potential fraud' if x == 'needs review' else 'none')
 
 
         self.df.to_csv('c:/Users/anton/OneDrive/fraud_detection/original.csv', index=False)
