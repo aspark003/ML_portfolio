@@ -1,27 +1,29 @@
-
 https://app.powerbi.com/groups/me/dashboards/3becc95e-5b8a-43d8-86b6-85cc65d37c13?experience=power-bi
 
-Residual-Based Financial Anomaly Detection
-Overview
+Residual-Based Financial Deviation & Risk Screening Overview
 
-This project implements an end-to-end residual-based financial anomaly detection pipeline using supervised regression.
-Rather than relying on unsupervised anomaly detection alone, the system builds an expectation model, measures deviations from that expectation, and classifies severity using distribution-based thresholds.
+This project implements an end-to-end regression-driven deviation analysis pipeline for financial and ledger-style data.
+Rather than treating regression as a prediction task, the system builds an expectation model, measures record-level deviations, assigns severity, and flags items for investigative review.
 
-The output is a record-level anomaly dataset designed for direct use in Power BI dashboards and audit workflows.
+The goal is not forecasting accuracy, but quantifying material deviation and supporting audit, compliance, and risk prioritization workflows.
+
+The output is a record-level enriched dataset designed for direct use in Power BI dashboards and human review processes.
 
 Pipeline Architecture
 
-The workflow is intentionally modular and executed in stages:
+The workflow is modular and executed in clearly separated stages:
 
-Raw File → Load → Clean → Model → Residuals → Severity Labels → Dashboard
+Raw File → Load → Clean → Model → Residuals → Severity → Investigation → Dashboard
 
-1. File Loading (FileLoader)
+File Loading (FileLoader)
 
-Supports multiple file types:
+Supported formats:
 
 Excel (.xlsx)
 
-Text Files (CSV)
+Text files (.csv, .tsv)
+
+JSON / TXT
 
 Features:
 
@@ -29,17 +31,16 @@ Validates Excel files as proper ZIP archives
 
 Normalizes ingestion into Pandas DataFrames
 
-Saves a standardized intermediate CSV (practice1.csv)
+Saves a standardized intermediate file (practice1.csv)
 
 Purpose:
+Ensure reliable ingestion regardless of source format while preserving raw structure.
 
-Ensure reliable ingestion regardless of source format.
-
-2. Data Cleaning & Preparation (CleanFile)
+Data Cleaning & Preparation (CleanFile)
 
 Key steps:
 
-Applies a custom header offset
+Applies custom header offsets where required
 
 Normalizes column names
 
@@ -47,7 +48,7 @@ Removes trailing non-data rows
 
 Adds a stable record ID
 
-Saves a preserved original snapshot for later reconciliation
+Preserves an untouched original snapshot for reconciliation
 
 Uses ColumnTransformer for:
 
@@ -55,19 +56,22 @@ Numeric median imputation
 
 Categorical missing-value handling
 
+Feature-safe preprocessing
+
 Outputs:
 
-practice_original.csv (pre-model reference)
+practice_original.csv (audit reference)
 
 practice0.csv (model-ready dataset)
 
 Purpose:
+Prepare a leakage-controlled dataset while preserving full financial context for explanation.
 
-Prepare a leakage-free, model-safe dataset while preserving raw financial context.
+Expectation Modeling (LinearModel)
 
-3. Expectation Modeling (LinearModel)
+Regression is used only to establish an expected value, not to classify records.
 
-Models tested:
+Models evaluated:
 
 Linear Regression
 
@@ -77,21 +81,20 @@ RidgeCV
 
 ElasticNetCV (available)
 
-Evaluation strategy:
+Evaluation approach:
 
 Train/Test split
 
-Cross-validation (CV)
+Cross-validation for realism checks
 
 Full-dataset fit for expectation generation
 
-Important design choice:
+Design principle:
+Model evaluation validates plausibility — it does not drive downstream decisions.
 
-Cross-validation is used to validate realism, not maximize scores.
+Leakage Control
 
-4. Leakage Control
-
-Post-event and outcome-derived financial fields are explicitly excluded from modeling, including:
+To prevent artificial performance inflation, outcome-derived or post-event fields are excluded from modeling, including:
 
 Commitments
 
@@ -101,44 +104,57 @@ Limits
 
 Organizational rollups
 
-These fields remain available for dashboard explanation, but not for prediction.
+These fields remain available for dashboard interpretation, but are never used for prediction.
 
 Purpose:
+Ensure real-world validity and audit defensibility.
 
-Prevent artificial performance inflation and ensure real-world validity.
+Residual Calculation
 
-5. Residual Calculation
-
-Residuals are computed as:
+Residuals are computed per record as:
 
 residual = actual − predicted
 
+This produces a direct, interpretable measure of financial deviation from expectation.
 
-This produces an interpretable deviation from expected spending.
+Residuals are not scores — they are differences.
 
-6. Severity Classification
+Severity Classification
 
-Residuals are categorized using quantile thresholds:
+Residuals are translated into severity using distribution-based thresholds:
 
-Under: ≤ 25th percentile
+Under → ≤ 25th percentile
 
-Normal: 25th–75th percentile
+Normal → 25th–75th percentile
 
-Over: ≥ 75th percentile
+Over → ≥ 75th percentile
 
 Outputs:
 
 Numeric residual identifier
 
-Human-readable severity label
+Human-readable residual category
+
+Binary investigation flag
 
 Purpose:
-
 Convert numeric deviation into actionable audit signals.
 
-7. Output for Visualization
+Investigation Logic
 
-Final output is written back to practice_original.csv with:
+Residual severity is collapsed into a binary review gate:
+
+Investigation required
+
+None
+
+This mirrors the same decision structure used in the unsupervised anomaly pipeline.
+
+Regression ends here — all further work is analysis, not modeling.
+
+Output for Visualization
+
+Final output is written back to practice_original.csv and includes:
 
 Original financial context
 
@@ -146,9 +162,11 @@ Model predictions
 
 Residual values
 
-Severity categories
+Severity labels
 
-This file is designed for direct ingestion into Power BI.
+Investigation flags
+
+The dataset is Power BI–ready with no downstream model logic.
 
 Power BI Dashboard
 
@@ -156,15 +174,15 @@ The dashboard supports:
 
 Record-level inspection
 
-Severity filtering
+Residual severity filtering
 
 Accounting-formatted financial fields
 
-Residual-driven prioritization
+Deviation-driven prioritization
 
 Audit-ready interpretation
 
-No model logic is duplicated in Power BI — all intelligence is upstream.
+No ML logic is duplicated in Power BI — all intelligence is upstream.
 
 Why This Approach
 
@@ -174,15 +192,18 @@ Data leakage
 
 Overfitting
 
-Uninterpretable anomaly scores
+Opaque anomaly scores
+
+Undocumented decision logic
 
 This project prioritizes:
 
 Model honesty
 
-Explainability
+Interpretability
+
+Governance defensibility
 
 Practical decision support
 
-Residual-based anomalies provide a transparent and defensible signal suitable for financial review and governance contexts.
-
+Residual-based deviation analysis provides a transparent, explainable, and defensible signal suitable for financial review, audit, and compliance contexts.
