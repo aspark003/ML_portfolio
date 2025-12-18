@@ -1,34 +1,46 @@
 https://app.fabric.microsoft.com/groups/me/dashboards/1c7a9c3e-5f14-4414-90ed-923cdc4e7027?experience=fabric-developer
 
+Anomaly Detection & Fraud Risk Screening Dashboard
 
-
-
-Anomaly Detection & Fraud Risk Dashboard
-
-Unsupervised ML Pipeline + Power BI Analytics
+Unsupervised ML + Regression Deviation Analysis with Power BI
 
 Project Overview
 
-This project implements an end-to-end unsupervised anomaly detection system for financial and ledger-style data.
-The pipeline detects unusual spending patterns using multiple density-based clustering algorithms, aggregates anomaly signals, and presents results in an interactive Power BI dashboard designed for audit, compliance, and financial oversight use cases.
+This project implements an end-to-end anomaly detection and risk screening system for financial and ledger-style data.
 
-The goal is not prediction, but risk discovery, validation, and prioritization.
+The system is designed to surface unusual patterns and material deviations, assign severity, and prioritize records for audit and investigative review using an interactive Power BI dashboard.
 
-Modeling Approach
+The goal is not fraud prediction, but risk discovery, validation, and prioritization.
 
-The system uses model consensus, not a single algorithm, to reduce false positives and improve confidence.
+Modeling Philosophy
+
+The system separates detection from decision-making:
+
+Machine learning identifies what is abnormal
+
+Severity quantifies how significant the deviation is
+
+Binary review flags drive human investigation
+
+This design mirrors real-world audit and compliance workflows.
+
+Modeling Components
+
+Unsupervised Anomaly Detection (Pattern-Based)
+
+To identify structural anomalies, the system uses model consensus across multiple density-based algorithms:
 
 Algorithms implemented:
 
-DBSCAN – density-based anomaly detection
+DBSCAN – density-based outlier detection
 
-OPTICS – variable density clustering for irregular structures
+OPTICS – variable-density clustering
 
 HDBSCAN – hierarchical density-based clustering
 
 PCA – dimensionality reduction for clustering stability
 
-Isolation Forest (optional reference model)
+(Isolation Forest included as a reference model)
 
 Each model produces:
 
@@ -36,43 +48,88 @@ cluster labels
 
 anomaly identifiers
 
-categorical flags
+Model outputs are aggregated, not used independently.
 
-These are combined into a unified severity score.
+Consensus-Based Anomaly Severity
 
-⚙️ Pipeline Architecture
+Model agreement is combined into a single score:
 
-1. Data Ingestion
+Anomaly Agreement Strength
 
-Supports Excel, CSV, TSV, JSON, and TXT
+DBSCAN + OPTICS + HDBSCAN
+
+
+Severity Levels
+
+0 → None
+
+1 → Low
+
+2 → Medium
+
+3 → High
+
+This answers:
+
+How confident are we that this record is structurally unusual?
+
+Regression-Based Deviation Analysis (Value-Based)
+
+Regression is used only to quantify deviation magnitude, not classification.
+
+For each record:
+
+Actual value is compared to a model-expected value
+
+Residuals (actual − predicted) measure financial deviation
+
+Residuals are:
+
+bucketed into severity levels using quantiles
+
+collapsed into a binary investigation flag
+
+This answers:
+
+How far off is this value from what would be expected?
+
+Investigation & Fraud Screening Logic
+
+Both anomaly severity and regression residual severity feed into review gates:
+
+Investigation Required → needs analyst review
+
+Fraud Candidate → potential fraud (screening only)
+
+No record is labeled as confirmed fraud.
+The system identifies candidates for review, not intent.
+
+Pipeline Architecture
+Data Ingestion
+
+Supports Excel, CSV, TSV, JSON, TXT
 
 Automatic validation and safe loading
 
-Preserves original data for audit traceability
+Original data preserved for audit traceability
 
-2. Preprocessing
+Preprocessing
 
-Median imputation for numeric features
+Median imputation (numeric)
 
-Constant imputation for categorical features
+Constant imputation (categorical)
 
 Min-Max scaling
 
 One-Hot Encoding
 
-Managed through ColumnTransformer
+Managed via ColumnTransformer
 
-3. Modeling
+Modeling
+
+Independent pipelines for DBSCAN, OPTICS, HDBSCAN
 
 PCA applied per model (configurable components)
-
-Independent pipelines for:
-
-DBSCAN
-
-OPTICS
-
-HDBSCAN
 
 Cluster evaluation using:
 
@@ -82,22 +139,23 @@ Calinski-Harabasz Index
 
 Davies-Bouldin Index
 
-4. Consensus Scoring
+Dashboard Features (Power BI)
 
-Total Identifiers = DBSCAN + OPTICS + HDBSCAN
-Severity Levels:
-0 → None
-1 → Low
-2 → Medium
-3 → High
+Interactive anomaly & deviation table
 
-📈 Dashboard Features (Power BI)
+Row-level highlighting for:
 
-Interactive anomaly table
+anomaly severity
 
-Row-level anomaly highlighting
+regression deviation severity
 
-Severity cards (None / Low / Medium / High)
+investigation status
+
+KPI cards for:
+
+None / Low / Medium / High anomaly counts
+
+Records requiring investigation
 
 Drill-down by:
 
@@ -109,41 +167,41 @@ project
 
 account code
 
-Supports audit review and investigation workflows
+Designed to support audit review, compliance checks, and prioritization.
 
 Output Artifacts
 
-original.csv – enriched dataset with all anomaly labels
+original.csv – enriched dataset with all anomaly and regression flags
 
-Model metrics printed per algorithm
+Model evaluation metrics logged per algorithm
 
-Power BI report connected to final dataset
+Power BI dashboard connected to finalized dataset
 
-🧪 Model Performance (Example)
+Example Model Metrics
 Model	Silhouette	Calinski-Harabasz	Davies-Bouldin
 DBSCAN	~0.70	~47	~1.00
 OPTICS	~0.50	~15	~1.56
 HDBSCAN	~0.72	~90	~0.68
 
-HDBSCAN provided the strongest clustering separation, reinforcing the multi-model consensus strategy.
+HDBSCAN showed the strongest separation, reinforcing the multi-model consensus approach.
 
 Key Takeaways
 
-Unsupervised models must be interpreted, not trusted blindly
+Unsupervised models identify risk signals, not conclusions
 
-Consensus across models dramatically improves reliability
+Model consensus reduces false positives
 
-PCA + density methods are effective for financial anomaly detection
+Regression residuals quantify material impact
 
-Dashboards turn models into decision tools, not experiments
+Dashboards convert ML outputs into actionable review workflows
 
 Use Cases
 
-Fraud detection
+Fraud screening (candidate identification)
 
 Financial audit support
 
-Budget anomaly discovery
+Budget and expenditure anomaly discovery
 
 Compliance monitoring
 
@@ -151,10 +209,10 @@ Risk prioritization
 
 Tech Stack
 
-Python (pandas, scikit-learn, numpy)
+Python (pandas, numpy, scikit-learn)
 
 PCA, DBSCAN, OPTICS, HDBSCAN
 
-Power BI
+Power BI / Fabric
 
-GitHub version control
+GitHub for version control
