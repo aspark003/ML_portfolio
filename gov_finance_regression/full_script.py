@@ -138,7 +138,7 @@ class LinearModel:
             lr_test = lr.predict(X_test)
             for sc in self.scores:
                 c = sc(y_test, lr_test)
-                #print(f'train / test scores: {sc.__name__}: {c}')
+                print(f'train / test scores: {sc.__name__}: {c}')
             #print()
 
             # no training, straight to X, y
@@ -201,6 +201,8 @@ class LinearModel:
             self.o['linear residual'] = self.o['linear final score'].apply(lambda x: 3 if x > high else 1 if x <= low else 2)
             self.o['linear residual category'] = self.o['linear residual'].map({3: 'over',2: 'normal', 1: 'under'})
 
+            self.o['residual severity'] = self.o['linear residual'].apply(lambda x: 'review required' if x > 2 else 'none')
+            self.o['investigation required'] = self.o['residual severity'].apply(lambda x: 'investigate' if x == 'review required' else 'none')
 
             self.o.to_csv('c:/Users/anton/OneDrive/practice/practice_original.csv', index=False)
             print(self.o.head().to_string())
