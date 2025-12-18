@@ -1,5 +1,5 @@
 
-https://app.fabric.microsoft.com/groups/me/reports/2cd556e7-790a-40f6-9ddc-f419f7757bbc/9e114e6d25d600f6b156?experience=fabric-developer
+https://app.powerbi.com/groups/me/dashboards/3becc95e-5b8a-43d8-86b6-85cc65d37c13?experience=power-bi
 
 Residual-Based Financial Anomaly Detection
 Overview
