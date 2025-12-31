@@ -1,5 +1,3 @@
-https://app.powerbi.com/groups/me/dashboards/3becc95e-5b8a-43d8-86b6-85cc65d37c13?experience=power-bi
-
 Residual-Based Financial Deviation & Risk Screening Overview
 
 This project implements an end-to-end regression-driven deviation analysis pipeline for financial and ledger-style data.
