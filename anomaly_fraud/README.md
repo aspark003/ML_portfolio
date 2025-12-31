@@ -1,12 +1,11 @@
-https://app.fabric.microsoft.com/groups/me/dashboards/1c7a9c3e-5f14-4414-90ed-923cdc4e7027?experience=fabric-developer
 
-Anomaly Detection & Fraud Risk Screening Dashboard
+Anomaly Detection
 
-Unsupervised ML + Regression Deviation Analysis with Power BI
+Unsupervised M
 
 Project Overview
 
-This project implements an end-to-end anomaly detection and risk screening system for financial and ledger-style data.
+This project implements an end-to-end anomaly dashboard.
 
 The system is designed to surface unusual patterns and material deviations, assign severity, and prioritize records for audit and investigative review using an interactive Power BI dashboard.
 
@@ -34,8 +33,6 @@ Algorithms implemented:
 
 DBSCAN – density-based outlier detection
 
-OPTICS – variable-density clustering
-
 HDBSCAN – hierarchical density-based clustering
 
 PCA – dimensionality reduction for clustering stability
@@ -44,11 +41,7 @@ PCA – dimensionality reduction for clustering stability
 
 Each model produces:
 
-cluster labels
-
 anomaly identifiers
-
-Model outputs are aggregated, not used independently.
 
 Consensus-Based Anomaly Severity
 
@@ -61,57 +54,11 @@ DBSCAN + OPTICS + HDBSCAN
 
 Severity Levels
 
-0 → None
-
-1 → Low
-
-2 → Medium
-
-3 → High
+critical / low
 
 This answers:
 
 How confident are we that this record is structurally unusual?
-
-Regression-Based Deviation Analysis (Value-Based)
-
-Regression is used only to quantify deviation magnitude, not classification.
-
-For each record:
-
-Actual value is compared to a model-expected value
-
-Residuals (actual − predicted) measure financial deviation
-
-Residuals are:
-
-bucketed into severity levels using quantiles
-
-collapsed into a binary investigation flag
-
-This answers:
-
-How far off is this value from what would be expected?
-
-Investigation & Fraud Screening Logic
-
-Both anomaly severity and regression residual severity feed into review gates:
-
-Investigation Required → needs analyst review
-
-Fraud Candidate → potential fraud (screening only)
-
-No record is labeled as confirmed fraud.
-The system identifies candidates for review, not intent.
-
-Pipeline Architecture
-Data Ingestion
-
-Supports Excel, CSV, TSV, JSON, TXT
-
-Automatic validation and safe loading
-
-Original data preserved for audit traceability
 
 Preprocessing
 
@@ -127,7 +74,7 @@ Managed via ColumnTransformer
 
 Modeling
 
-Independent pipelines for DBSCAN, OPTICS, HDBSCAN
+Independent pipelines for DBSCAN, HDBSCAN, ISOLATION FOREST
 
 PCA applied per model (configurable components)
 
@@ -151,9 +98,9 @@ regression deviation severity
 
 investigation status
 
-KPI cards for:
+Powerbi cards for:
 
-None / Low / Medium / High anomaly counts
+id/anomaly/risk/detector
 
 Records requiring investigation
 
@@ -179,11 +126,20 @@ Power BI dashboard connected to finalized dataset
 
 Example Model Metrics
 Model	Silhouette	Calinski-Harabasz	Davies-Bouldin
-DBSCAN	~0.70	~47	~1.00
-OPTICS	~0.50	~15	~1.56
-HDBSCAN	~0.72	~90	~0.68
+DBSCAN:
+silhouette_score:0.7112018964744454
+calinski_harabasz_score:427.12848402501555
+davies_bouldin_score:0.778474433752063
 
-HDBSCAN showed the strongest separation, reinforcing the multi-model consensus approach.
+HDBSCAN 
+silhouette_score:0.6154682023131522
+calinski_harabasz_score:142.16463458230797
+davies_bouldin_score:1.152683627699001
+
+VARIANCE
+[0.2948866  0.23071016 0.22773586 0.10002866 0.06515764]
+CUMSUM
+[0.2948866  0.52559676 0.75333262 0.85336128 0.91851892]
 
 Key Takeaways
 
@@ -191,28 +147,27 @@ Unsupervised models identify risk signals, not conclusions
 
 Model consensus reduces false positives
 
-Regression residuals quantify material impact
-
 Dashboards convert ML outputs into actionable review workflows
 
 Use Cases
 
-Fraud screening (candidate identification)
-
-Financial audit support
-
-Budget and expenditure anomaly discovery
-
-Compliance monitoring
+Anomaly identifier
 
 Risk prioritization
 
 Tech Stack
 
-Python (pandas, numpy, scikit-learn)
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
+from sklearn.cluster import DBSCAN, OPTICS, HDBSCAN
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
+from sklearn.decomposition import PCA
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.ensemble import IsolationForest
 
-PCA, DBSCAN, OPTICS, HDBSCAN
-
-Power BI / Fabric
+Power BI - personal
 
 GitHub for version control
