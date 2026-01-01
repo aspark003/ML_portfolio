@@ -126,20 +126,27 @@ Power BI dashboard connected to finalized dataset
 
 Example Model Metrics
 Model	Silhouette	Calinski-Harabasz	Davies-Bouldin
-DBSCAN:
-silhouette_score:0.7112018964744454
-calinski_harabasz_score:427.12848402501555
-davies_bouldin_score:0.778474433752063
-
-HDBSCAN 
-silhouette_score:0.6154682023131522
-calinski_harabasz_score:142.16463458230797
-davies_bouldin_score:1.152683627699001
 
 VARIANCE
 [0.2948866  0.23071016 0.22773586 0.10002866 0.06515764]
 CUMSUM
 [0.2948866  0.52559676 0.75333262 0.85336128 0.91851892]
+
+DBSCAN:
+silhouette_score:0.7112018964744454
+calinski_harabasz_score:427.12848402501555
+davies_bouldin_score:0.778474433752063
+
+OPTICS:
+optics: silhouette_score:0.415656117615129
+optics: calinski_harabasz_score:81.67084716989875
+optics: davies_bouldin_score:1.0495095936033456
+
+HDBSCAN 
+hdbscan: silhouette_score:0.8523950193024684
+hdbscan: calinski_harabasz_score:5030.9098261208355
+hdbscan: davies_bouldin_score:0.6991332955991967
+
 
 Key Takeaways
 
@@ -155,8 +162,7 @@ Anomaly identifier
 
 Risk prioritization
 
-Tech Stack
-
+LIBRARY:
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
@@ -171,3 +177,8 @@ from sklearn.ensemble import IsolationForest
 Power BI - personal
 
 GitHub for version control
+
+
+
+
+
