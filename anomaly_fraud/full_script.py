@@ -36,15 +36,15 @@ class A:
 
         db = Pipeline([('preprocessor', preprocessor),
                        ('pca', PCA(n_components=0.9)),
-                       ('dbscan', DBSCAN(eps=0.2, min_samples=5))])
+                       ('dbscan', DBSCAN(eps=0.4, min_samples=8))])
 
         op = Pipeline([('preprocessor', preprocessor),
-                       ('pca', PCA(n_components=0.9)),
-                       ('optics', OPTICS(min_samples=5, xi=0.05))])
+                       ('pca', PCA(n_components=0.8)),
+                       ('optics', OPTICS(min_samples=6, xi=0.01))])
 
         hd = Pipeline([('preprocessor', preprocessor),
-                       ('pca', PCA(n_components=0.9)),
-                       ('hdbscan', HDBSCAN(min_samples=5, min_cluster_size=5, copy=False))])
+                       ('pca', PCA(n_components=0.8)),
+                       ('hdbscan', HDBSCAN(min_samples=5, min_cluster_size=7, copy=False))])
 
         iso = Pipeline([('preprocessor', preprocessor),
                         ('pca', PCA(n_components=0.9)),
@@ -56,45 +56,60 @@ class A:
         x_pca = db.named_steps['pca'].transform(x)
         variance = db.named_steps['pca'].explained_variance_ratio_
         cumsum = np.cumsum(variance)
-        print(variance)
-        print(cumsum)
+        #print(variance)
+        #print(cumsum)
         y = db.named_steps['dbscan'].labels_
         for sc in scores:
             s = sc(x_pca, y)
-            print(f'{sc.__name__}:{s}')
+            print(f'dbscan: {sc.__name__}:{s}')
+        print()
+
+
+        op.fit(self.df)
+        ox = op.named_steps['preprocessor'].transform(self.df)
+        ox_pca = op.named_steps['pca'].transform(ox)
+        oy = op.named_steps['optics'].labels_
+        for oyscore in scores:
+            oys = oyscore(ox_pca, oy)
+            print(f'optics: {oyscore.__name__}:{oys}')
+        print()
+
         hd.fit(self.df)
         xh = hd.named_steps['preprocessor'].transform(self.df)
         xh_pca = hd.named_steps['pca'].transform(xh)
         yh = hd.named_steps['hdbscan'].labels_
         for ys in scores:
             ysco = ys(xh_pca, yh)
-            print(f'{ys.__name__}:{ysco}')
+            print(f'hdbscan: {ys.__name__}:{ysco}')
+        print()
 
         prob = hd.named_steps['hdbscan'].probabilities_
 
 
-        self.df['dbscan label'] = y
-        self.df['outlier'] = (self.df['dbscan label'] == -1).astype(int)
+        self.df['hdbscan label'] = yh
+        self.df['outlier'] = (self.df['hdbscan label'].apply(lambda x: 1 if x == -1 else 0))
         self.df['outlier label'] = (self.df['outlier'].apply(lambda x: 'review' if x == 1 else 'no issues'))
 
         self.df['risk score'] = prob
 
-        med = 0.5
+        threshold = self.df['risk score'].quantile(0.25)
 
-        self.df['risk level'] = (self.df['risk score'].apply(lambda x: 'high' if x <= med else 'low'))
-
+        self.df['risk level'] = np.where(self.df['risk score'] <= threshold, 'high', 'low')
         iso.fit(self.df)
         ix = iso.named_steps['preprocessor'].transform(self.df)
         ix_pca = iso.named_steps['pca'].transform(ix)
         iso_d = iso.named_steps['iso'].decision_function(ix_pca)
 
         self.df['anomaly score'] = iso_d
-        middle = 0.5
-        self.df['anomaly detector'] = (self.df['anomaly score'].apply(lambda x: 'critical' if x <= middle else 'low'))
+
+        cutoff = self.df['anomaly score'].quantile(0.25)
+
+
+        self.df['anomaly detector'] = np.where(self.df['anomaly score'] <= cutoff, 'critical', 'low')
         self.df.reset_index(drop=True)
         self.df.insert(0, 'id', self.df.index + 1)
         #self.df.to_csv('c:/Users/anton/unsuper/cluster/final.csv', index=False)
-        print(self.df.head().to_string())
+        print(self.df.head(1).to_string())
 
         #print(iso_d)
 
