@@ -33,6 +33,8 @@ Algorithms implemented:
 
 DBSCAN – density-based outlier detection
 
+OPTICS - reachability, identify multiple density - based outlier detection
+
 HDBSCAN – hierarchical density-based clustering
 
 PCA – dimensionality reduction for clustering stability
@@ -49,11 +51,13 @@ Model agreement is combined into a single score:
 
 Anomaly Agreement Strength
 
-DBSCAN + OPTICS + HDBSCAN
+HDBSCAN
+outlier / no issues
 
+HDBSCAN PROBABILITIES
+high / low
 
-Severity Levels
-
+ISOLATION FOREST DECISION FUNCTION
 critical / low
 
 This answers:
@@ -94,27 +98,27 @@ Row-level highlighting for:
 
 anomaly severity
 
-regression deviation severity
-
 investigation status
 
 Powerbi cards for:
 
-id/anomaly/risk/detector
+id/outlier/risk level/anomaly
 
 Records requiring investigation
 
 Drill-down by:
 
-fund
+id
+age
+region
+account type
+credit score
+annual income
+outlier label
+risk level
+anomaly detector
 
-organization
-
-project
-
-account code
-
-Designed to support audit review, compliance checks, and prioritization.
+Designed to support loan reviews.
 
 Output Artifacts
 
