@@ -1,15 +1,15 @@
 
 Anomaly Detection
 
-Unsupervised M
+Unsupervised
 
 Project Overview
 
 This project implements an end-to-end anomaly dashboard.
 
-The system is designed to surface unusual patterns and material deviations, assign severity, and prioritize records for audit and investigative review using an interactive Power BI dashboard.
+The system is designed to surface unusual patterns and material deviations, anomaly detector review using an interactive Power BI dashboard.
 
-The goal is not fraud prediction, but risk discovery, validation, and prioritization.
+The goal is not to predict, but risk discovery, validation, and prioritization.
 
 Modeling Philosophy
 
@@ -17,7 +17,7 @@ The system separates detection from decision-making:
 
 Machine learning identifies what is abnormal
 
-Severity quantifies how significant the deviation is
+Anomaly quantifies how significant the deviation is
 
 Binary review flags drive human investigation
 
@@ -30,10 +30,6 @@ Unsupervised Anomaly Detection (Pattern-Based)
 To identify structural anomalies, the system uses model consensus across multiple density-based algorithms:
 
 Algorithms implemented:
-
-DBSCAN – density-based outlier detection
-
-OPTICS - reachability, identify multiple density - based outlier detection
 
 HDBSCAN – hierarchical density-based clustering
 
@@ -78,7 +74,7 @@ Managed via ColumnTransformer
 
 Modeling
 
-Independent pipelines for DBSCAN, HDBSCAN, ISOLATION FOREST
+Independent pipelines for HDBSCAN, ISOLATION FOREST
 
 PCA applied per model (configurable components)
 
@@ -136,21 +132,10 @@ VARIANCE
 CUMSUM
 [0.2948866  0.52559676 0.75333262 0.85336128 0.91851892]
 
-DBSCAN:
-silhouette_score:0.7112018964744454
-calinski_harabasz_score:427.12848402501555
-davies_bouldin_score:0.778474433752063
-
-OPTICS:
-optics: silhouette_score:0.415656117615129
-optics: calinski_harabasz_score:81.67084716989875
-optics: davies_bouldin_score:1.0495095936033456
-
 HDBSCAN 
 hdbscan: silhouette_score:0.8523950193024684
 hdbscan: calinski_harabasz_score:5030.9098261208355
 hdbscan: davies_bouldin_score:0.6991332955991967
-
 
 Key Takeaways
 
@@ -161,9 +146,7 @@ Model consensus reduces false positives
 Dashboards convert ML outputs into actionable review workflows
 
 Use Cases
-
 Anomaly identifier
-
 Risk prioritization
 
 LIBRARY:
