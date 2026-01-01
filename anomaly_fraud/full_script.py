@@ -74,23 +74,23 @@ class A:
 
 
         self.df['dbscan label'] = y
-        self.df['anomaly'] = (self.df['dbscan label'] == -1).astype(int)
-        self.df['anomaly label'] = (self.df['anomaly'].apply(lambda x: 'critical' if x == 1 else 'low'))
+        self.df['outlier'] = (self.df['dbscan label'] == -1).astype(int)
+        self.df['outlier label'] = (self.df['outlier'].apply(lambda x: 'review' if x == 1 else 'no issues'))
 
-        self.df['risk label'] = prob
+        self.df['risk score'] = prob
 
         med = 0.5
 
-        self.df['risk score'] = (self.df['risk label'].apply(lambda x: 'critical' if x >= med else 'low'))
+        self.df['risk level'] = (self.df['risk score'].apply(lambda x: 'high' if x <= med else 'low'))
 
         iso.fit(self.df)
         ix = iso.named_steps['preprocessor'].transform(self.df)
         ix_pca = iso.named_steps['pca'].transform(ix)
         iso_d = iso.named_steps['iso'].decision_function(ix_pca)
 
-        self.df['isolation score'] = iso_d
+        self.df['anomaly score'] = iso_d
         middle = 0.5
-        self.df['isolation label'] = (self.df['isolation score'].apply(lambda x: 'critical' if x <= middle else 'low'))
+        self.df['anomaly detector'] = (self.df['anomaly score'].apply(lambda x: 'critical' if x <= middle else 'low'))
         self.df.reset_index(drop=True)
         self.df.insert(0, 'id', self.df.index + 1)
         #self.df.to_csv('c:/Users/anton/unsuper/cluster/final.csv', index=False)
