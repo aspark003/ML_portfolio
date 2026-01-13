@@ -1,171 +1,55 @@
+Power BI Anomaly Detection Dashboard
+Overview
 
-Anomaly Detection
+This project demonstrates an end-to-end analytics workflow using Power BI Desktop combined with machine learning–driven anomaly detection.
 
-Unsupervised
+The dashboard is designed to analyze structured financial-style data and automatically flag abnormal patterns, risk levels, and outliers using unsupervised learning techniques.
 
-Project Overview
+It simulates real-world scenarios such as:
 
-This project implements an end-to-end anomaly dashboard.
+Fraud detection
 
-The system is designed to surface unusual patterns and material deviations, anomaly detector review using an interactive Power BI dashboard.
+Risk scoring
 
-The goal is not to predict, but risk discovery, validation, and prioritization.
+Operational anomaly monitoring
 
-Modeling Philosophy
+Behavior analysis
 
-The system separates detection from decision-making:
+Dashboard Features
 
-Machine learning identifies what is abnormal
+Interactive anomaly detection dashboard
 
-Anomaly quantifies how significant the deviation is
+Risk level classification (Low / Medium / High)
 
-Binary review flags drive human investigation
 
-This design mirrors real-world audit and compliance workflows.
 
-Modeling Components
 
-Unsupervised Anomaly Detection (Pattern-Based)
+Tools & Technologies
 
-To identify structural anomalies, the system uses model consensus across multiple density-based algorithms:
+Power BI Desktop
 
-Algorithms implemented:
+Python (pandas, scikit-learn)
 
-HDBSCAN – hierarchical density-based clustering
+Machine Learning (HDBSCAN, IsolationForest, PCA)
 
-PCA – dimensionality reduction for clustering stability
-
-(Isolation Forest included as a reference model)
-
-Each model produces:
-
-anomaly identifiers
-
-Consensus-Based Anomaly Severity
-
-Model agreement is combined into a single score:
-
-Anomaly Agreement Strength
-
-HDBSCAN
-outlier / no issues
-
-HDBSCAN PROBABILITIES
-high / low
-
-ISOLATION FOREST DECISION FUNCTION
-critical / low
-
-This answers:
-
-How confident are we that this record is structurally unusual?
-
-Preprocessing
-
-Median imputation (numeric)
-
-Constant imputation (categorical)
-
-Min-Max scaling
-
-One-Hot Encoding
-
-Managed via ColumnTransformer
-
-Modeling
-
-Independent pipelines for HDBSCAN, ISOLATION FOREST
-
-PCA applied per model (configurable components)
-
-Cluster evaluation using:
-
-Silhouette Score
-
-Calinski-Harabasz Index
-
-Davies-Bouldin Index
-
-Dashboard Features (Power BI)
-
-Interactive anomaly & deviation table
-
-Row-level highlighting for:
-
-anomaly severity
-
-investigation status
-
-Powerbi cards for:
-
-id/outlier/risk level/anomaly
-
-Records requiring investigation
-
-Drill-down by:
-
-id
-age
-region
-account type
-credit score
-annual income
-outlier label
-risk level
-anomaly detector
-
-Designed to support loan reviews.
-
-Output Artifacts
-
-original.csv – enriched dataset with all anomaly and regression flags
-
-Model evaluation metrics logged per algorithm
-
-Power BI dashboard connected to finalized dataset
-
-Example Model Metrics
-Model	Silhouette	Calinski-Harabasz	Davies-Bouldin
-
-VARIANCE
-[0.2948866  0.23071016 0.22773586 0.10002866 0.06515764]
-CUMSUM
-[0.2948866  0.52559676 0.75333262 0.85336128 0.91851892]
-
-HDBSCAN 
-hdbscan: silhouette_score:0.8523950193024684
-hdbscan: calinski_harabasz_score:5030.9098261208355
-hdbscan: davies_bouldin_score:0.6991332955991967
-
-Key Takeaways
-
-Unsupervised models identify risk signals, not conclusions
-
-Model consensus reduces false positives
-
-Dashboards convert ML outputs into actionable review workflows
+Data preprocessing and feature engineering
 
 Use Cases
-Anomaly identifier
-Risk prioritization
 
-LIBRARY:
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
-from sklearn.cluster import DBSCAN, OPTICS, HDBSCAN
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
-from sklearn.decomposition import PCA
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.ensemble import IsolationForest
+Fraud & compliance monitoring
 
-Power BI - personal
+Financial risk analysis
 
-GitHub for version control
+Vendor anomaly detection
 
+Operational intelligence
 
+Audit and governance dashboards
 
+Author
+
+Antonio
+Data Analytics & Machine Learning
+Power BI | Python | Risk Analytics | Anomaly Detection
 
 
