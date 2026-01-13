@@ -21,8 +21,15 @@ Interactive anomaly detection dashboard
 
 Risk level classification (Low / Medium / High)
 
+Files in This Repository
 
+File	Description
 
+README.med
+copy_raw.csv
+dashboard_screen.pdf
+final.csv
+full_script.py
 
 Tools & Technologies
 
@@ -49,7 +56,9 @@ Audit and governance dashboards
 Author
 
 Antonio
+
 Data Analytics & Machine Learning
+
 Power BI | Python | Risk Analytics | Anomaly Detection
 
 
