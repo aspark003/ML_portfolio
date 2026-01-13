@@ -1,12 +1,11 @@
-Power BI Anomaly Detection Dashboard
-
+Power BI Anomaly Detection Dashboard (Unsupervised ML)
 Overview
 
-This project demonstrates an end-to-end analytics workflow using Power BI Desktop combined with machine learning–driven anomaly detection.
+This project demonstrates an end-to-end analytics workflow using Power BI Desktop combined with machine learning–driven anomaly detection in Python.
 
-The dashboard is designed to analyze structured financial-style data and automatically flag abnormal patterns, risk levels, and outliers using unsupervised learning techniques.
+The dashboard analyzes structured, financial-style data and automatically flags abnormal patterns, risk levels, and outliers using unsupervised learning techniques. The goal is to simulate real-world operational and compliance scenarios where labels are unavailable, but unusual behavior must still be detected and prioritized.
 
-It simulates real-world scenarios such as:
+Real-World Scenarios Simulated
 
 Fraud detection
 
@@ -14,37 +13,41 @@ Risk scoring
 
 Operational anomaly monitoring
 
-Behavior analysis
+Behavioral deviation analysis
 
 Dashboard Features
 
-Interactive anomaly detection dashboard
+Interactive anomaly detection dashboard in Power BI
+
+Model-driven outlier detection (unsupervised)
 
 Risk level classification (Low / Medium / High)
 
-Files in This Repository
+Drilldowns by business attributes (ex: region, vendor/account type, department)
 
-File	Description
+Record-level investigation table for audit review
 
-README.med
+Machine Learning Approach
 
-copy_raw.csv
+Unsupervised anomaly detection techniques used to score and flag abnormal behavior:
 
-dashboard_screen.pdf
+PCA (dimensionality reduction)
 
-final.csv
+HDBSCAN (density-based clustering / anomaly labeling)
 
-full_script.py
+Isolation Forest (outlier detection)
 
-Tools & Technologies
+Outputs include anomaly flags and severity scoring that feed directly into the Power BI dashboard.
 
 Power BI Desktop
 
-Python (pandas, scikit-learn)
+Python (pandas, NumPy, scikit-learn)
 
-Machine Learning (HDBSCAN, IsolationForest, PCA)
+Machine Learning: HDBSCAN, Isolation Forest, PCA
 
 Data preprocessing and feature engineering
+
+Dashboard development and KPI reporting
 
 Use Cases
 
@@ -52,18 +55,14 @@ Fraud & compliance monitoring
 
 Financial risk analysis
 
-Vendor anomaly detection
+Vendor / account anomaly detection
 
-Operational intelligence
+Operational intelligence & outlier monitoring
 
 Audit and governance dashboards
 
 Author
 
-Antonio
-
+Antonio Park
 Data Analytics & Machine Learning
-
 Power BI | Python | Risk Analytics | Anomaly Detection
-
-
