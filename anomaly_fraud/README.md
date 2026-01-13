@@ -1,4 +1,5 @@
 Power BI Anomaly Detection Dashboard
+
 Overview
 
 This project demonstrates an end-to-end analytics workflow using Power BI Desktop combined with machine learning–driven anomaly detection.
@@ -26,9 +27,13 @@ Files in This Repository
 File	Description
 
 README.med
+
 copy_raw.csv
+
 dashboard_screen.pdf
+
 final.csv
+
 full_script.py
 
 Tools & Technologies
