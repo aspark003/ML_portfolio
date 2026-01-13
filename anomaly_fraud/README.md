@@ -64,5 +64,7 @@ Audit and governance dashboards
 Author
 
 Antonio Park
-Data Analytics & Machine Learning
-Power BI | Python | Risk Analytics | Anomaly Detection
+
+Machine Learning Engineer
+
+ML Portfolio: https://github.com/aspark003/ML_portfolio
