@@ -1,111 +1,109 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
-from sklearn.cluster import DBSCAN, OPTICS, HDBSCAN
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
 from sklearn.decomposition import PCA
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
 
 class A:
     def __init__(self, file):
         self.df = pd.read_csv(file, encoding='utf-8-sig', engine='python')
 
+        self.copy = self.df.copy()
+
+        self.num = self.copy.select_dtypes(include=['number']).columns
+        self.obj = self.copy.select_dtypes(include=['object', 'string']).columns
+
+        self.scaler = MinMaxScaler()
+        self.encoder = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
+
+        self.s_simple = Pipeline([('imputer', SimpleImputer(strategy='median')),
+                                 ('scaler', self.scaler)])
+
+        self.e_simple = Pipeline([('imputer', SimpleImputer(strategy='most_frequent')),
+                                  ('encoder', self.encoder)])
+
+        self.preprocessor = ColumnTransformer([('scaler', self.s_simple, self.num),
+                                               ('encoder', self.e_simple, self.obj)])
+
     def b(self):
-        self.df.columns =self.df.columns.str.replace('_', ' ', regex=True).str.lower().str.strip()
 
-        num = self.df.select_dtypes(include=['number']).columns
-        obj = self.df.select_dtypes(include=['object', 'string']).columns
+        x = self.preprocessor.fit_transform(self.copy)
+        pca = PCA(n_components=0.9)
 
-        scaler = MinMaxScaler()
-        encoder = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
+        x_pca = pca.fit_transform(x)
 
-        n = SimpleImputer(strategy='median')
-        o = SimpleImputer(strategy='most_frequent')
+        iso = IsolationForest(random_state=42)
 
-        ns = Pipeline([('n', n),
-                       ('scaler', scaler)])
-        os = Pipeline([('o',o),
-                       ('encoder', encoder)])
+        iso.fit(x_pca)
+        x_iso = iso.predict(x_pca)
+
+        d_iso = iso.decision_function(x_pca)
+
+        self.df['Isolation labels'] = x_iso
+
+        self.df['Isolation scores'] = d_iso
+
+        mm = MinMaxScaler()
+        mm1 = MinMaxScaler()
+
+        mm_scale = d_iso.reshape(-1,1)
+
+        mm_up = mm.fit_transform(mm_scale).ravel()
+
+        self.df['Isolation risk scores'] = 1 - mm_up
+
+        self.df['Isolation risk level'] = np.where((self.df['Isolation risk scores'] >= 0.75), 'Critical', np.where((self.df['Isolation risk scores'] >= 0.25), 'High', 'Low'))
+
+        local = LocalOutlierFactor(n_neighbors=100)
+
+        x_l = local.fit_predict(x_pca)
+
+        factor = local.negative_outlier_factor_
+
+        self.df['Local Outlier Labels'] = x_l
+        self.df['Local Outlier Scores'] = factor
+
+        self.df['Local Risk Level'] = np.where(
+            (self.df['Local Outlier Scores'] <= self.df['Local Outlier Scores'].quantile(0.25)), 'Critical',
+            np.where((self.df['Local Outlier Scores'] <= self.df['Local Outlier Scores'].quantile(0.75)), 'High',
+                     'Low'))
 
 
-        preprocessor = ColumnTransformer([('num', ns, num),
-                                          ('obj', os, obj)])
+        pca_recon = pca.inverse_transform(x_pca)
+        recon_error = np.mean((x - pca_recon) **2, axis=1)
 
-        db = Pipeline([('preprocessor', preprocessor),
-                       ('pca', PCA(n_components=0.9)),
-                       ('dbscan', DBSCAN(eps=0.4, min_samples=8))])
+        self.df['PCA Error'] = recon_error
 
-        hd = Pipeline([('preprocessor', preprocessor),
-                       ('pca', PCA(n_components=0.8)),
-                       ('hdbscan', HDBSCAN(min_samples=5, min_cluster_size=7, copy=False))])
+        p_sha = recon_error.reshape(-1, 1)
 
-        iso = Pipeline([('preprocessor', preprocessor),
-                        ('iso', IsolationForest(n_estimators=100, max_samples='auto', contamination='auto', random_state=42))])
+        p_scaled = mm1.fit_transform(p_sha).ravel()
 
-        scores = [silhouette_score, calinski_harabasz_score, davies_bouldin_score]
+        self.df['Scaled PCA'] = p_scaled
 
-        db.fit(self.df)
-        x = db.named_steps['preprocessor'].transform(self.df)
-        x_pca = db.named_steps['pca'].transform(x)
-        variance = db.named_steps['pca'].explained_variance_ratio_
-        cumsum = np.cumsum(variance)
-        print(variance)
-        print(cumsum)
-        
-        y = db.named_steps['dbscan'].labels_
-        for sc in scores:
-            s = sc(x_pca, y)
-            print(f'dbscan: {sc.__name__}:{s}')
-        print()
+        self.df['PCA Level'] = np.where((self.df['Scaled PCA'] >= 0.75), 'Critical',
+                                        np.where((self.df['Scaled PCA'] >= 0.25), 'High', 'Low'))
 
-        hd.fit(self.df)
-        xh = hd.named_steps['preprocessor'].transform(self.df)
-        xh_pca = hd.named_steps['pca'].transform(xh)
-        yh = hd.named_steps['hdbscan'].labels_
-        for ys in scores:
-            ysco = ys(xh_pca, yh)
-            print(f'hdbscan: {ys.__name__}:{ysco}')
-        print()
+        self.df['Severity Level'] = np.where(
+            (self.df['Isolation risk level'] == 'Critical') &
+            (self.df['Local Risk Level'] == 'Critical') &
+            (self.df['PCA Level'] == 'Critical'),
+            'Critical',
+            np.where(
+                (self.df['Isolation risk level'].isin(['Critical', 'High'])) &
+                (self.df['Local Risk Level'].isin(['Critical', 'High'])) &
+                (self.df['PCA Level'].isin(['Critical', 'High'])),
+                'High',
+                'Low'))
 
-        self.df['hdbscan label'] = yh
-
-        self.df['outlier flag'] = self.df['hdbscan label'] == -1
-
-        prob = hd.named_steps['hdbscan'].probabilities_
-
-        self.df['probability score'] = - prob
-        self.df['probability score scaled'] = MinMaxScaler().fit_transform(self.df['probability score'].values.reshape(-1,1)).ravel()
-
-        self.df['probability level'] = np.where((self.df['outlier flag'] == True) & (self.df['probability score scaled'] > 0.75),'high', np.where((self.df['outlier flag'] == True) & (self.df['probability score scaled'] >= 0.25), 'medium','low'))
-
-        iso.fit(self.df)
-        x_decision = iso.named_steps['preprocessor'].transform(self.df)
-        x_dec_predict = iso.named_steps['iso'].predict(x_decision)
-        x_dec_function = iso.named_steps['iso'].decision_function(x_decision)
-
-        self.df['isolation prediction'] = x_dec_predict
-        self.df['isolation outlier flag'] = (self.df['isolation prediction'] == -1)
-        self.df['isolation risk score'] = - x_dec_function
-
-        self.df['isolation risk score scaled'] = MinMaxScaler().fit_transform(self.df['isolation risk score'].values.reshape(-1,1)).ravel()
-
-        self.df['isolation level'] = np.where((self.df['isolation outlier flag'] == True) & (self.df['isolation risk score scaled'] > 0.75), 'high', np.where((self.df['isolation outlier flag'] == True) & (self.df['isolation risk score scaled'] >= 0.25), 'medium','low'))
-
-        self.df["Severity Level"] = np.select([(self.df["probability level"] == "high") & (self.df["isolation level"] == "high"),
-                (self.df["probability level"].isin(["high", "medium"])) & (self.df["isolation level"].isin(["high", "medium"]))],["high", "medium"],default="low")
-
-        self.df.reset_index(drop=True)
+        self.df = self.df.reset_index(drop=True)
         self.df.insert(0, 'id', self.df.index + 1)
-        print(self.df.head(30).to_string())
-        print()
-        #self.df.to_csv('c:/Users/anton/unsuper/cluster/final.csv', index=False)
-        #print(self.df.head(50).to_string())
 
-        #print(iso_d)
-
+        #self.df.to_csv('c:/Users/anton/unsuper/cluster/final_powerbi.csv', index=False)
+        print(self.df.head().to_string())
 
 if __name__ == "__main__":
     a = A('c:/Users/anton/unsuper/cluster/copy_raw.csv')
