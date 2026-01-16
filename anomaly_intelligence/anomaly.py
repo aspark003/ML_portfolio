@@ -34,7 +34,7 @@ class A:
 
         scaled = mm.fit_transform(c).ravel()
 
-        self.df['Risk Score'] = scaled
+        self.df['Risk Score'] = 1 - scaled
 
         self.df['Risk Level'] = np.where((self.df['Risk Score'] >= 0.75), 'Critical', np.where((self.df['Risk Score'] >= 0.25), 'High', 'Low'))
 
