@@ -1,70 +1,181 @@
-Power BI Anomaly Detection Dashboard (Unsupervised ML)
+Anomaly Intelligence Dashboard
+ML-Powered Anomaly Detection and Risk Scoring Platform
 Overview
 
-This project demonstrates an end-to-end analytics workflow using Power BI Desktop combined with machine learning–driven anomaly detection in Python.
+The Operation Risk Intelligence Dashboard is an end-to-end anomaly detection and operational risk monitoring system built using unsupervised machine learning and Power BI.
 
-The dashboard analyzes structured, financial-style data and automatically flags abnormal patterns, risk levels, and outliers using unsupervised learning techniques. The goal is to simulate real-world operational and compliance scenarios where labels are unavailable, but unusual behavior must still be detected and prioritized.
+The platform detects abnormal behavior in transactional data, assigns multi-layer risk scores, and produces an interactive intelligence dashboard for monitoring, investigation, and decision support.
 
-Real-World Scenarios Simulated
+This system is designed to reflect real-world fraud, operational risk, and anomaly surveillance platforms used in enterprise environments.
 
-Fraud detection
+Objectives
 
-Risk scoring
+Detect anomalous transactions using unsupervised machine learning
 
-Operational anomaly monitoring
+Generate normalized business-friendly risk scores
 
-Behavioral deviation analysis
+Classify operational severity using ensemble logic
 
-Dashboard Features
+Provide an interactive intelligence dashboard
 
-Interactive anomaly detection dashboard in Power BI
+Support investigation and monitoring workflows
 
-Model-driven outlier detection (unsupervised)
+Machine Learning Architecture
 
-Risk level classification (Low / Medium / High)
+The platform uses a three-layer detection stack:
 
-Drilldowns by business attributes (ex: region, vendor/account type, department)
+Layer	Model	Purpose
+Global Risk Engine	Isolation Forest	Global anomaly detection
+Local Anomaly Engine	Local Outlier Factor	Neighborhood density detection
+Structural Engine	PCA Reconstruction Error	Structural anomaly detection
+Business Aggregation	Ensemble Logic	Final severity classification
+Detection and Scoring Pipeline
+Global Risk Engine (Isolation Forest)
 
-Record-level investigation table for audit review
+Detects globally rare behavior patterns.
 
-Machine Learning Approach
+Outputs:
 
-Unsupervised anomaly detection techniques used to score and flag abnormal behavior:
+Isolation labels
 
-PCA (dimensionality reduction)
+Decision scores
 
-HDBSCAN (density-based clustering / anomaly labeling)
+Risk score (normalized)
 
-Isolation Forest (outlier detection)
+Risk level (Low, High, Critical)
 
-Outputs include anomaly flags and severity scoring that feed directly into the Power BI dashboard.
+Local Risk Engine (Local Outlier Factor)
+
+Detects neighborhood-based anomalies.
+
+Outputs:
+
+Local outlier labels
+
+Local outlier scores
+
+Local risk level (Low, High, Critical)
+
+Structural Anomaly Engine (PCA)
+
+Detects violations of normal data structure.
+
+Outputs:
+
+PCA reconstruction error
+
+Scaled PCA score
+
+PCA level (Low, High, Critical)
+
+Ensemble Severity Engine
+
+Final operational decision based on agreement across all three detection layers.
+
+Logic:
+
+Critical: All three engines agree
+
+High: At least two engines agree
+
+Low: Otherwise
+
+Outputs:
+
+Severity level (Low, High, Critical)
+
+Power BI Intelligence Dashboard
+
+Dashboard Name:
+Operation Risk Intelligence Dashboard
+
+Capabilities:
+
+Interactive risk controllers using donut charts
+
+Severity-level filtering
+
+Total population KPI
+
+Multi-layer anomaly filtering
+
+Investigation-ready workflow
+
+Each donut chart acts as a controller and filters the entire page. Filters stack together to support multi-layer investigation logic.
+
+Output Dataset
+
+The system produces a fully enriched dataset containing:
+
+Column	Description
+id	Unique record ID
+Isolation risk scores	Normalized global risk score
+Isolation risk level	Global risk classification
+Local Outlier Scores	Density anomaly score
+Local Risk Level	Local anomaly classification
+PCA Error	Structural reconstruction error
+PCA Level	Structural anomaly classification
+Severity Level	Final operational decision
+Technologies Used
+
+Python
+
+Pandas
+
+NumPy
+
+Scikit-learn
+
+Isolation Forest
+
+Local Outlier Factor
+
+PCA
 
 Power BI Desktop
 
-Python (pandas, NumPy, scikit-learn)
+How to Run
 
-Machine Learning: HDBSCAN, Isolation Forest, PCA
+Run the detector script:
 
-Data preprocessing and feature engineering
+python detector.py
 
-Dashboard development and KPI reporting
+
+The script will:
+
+Load the dataset
+
+Train anomaly detection models
+
+Generate multi-layer risk scores
+
+Output a fully enriched dataset for Power BI
+
+System Architecture
+
+Raw Data
+→ Isolation Forest → Risk Score → Risk Level
+→ Local Outlier Factor → Local Risk Level
+→ PCA Error → PCA Level
+→ Ensemble Logic → Severity Level
+→ Power BI Intelligence Dashboard
 
 Use Cases
 
-Fraud & compliance monitoring
+Fraud detection
 
-Financial risk analysis
+Financial anomaly detection
 
-Vendor / account anomaly detection
+Insider threat detection
 
-Operational intelligence & outlier monitoring
+Operational monitoring
 
-Audit and governance dashboards
+Risk surveillance
+
+Compliance auditing
 
 Author
 
 Antonio Park
-
 Machine Learning Engineer
-
-ML Portfolio: https://github.com/aspark003/ML_portfolio
+Anomaly Detection and Risk Analytics
