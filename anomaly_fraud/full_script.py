@@ -7,6 +7,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
+from sklearn.svm import OneClassSVM
 
 class A:
     def __init__(self, file):
@@ -49,6 +50,7 @@ class A:
 
         mm = MinMaxScaler()
         mm1 = MinMaxScaler()
+        mm2 = MinMaxScaler()
 
         mm_scale = d_iso.reshape(-1,1)
 
@@ -87,15 +89,34 @@ class A:
         self.df['PCA Level'] = np.where((self.df['Scaled PCA'] >= 0.75), 'Critical',
                                         np.where((self.df['Scaled PCA'] >= 0.25), 'High', 'Low'))
 
+        svm = OneClassSVM()
+        svm.fit(x_pca)
+        svm_predict = svm.predict(x_pca)
+
+        svm_decision = svm.decision_function(x_pca)
+
+        self.df['SVM labels'] = svm_predict
+
+
+        svm_s = svm_decision.reshape(-1,1)
+        svm_scaled = mm2.fit_transform(svm_s).ravel()
+
+        svm_risk = 1 - svm_scaled
+        self.df['SVM risk scores'] = svm_risk
+        self.df['SVM risk level'] = np.where((self.df['SVM risk scores'] >= 0.75), 'Critical', np.where((self.df['SVM risk scores'] >= 0.25), 'High', 'Low'))
+
+
         self.df['Severity Level'] = np.where(
             (self.df['Isolation risk level'] == 'Critical') &
             (self.df['Local Risk Level'] == 'Critical') &
-            (self.df['PCA Level'] == 'Critical'),
+            (self.df['PCA Level'] == 'Critical') &
+            (self.df['SVM risk level'] == 'Critical'),
             'Critical',
             np.where(
                 (self.df['Isolation risk level'].isin(['Critical', 'High'])) &
                 (self.df['Local Risk Level'].isin(['Critical', 'High'])) &
-                (self.df['PCA Level'].isin(['Critical', 'High'])),
+                (self.df['PCA Level'].isin(['Critical', 'High'])) &
+                (self.df['SVM risk level'].isin(['Critical', 'High'])),
                 'High',
                 'Low'))
 
@@ -108,4 +129,5 @@ class A:
 if __name__ == "__main__":
     a = A('c:/Users/anton/unsuper/cluster/copy_raw.csv')
     a.b()
+
 
