@@ -5,6 +5,7 @@ from sklearn.decomposition import PCA
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import LocalOutlierFactor
+from sklearn.svm import OneClassSVM
 
 class A:
     def __init__(self):
@@ -29,6 +30,7 @@ class A:
 
         mm = MinMaxScaler()
         mm1 = MinMaxScaler()
+        mm2 = MinMaxScaler()
 
         c = decision.reshape(-1,1)
 
@@ -51,7 +53,7 @@ class A:
                                                np.where((self.df['Local Outlier Scores'] <= self.df['Local Outlier Scores'].quantile(0.75)), 'High', 'Low'))
 
         pca_recon = pca.inverse_transform(x)
-        recon_error = np.mean((self.copy.values - pca_recon) ** 2, axis=1)
+        recon_error = np.mean((x - pca_recon) ** 2, axis=1)
 
         self.df['PCA Error'] = recon_error
 
@@ -63,22 +65,40 @@ class A:
 
         self.df['PCA Level'] = np.where((self.df['Scaled PCA'] >= 0.75), 'Critical', np.where((self.df['Scaled PCA'] >= 0.25), 'High', 'Low'))
 
+        svm = OneClassSVM()
+        svm.fit(x)
+        svm_predict = svm.predict(x)
+
+        self.df['SVM labels'] = svm_predict
+        svm_decision = svm.decision_function(x)
+        svm_s = svm_decision.reshape(-1,1)
+        svm_scaled = mm2.fit_transform(svm_s).ravel()
+
+        svm_risk = 1 - svm_scaled
+
+        self.df['SVM risk scores'] = svm_risk
+
+        self.df['SVM risk level'] = np.where((self.df['SVM risk scores'] >= 0.75), 'Critical',
+                                             np.where((self.df['SVM risk scores'] >= 0.25), 'High', 'Low'))
+
         self.df['Severity Level'] = np.where(
             (self.df['Risk Level'] == 'Critical') &
             (self.df['Local Risk Level'] == 'Critical') &
-            (self.df['PCA Level'] == 'Critical'),
+            (self.df['PCA Level'] == 'Critical') &
+            (self.df['SVM risk level'] == 'Critical'),
             'Critical',
             np.where(
                 (self.df['Risk Level'].isin(['Critical', 'High'])) &
                 (self.df['Local Risk Level'].isin(['Critical', 'High'])) &
-                (self.df['PCA Level'].isin(['Critical', 'High'])),
+                (self.df['PCA Level'].isin(['Critical', 'High'])) &
+                (self.df['SVM risk level'].isin(['Critical', 'High'])),
                 'High',
                 'Low'))
 
         self.df.reset_index(drop=True)
         self.df.insert(0, 'id', self.df.index +1)
 
-        #self.df.to_csv('c:/Users/anton/projects/full_detector.csv', index=False)
+        self.df.to_csv('c:/Users/anton/projects/full_detector.csv', index=False)
         print(self.df.head(10).to_string())
 
 if __name__ == "__main__":
