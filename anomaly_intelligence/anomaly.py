@@ -1,106 +1,233 @@
 import pandas as pd
-from sklearn.ensemble import IsolationForest
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
-from sklearn.decomposition import PCA
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
+from sklearn.cluster import DBSCAN, OPTICS
+from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
+from sklearn.ensemble import IsolationForest
+from sklearn.svm import OneClassSVM
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+import hdbscan
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.svm import OneClassSVM
 
 class A:
     def __init__(self):
-        self.df = pd.read_csv('c:/Users/anton/projects/fraud.csv')
+        self.df = pd.read_csv('c:/Users/anton/risk/credit.csv', encoding='utf-8-sig', engine='python')
+        self.df.columns = self.df.columns.str.replace('_', ' ', regex=True).str.lower().str.strip()
+
+        self.df = self.df.drop(columns=['loan grade', 'loan status', 'cb person default on file'])
+
+        self.df = self.df.rename(columns={'person age': 'age',
+                                'person income': 'income',
+                                'person home ownership': 'owner',
+                                'person emp length': 'length',
+                                'loan intent': 'intent',
+                                'loan amnt': 'amount',
+                                'loan int rate': 'interest',
+                                'loan percent income': 'percent',
+                                'cb person cred hist length': 'card'})
+
+        self.df.columns = self.df.columns.str.lower().str.strip()
+
         self.copy = self.df.copy()
-        self.copy.columns = self.df.columns.str.lower().str.strip()
-        self.copy = self.copy.drop(columns=['time', 'class'])
+
+        self.min = MinMaxScaler()
+        self.one = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
+
+        self.num = self.copy.select_dtypes(include=['number']).columns
+        self.obj = self.copy.select_dtypes(include=['object']).columns
+
+        n_simple = SimpleImputer(strategy='median')
+        o_simple = SimpleImputer(strategy='most_frequent')
+
+        num_pipeline = Pipeline([('num', n_simple),
+                                 ('scaler', self.min)])
+        obj_pipeline = Pipeline([('obj', o_simple),
+                                 ('encoder', self.one)])
+
+        self.preprocessor = ColumnTransformer([('n', num_pipeline, self.num),
+                                               ('o', obj_pipeline, self.obj)])
+
+        self.copy = self.preprocessor.fit_transform(self.copy)
+
+        self.scores = [silhouette_score, calinski_harabasz_score, davies_bouldin_score]
 
     def b(self):
-        pca = PCA(n_components=0.7)
 
-        dbscan = IsolationForest()
-        x = pca.fit_transform(self.copy)
+        dbscan = DBSCAN(eps=0.2, min_samples=7)
+        pca = PCA(n_components=0.9)
 
-        dbscan.fit(x)
-        y = dbscan.predict(x)
+        x_pca = pca.fit_transform(self.copy)
+        dbscan.fit(x_pca)
+        db_label = dbscan.labels_
 
-        decision = dbscan.decision_function(x)
+        for score in self.scores:
+            s = score(x_pca, db_label)
+            print(f'{score.__name__}: {s}')
+        print()
 
-        self.df['Isolation labels'] = y
-        self.df['Decision Scores'] = decision
+        self.df['dbscan label'] = db_label
 
-        mm = MinMaxScaler()
-        mm1 = MinMaxScaler()
-        mm2 = MinMaxScaler()
+        db_size = pd.Series(db_label).value_counts()
+        self.df['dbscan cluster size'] = pd.Series(db_label).map(db_size).values
 
-        c = decision.reshape(-1,1)
+        db_invert = self.df['dbscan cluster size'].max() - self.df['dbscan cluster size']
 
-        scaled = mm.fit_transform(c).ravel()
+        self.df['dbscan cluster score'] = self.min.fit_transform(db_invert.values.reshape(-1,1)).ravel()
 
-        self.df['Risk Score'] = 1 - scaled
+        top = self.df['dbscan cluster score'].quantile(0.75)
+        mi = self.df['dbscan cluster score'].quantile(0.25)
 
-        self.df['Risk Level'] = np.where((self.df['Risk Score'] >= 0.75), 'Critical', np.where((self.df['Risk Score'] >= 0.25), 'High', 'Low'))
+        self.df['dbscan anomaly'] = np.where((self.df['dbscan cluster score'] >= top), 'High',
+                                             np.where((self.df['dbscan cluster score'] >= mi), 'Medium', 'Low'))
 
-        local = LocalOutlierFactor(n_neighbors=100)
+        op = OPTICS(min_samples=3, xi=0.9)
 
-        x_l = local.fit_predict(x)
+        op.fit(x_pca)
+        op_tics = op.labels_
 
-        factor = local.negative_outlier_factor_
+        for o in self.scores:
+            o_score = o(x_pca, op_tics)
+            print(f'{o.__name__}: {o_score}')
+        print()
 
-        self.df['Local Outlier Labels'] = x_l
-        self.df['Local Outlier Scores'] = factor
+        reach = op.reachability_.copy()
 
-        self.df['Local Risk Level'] = np.where((self.df['Local Outlier Scores'] <= self.df['Local Outlier Scores'].quantile(0.25)),'Critical',
-                                               np.where((self.df['Local Outlier Scores'] <= self.df['Local Outlier Scores'].quantile(0.75)), 'High', 'Low'))
+        reach_convert = reach[np.isfinite(reach)].max()
+        reach = np.where(np.isinf(reach), reach_convert, reach)
+        self.df['optics reachability score'] = reach
 
-        pca_recon = pca.inverse_transform(x)
-        recon_error = np.mean((x - pca_recon) ** 2, axis=1)
+        hi = self.df['optics reachability score'].quantile(0.75)
+        med = self.df['optics reachability score'].quantile(0.25)
 
-        self.df['PCA Error'] = recon_error
+        self.df['optics anomaly'] = np.where((self.df['optics reachability score'] >= hi), 'High',
+                                             np.where((self.df['optics reachability score'] >= med), 'Medium', 'Low'))
 
-        p_sha = recon_error.reshape(-1,1)
+        hd = hdbscan.HDBSCAN(min_samples=8, min_cluster_size= 7)
+        hd.fit(x_pca)
+        hd_label = hd.labels_
 
-        p_scaled = mm1.fit_transform(p_sha).ravel()
+        for hd_score in self.scores:
+            h = hd_score(x_pca, hd_label)
+            print(f'{hd_score.__name__}: {h}')
+        print()
 
-        self.df['Scaled PCA'] = p_scaled
+        self.df['hdbscan label'] = hd_label
 
-        self.df['PCA Level'] = np.where((self.df['Scaled PCA'] >= 0.75), 'Critical', np.where((self.df['Scaled PCA'] >= 0.25), 'High', 'Low'))
+        prob = hd.probabilities_
 
-        svm = OneClassSVM()
-        svm.fit(x)
-        svm_predict = svm.predict(x)
+        self.df['hdbscan probability'] = prob
 
-        self.df['SVM labels'] = svm_predict
-        svm_decision = svm.decision_function(x)
-        svm_s = svm_decision.reshape(-1,1)
-        svm_scaled = mm2.fit_transform(svm_s).ravel()
+        h = self.df['hdbscan probability'].quantile(0.75)
+        m = self.df['hdbscan probability'].quantile(0.25)
 
-        svm_risk = 1 - svm_scaled
+        self.df['hdbscan confidence'] = np.where((self.df['hdbscan probability'] >= h), 'High',
+                                                 np.where((self.df['hdbscan probability'] >= m), 'Medium', 'Low'))
 
-        self.df['SVM risk scores'] = svm_risk
+        self.df['hdbscan outlier score'] = hd.outlier_scores_
 
-        self.df['SVM risk level'] = np.where((self.df['SVM risk scores'] >= 0.75), 'Critical',
-                                             np.where((self.df['SVM risk scores'] >= 0.25), 'High', 'Low'))
+        top = self.df['hdbscan outlier score'].quantile(0.75)
+        middle = self.df['hdbscan outlier score'].quantile(0.25)
 
-        self.df['Severity Level'] = np.where(
-            (self.df['Risk Level'] == 'Critical') &
-            (self.df['Local Risk Level'] == 'Critical') &
-            (self.df['PCA Level'] == 'Critical') &
-            (self.df['SVM risk level'] == 'Critical'),
-            'Critical',
+        self.df['hdbscan anomaly'] = np.where((self.df['hdbscan outlier score'] >= top), 'High',
+                                              np.where((self.df['hdbscan outlier score'] >= middle), 'Medium', 'Low'))
+
+        lof = LocalOutlierFactor(n_neighbors=100)
+
+        lof.fit(x_pca)
+        lof_predict = lof.fit_predict(x_pca)
+
+        neg_outlier = lof.negative_outlier_factor_
+
+        self.df['local label'] = lof_predict
+
+        invert_local = neg_outlier.reshape(-1,1)
+
+        local_scale = self.min.fit_transform(invert_local).ravel()
+
+        self.df['local score'] = 1 - local_scale
+
+        local_max = self.df['local score'].quantile(0.75)
+        local_med = self.df['local score'].quantile(0.25)
+
+        self.df['local anomaly'] = np.where((self.df['local score'] >= local_max), 'High',
+                                            np.where((self.df['local score'] >= local_med), 'Medium', 'Low'))
+
+
+        self.df['combine anomaly'] = np.where(
+            # Top condition → all High
+            (self.df['dbscan anomaly'] == 'High') &
+            (self.df['optics anomaly'] == 'High') &
+            (self.df['hdbscan confidence'] == 'High') &
+            (self.df['hdbscan anomaly'] == 'High') &
+            (self.df['local anomaly'] == 'High'),
+            'High',
+
             np.where(
-                (self.df['Risk Level'].isin(['Critical', 'High'])) &
-                (self.df['Local Risk Level'].isin(['Critical', 'High'])) &
-                (self.df['PCA Level'].isin(['Critical', 'High'])) &
-                (self.df['SVM risk level'].isin(['Critical', 'High'])),
-                'High',
+                (self.df['dbscan anomaly'].isin(['Medium', 'Low'])) &
+                (self.df['optics anomaly'].isin(['Medium', 'Low'])) &
+                (self.df['hdbscan confidence'].isin(['Medium', 'Low'])) &
+                (self.df['hdbscan anomaly'].isin(['Medium', 'Low'])) &
+                (self.df['local anomaly'].isin(['Medium', 'Low'])),
+                'Medium',
                 'Low'))
 
-        self.df.reset_index(drop=True)
-        self.df.insert(0, 'id', self.df.index +1)
+        iso = IsolationForest(n_estimators=100)
 
-        self.df.to_csv('c:/Users/anton/projects/full_detector.csv', index=False)
-        print(self.df.head(10).to_string())
+        iso.fit(x_pca)
+        pre_iso = iso.predict(x_pca)
+        iso_decision = iso.decision_function(x_pca)
+
+        self.df['isolation label'] = pre_iso
+
+        invert_iso = iso_decision.reshape(-1,1)
+        iso_min = self.min.fit_transform(invert_iso).ravel()
+
+        self.df['isolation score'] = 1 - iso_min
+
+        iso_max = self.df['isolation score'].quantile(0.75)
+        iso_med = self.df['isolation score'].quantile(0.25)
+
+        self.df['isolation anomaly'] = np.where((self.df['isolation score'] >= iso_max), 'High', np.where((self.df['isolation score'] >= iso_med), 'Medium', 'Low'))
+
+        self.df['final iso combine alert'] = np.where((self.df['combine anomaly'] == 'High') & (self.df['isolation anomaly'] == 'High'), 'High',
+                                                      np.where((self.df['combine anomaly'].isin(['Medium', 'Low'])) & (self.df['isolation anomaly'].isin(['Medium', 'Low'])), 'Medium', 'Low'))
+
+        svm = OneClassSVM()
+
+        svm.fit(x_pca)
+        svm_predict = svm.predict(x_pca)
+        svm_decision = svm.decision_function(x_pca)
+
+        svm_score = svm_decision.reshape(-1, 1)
+        svm_ravel = self.min.fit_transform(svm_score).ravel()
+
+        svm_final = 1 - svm_ravel
+
+        self.df['svm score'] = svm_final
+
+        svm_max = self.df['svm score'].quantile(0.75)
+        svm_med = self.df['svm score'].quantile(0.25)
+
+        self.df['svm anomaly'] = np.where((self.df['svm score'] >= svm_max), 'High',
+                                          np.where((self.df['svm score'] >= svm_med), 'Medium', 'Low'))
+
+        self.df['final svm combine alert'] = np.where((self.df['combine anomaly'] == 'High') & (self.df['svm anomaly'] == 'High'), 'High',
+                                                      np.where((self.df['combine anomaly'].isin(['Medium', 'Low'])) & (self.df['svm anomaly'].isin(['Medium', 'Low'])), 'Medium', 'Low'))
+
+        self.df['final notification'] = np.where((self.df['final iso combine alert'] == 'High') & (self.df['final svm combine alert'] == 'High'), 'High',
+                                                 np.where((self.df['final iso combine alert'].isin(['Medium', 'Low'])) & (self.df['final svm combine alert'].isin(['Medium', 'Low'])), 'Medium', 'Low'))
+
+        self.df = self.df.reset_index(drop=True)
+        self.df.insert(0, 'id', self.df.index+1)
+        print(self.df.head(5).to_string())
+
+        #self.df.to_csv('c:/Users/anton/risk/credit_final.csv', index=False)
+
 
 if __name__ == "__main__":
-    A = A()
-    A.b()
+    a = A()
+    a.b()
