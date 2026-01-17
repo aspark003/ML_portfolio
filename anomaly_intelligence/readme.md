@@ -1,183 +1,65 @@
-Operation Risk Intelligence Dashboard
-
-ML-Powered Anomaly Detection and Risk Scoring Platform
-
-Overview
-
-The Operation Risk Intelligence Dashboard is an end-to-end anomaly detection and operational risk monitoring system built using unsupervised machine learning and Power BI.
-
-The platform detects abnormal behavior in transactional data, assigns multi-layer risk scores, and produces an interactive intelligence dashboard for monitoring, investigation, and decision support.
-
-This system is designed to reflect real-world fraud, operational risk, and anomaly surveillance platforms used in enterprise environments.
-
-Objectives
-
-Detect anomalous transactions using unsupervised machine learning
-
-Generate normalized business-friendly risk scores
-
-Classify operational severity using ensemble logic
-
-Provide an interactive intelligence dashboard
-
-Support investigation and monitoring workflows
-
-Machine Learning Architecture
-
-The platform uses a three-layer detection stack:
-
-Layer	Model	Purpose
-Global Risk Engine	Isolation Forest	Global anomaly detection
-Local Anomaly Engine	Local Outlier Factor	Neighborhood density detection
-Structural Engine	PCA Reconstruction Error	Structural anomaly detection
-Business Aggregation	Ensemble Logic	Final severity classification
-Detection and Scoring Pipeline
-Global Risk Engine (Isolation Forest)
-
-Detects globally rare behavior patterns.
-
-Outputs:
-
-Isolation labels
-
-Decision scores
-
-Risk score (normalized)
-
-Risk level (Low, High, Critical)
-
-Local Risk Engine (Local Outlier Factor)
-
-Detects neighborhood-based anomalies.
-
-Outputs:
-
-Local outlier labels
-
-Local outlier scores
-
-Local risk level (Low, High, Critical)
-
-Structural Anomaly Engine (PCA)
-
-Detects violations of normal data structure.
-
-Outputs:
-
-PCA reconstruction error
-
-Scaled PCA score
-
-PCA level (Low, High, Critical)
-
-Ensemble Severity Engine
-
-Final operational decision based on agreement across all three detection layers.
-
-Logic:
-
-Critical: All three engines agree
-
-High: At least two engines agree
-
-Low: Otherwise
-
-Outputs:
-
-Severity level (Low, High, Critical)
-
-Power BI Intelligence Dashboard
-
-Dashboard Name:
-Operation Risk Intelligence Dashboard
-
-Capabilities:
-
-Interactive risk controllers using donut charts
-
-Severity-level filtering
-
-Total population KPI
-
-Multi-layer anomaly filtering
-
-Investigation-ready workflow
-
-Each donut chart acts as a controller and filters the entire page. Filters stack together to support multi-layer investigation logic.
-
-Output Dataset
-
-The system produces a fully enriched dataset containing:
-
-Column	Description
-id	Unique record ID
-Risk Score	Normalized global risk score
-Risk Level	Global risk classification
-Local Outlier Scores	Density anomaly score
-Local Risk Level	Local anomaly classification
-PCA Error	Structural reconstruction error
-PCA Level	Structural anomaly classification
-Severity Level	Final operational decision
-Technologies Used
-
-Python
-
-Pandas
-
-NumPy
-
-Scikit-learn
-
-Isolation Forest
-
-Local Outlier Factor
-
-PCA
-
-Power BI Desktop
-
-How to Run
-
-Run the detector script:
-
-python detector.py
-
-
-The script will:
-
-Load the dataset
-
-Train anomaly detection models
-
-Generate multi-layer risk scores
-
-Output a fully enriched dataset for Power BI
-
-System Architecture
-
-Raw Data
-→ Isolation Forest → Risk Score → Risk Level
-→ Local Outlier Factor → Local Risk Level
-→ PCA Error → PCA Level
-→ Ensemble Logic → Severity Level
-→ Power BI Intelligence Dashboard
-
-Use Cases
-
-Fraud detection
-
-Financial anomaly detection
-
-Insider threat detection
-
-Operational monitoring
-
-Risk surveillance
-
-Compliance auditing
-
-Author
-
-Antonio Park
-Machine Learning Engineer
-Anomaly Detection and Risk Analytics
+Anomaly Intelligence Dashboard engine leverages unsupervised clustering, density-based, and model based anomaly detection techniques to identify irregular and quantify risk levels.
+
+Key Features:
+- Multiple Anomaly Detection Models:
+  - DBSCAN: Detects density based clusters and identifies isolated points. Indentifies loaner
+  - OPTICS: Measures reachability distance to detect outliers within clusters. Identifies what dbscan cant
+  - HDBSCAN: Probabiltiy clustering with outlier detection and confidence scoring. Combines DBSCAN and OPTICS.
+  - ISOLATION FOREST: Detects anomalies by isolating points in a forest of trees. Bool is used.
+  - ONE CLASS SVM: Model based anomaly scoring for outlier verification. Covers outer boundaries.
+
+Scoring & Classification:
+- Assigns numeric scores for cluster based anomalies.
+- Converts scores into High/Medium/Low labes based on each score using quanitle: 'High' 0.75, 'Low' 0.25, else 'Medium'
+- Combines model outputs into final alerts for actionable insight..
+  -  Combine all DBSCAN, OPTICS, HDBSCAN, LOCAL OUTLIER FACTOR to one final category
+  -  Combine all scores from final category to Isolation forest.
+  -  Combine all scores from final category to One Class SVM.
+  -  Final: Combine finall Isolation and final SVM.
+ 
+Dashboard Integration:
+- Interactive PowerBI visualize:
+  - Isolation Risk: Combine all scores from final category to Isolation forest.
+  - SVM Risk: Combine all scores from final category to One Class SVM.
+  - Notification: Combine finall Isolation and final SVM.
+ 
+Preprocessing & Future Enginnering:
+- Handles numeric, categorical, and string features.
+  - self.min = MinMaxScaler()
+        self.one = OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')
+
+        self.num = self.copy.select_dtypes(include=['number']).columns
+        self.obj = self.copy.select_dtypes(include=['object']).columns
+
+        n_simple = SimpleImputer(strategy='median')
+        o_simple = SimpleImputer(strategy='most_frequent')
+
+        num_pipeline = Pipeline([('num', n_simple),
+                                 ('scaler', self.min)])
+        obj_pipeline = Pipeline([('obj', o_simple),
+                                 ('encoder', self.one)])
+
+        self.preprocessor = ColumnTransformer([('n', num_pipeline, self.num),
+                                               ('o', obj_pipeline, self.obj)])
+
+Flexible & Resuable Engine:
+- Any dataset can be used.
+
+Instructions:
+- Data Preprocessing
+- Dimensionality Reduction (PCA)
+- Unsupervised Learning
+  - DBSCAN, OPTICS, HDBSCAN, PCA, LOCAL OUTLIER FACTOR, ISOLATION FOREST, ONE CLASS SVM
+- Risk Classification:
+  - Final iso combine alert: DBSCAN, OPTICS, HDBSCAN, LOCAL OUTLIER FACTOR, ISOLATION FOREST
+  - Final svm combine alert: DBSCAN, OPTICS, HDBSCAN, LOCAL OUTLIER FACOTR, ONE CLASS SVM
+  - Final Notification: FINAL ISO COMBINE ALERT + FINAL SVM COMBINE ALERT
+ 
+Final:
+- The Intelligence Dashboard is real life engine, can consume any data and turn into actionable insight.
+  - FRAUD
+  - MISSING
+    
+ 
+
+    
