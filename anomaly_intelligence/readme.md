@@ -48,17 +48,25 @@ Flexible & Resuable Engine:
 Instructions:
 - Data Preprocessing
 - Dimensionality Reduction (PCA)
+  
 - Unsupervised Learning
   - DBSCAN, OPTICS, HDBSCAN, PCA, LOCAL OUTLIER FACTOR, ISOLATION FOREST, ONE CLASS SVM
+    
 - Risk Classification:
   - Final iso combine alert: DBSCAN, OPTICS, HDBSCAN, LOCAL OUTLIER FACTOR, ISOLATION FOREST
   - Final svm combine alert: DBSCAN, OPTICS, HDBSCAN, LOCAL OUTLIER FACOTR, ONE CLASS SVM
   - Final Notification: FINAL ISO COMBINE ALERT + FINAL SVM COMBINE ALERT
  
 Final:
-- The Intelligence Dashboard is real life engine, can consume any data and turn into actionable insight.
-  - FRAUD
-  - MISSING
+-Real-life anomaly detection engine that can consume any dataset and convert raw patterns into actionable insights.
+
+Applicable to:
+
+- Fraud detection
+
+- Missing data or irregularities
+
+- Operational risk and decision support
     
  
 
