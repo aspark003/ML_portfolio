@@ -81,13 +81,15 @@ class A:
         top = self.df['dbscan cluster score'].quantile(0.75)
         mi = self.df['dbscan cluster score'].quantile(0.25)
 
-        self.df['dbscan anomaly'] = np.where((self.df['dbscan cluster score'] >= top), 'High',
+        self.df['dbscan severity level'] = np.where((self.df['dbscan cluster score'] >= top), 'High',
                                              np.where((self.df['dbscan cluster score'] > mi), 'Medium', 'Low'))
 
         op = OPTICS(min_samples=3, xi=0.9)
 
         op.fit(x_pca)
         op_tics = op.labels_
+
+        self.df['optics label'] = op_tics
 
         for o in self.scores:
             o_score = o(x_pca, op_tics)
@@ -96,6 +98,8 @@ class A:
 
         reach = op.reachability_.copy()
 
+        self.df['reachability cluster size'] = reach
+
         reach_convert = reach[np.isfinite(reach)].max()
         reach = np.where(np.isinf(reach), reach_convert, reach)
 
@@ -103,15 +107,15 @@ class A:
 
         reach_scale = self.min.fit_transform(invert_reach).ravel()
 
-        self.df['optics score'] = reach_scale
+        self.df['optics reachability cluster size'] = reach
 
-        self.df['optics reachability score'] = reach
+        self.df['optics reachability scaled score'] = reach_scale
 
-        hi = self.df['optics score'].quantile(0.75)
-        med = self.df['optics score'].quantile(0.25)
+        hi = self.df['optics reachability scaled score'].quantile(0.75)
+        med = self.df['optics reachability scaled score'].quantile(0.25)
 
-        self.df['optics anomaly'] = np.where((self.df['optics score'] >= hi), 'High',
-                                             np.where((self.df['optics score'] > med), 'Medium', 'Low'))
+        self.df['optics severity level'] = np.where((self.df['optics reachability scaled score'] >= hi), 'High',
+                                             np.where((self.df['optics reachability scaled score'] > med), 'Medium', 'Low'))
 
         hd = hdbscan.HDBSCAN(min_samples=8, min_cluster_size= 7)
         hd.fit(x_pca)
@@ -134,104 +138,110 @@ class A:
         self.df['hdbscan probability confidence'] = np.where((self.df['hdbscan probability'] >= h), 'High',
                                                  np.where((self.df['hdbscan probability'] > m), 'Medium', 'Low'))
 
-        self.df['hdbscan probability anomaly score'] = 1 - self.df['hdbscan probability']
+        self.df['hdbscan probability severity score'] = 1 - self.df['hdbscan probability']
 
-        hp_max = self.df['hdbscan probability anomaly score'].quantile(0.75)
-        hp_med = self.df['hdbscan probability anomaly score'].quantile(0.25)
+        hp_max = self.df['hdbscan probability severity score'].quantile(0.75)
+        hp_med = self.df['hdbscan probability severity score'].quantile(0.25)
 
-        self.df['hdbscan probability anomaly'] = np.where(
-            self.df['hdbscan probability anomaly score'] >= hp_max, 'High',
-            np.where(self.df['hdbscan probability anomaly score'] > hp_med, 'Medium', 'Low'))
+        self.df['hdbscan probability severity level'] = np.where(
+            self.df['hdbscan probability severity score'] >= hp_max, 'High',
+            np.where(self.df['hdbscan probability severity score'] > hp_med, 'Medium', 'Low'))
 
         self.df['hdbscan outlier score'] = hd.outlier_scores_.copy()
 
         top = self.df['hdbscan outlier score'].quantile(0.75)
         middle = self.df['hdbscan outlier score'].quantile(0.25)
 
-        self.df['hdbscan anomaly'] = np.where((self.df['hdbscan outlier score'] >= top), 'High',
+        self.df['hdbscan outlier severity level'] = np.where((self.df['hdbscan outlier score'] >= top), 'High',
                                               np.where((self.df['hdbscan outlier score'] > middle), 'Medium', 'Low'))
 
         lof = LocalOutlierFactor(n_neighbors=100)
 
         lof_predict = lof.fit_predict(x_pca)
 
+        self.df['local outlier factor label'] = lof_predict
+
         neg_outlier = lof.negative_outlier_factor_.copy()
 
-        self.df['local label'] = lof_predict
+        self.df['local outlier factor score'] = neg_outlier
 
         invert_local = neg_outlier.reshape(-1,1)
 
         local_scale = self.min.fit_transform(invert_local).ravel()
 
-        self.df['local score'] = 1 - local_scale
+        self.df['local outlier severity score'] = 1 - local_scale
 
-        local_max = self.df['local score'].quantile(0.75)
-        local_med = self.df['local score'].quantile(0.25)
+        local_max = self.df['local outlier severity score'].quantile(0.75)
+        local_med = self.df['local outlier severity score'].quantile(0.25)
 
-        self.df['local anomaly'] = np.where((self.df['local score'] >= local_max), 'High',
-                                            np.where((self.df['local score'] > local_med), 'Medium', 'Low'))
+        self.df['local outlier severity level'] = np.where((self.df['local outlier severity score'] >= local_max), 'High',
+                                            np.where((self.df['local outlier severity score'] > local_med), 'Medium', 'Low'))
 
-        self.df['combine anomaly'] = np.where(
-            (self.df['dbscan anomaly'] == 'High') &
-            (self.df['optics anomaly'] == 'High') &
-            (self.df['hdbscan probability anomaly'] == 'High') &
-            (self.df['hdbscan anomaly'] == 'High') &
-            (self.df['local anomaly'] == 'High'),
+        self.df['density severity level'] = np.where(
+            (self.df['dbscan severity level'] == 'High') &
+            (self.df['optics severity level'] == 'High') &
+            (self.df['hdbscan probability severity level'] == 'High') &
+            (self.df['hdbscan outlier severity level'] == 'High') &
+            (self.df['local outlier severity level'] == 'High'),
             'High',
             np.where(
-                (self.df['dbscan anomaly'].isin(['High', 'Medium'])) &
-                (self.df['optics anomaly'].isin(['High', 'Medium'])) &
-                (self.df['hdbscan probability anomaly'].isin(['High', 'Medium'])) &
-                (self.df['hdbscan anomaly'].isin(['High', 'Medium'])) &
-                (self.df['local anomaly'].isin(['High', 'Medium'])),
+                (self.df['dbscan severity level'].isin(['High', 'Medium'])) &
+                (self.df['optics severity level'].isin(['High', 'Medium'])) &
+                (self.df['hdbscan probability severity level'].isin(['High', 'Medium'])) &
+                (self.df['hdbscan outlier severity level'].isin(['High', 'Medium'])) &
+                (self.df['local outlier severity level'].isin(['High', 'Medium'])),
                 'Medium',
                 'Low'))
 
         iso = IsolationForest(n_estimators=100)
 
-        iso.fit(x_pca)
-        pre_iso = iso.predict(x_pca)
-        iso_decision = iso.decision_function(x_pca)
+        pre_iso = iso.fit_predict(x_pca)
 
         self.df['isolation label'] = pre_iso
 
-        invert_iso = iso_decision.reshape(-1,1)
+        iso_decision = iso.decision_function(x_pca)
+
+        self.df['isolation decision score'] = iso_decision
+
+        invert_iso = iso_decision.reshape(-1, 1)
         iso_min = self.min.fit_transform(invert_iso).ravel()
 
-        self.df['isolation score'] = 1 - iso_min
+        self.df['isolation severity score'] = 1 - iso_min
 
-        iso_max = self.df['isolation score'].quantile(0.75)
-        iso_med = self.df['isolation score'].quantile(0.25)
+        iso_max = self.df['isolation severity score'].quantile(0.75)
+        iso_med = self.df['isolation severity score'].quantile(0.25)
 
-        self.df['isolation anomaly'] = np.where((self.df['isolation score'] >= iso_max), 'High', np.where((self.df['isolation score'] > iso_med), 'Medium', 'Low'))
+        self.df['isolation severity level'] = np.where((self.df['isolation severity score'] >= iso_max), 'High',
+                                                np.where((self.df['isolation severity score'] > iso_med), 'Medium', 'Low'))
 
-        self.df['final iso combine alert'] = np.where((self.df['combine anomaly'] == 'High') & (self.df['isolation anomaly'] == 'High'), 'High',
-                                                      np.where((self.df['combine anomaly'].isin(['High', 'Medium'])) & (self.df['isolation anomaly'].isin(['High','Medium'])), 'Medium', 'Low'))
+        self.df['final density severity level'] = np.where((self.df['density severity level'] == 'High') & (self.df['isolation severity level'] == 'High'), 'High',
+                                                           np.where((self.df['density severity level'].isin(['High', 'Medium'])) & (self.df['isolation severity level'].isin(['High', 'Medium'])), 'Medium', 'Low'))
 
         svm = OneClassSVM()
 
-        svm.fit(x_pca)
-        svm_predict = svm.predict(x_pca)
+        svm_predict = svm.fit_predict(x_pca)
+
+        self.df['svm label'] = svm_predict
+
         svm_decision = svm.decision_function(x_pca)
+
+        self.df['svm decision score'] = svm_decision
 
         svm_score = svm_decision.reshape(-1, 1)
         svm_ravel = self.min.fit_transform(svm_score).ravel()
 
         svm_final = 1 - svm_ravel
 
-        self.df['svm score'] = svm_final
+        self.df['svm severity score'] = svm_final
 
-        svm_max = self.df['svm score'].quantile(0.75)
-        svm_med = self.df['svm score'].quantile(0.25)
+        svm_max = self.df['svm severity score'].quantile(0.75)
+        svm_med = self.df['svm severity score'].quantile(0.25)
 
-        self.df['svm anomaly'] = np.where((self.df['svm score'] >= svm_max), 'High',
-                                          np.where((self.df['svm score'] > svm_med), 'Medium', 'Low'))
+        self.df['svm severity level'] = np.where((self.df['svm severity score'] >= svm_max), 'High',
+                                          np.where((self.df['svm severity score'] > svm_med), 'Medium', 'Low'))
 
-        self.df['final svm combine alert'] = np.where((self.df['combine anomaly'] == 'High') & (self.df['svm anomaly'] == 'High'), 'High',
-                                                      np.where((self.df['combine anomaly'].isin(['High', 'Medium'])) & (self.df['svm anomaly'].isin(['High','Medium'])), 'Medium', 'Low'))
-
-        self.df['final notification'] = np.where((self.df['final iso combine alert'] == 'High') & (self.df['final svm combine alert'] == 'High'), 'High',
-                                                 np.where((self.df['final iso combine alert'].isin(['High','Medium'])) & (self.df['final svm combine alert'].isin(['High','Medium'])), 'Medium', 'Low'))
+        self.df['severity level'] = np.where((self.df['svm severity level'] == 'High') & (self.df['final density severity level'] == 'High'), 'High',
+                                             np.where((self.df['svm severity level'].isin(['High', 'Medium'])) & (self.df['final density severity level'].isin(['High', 'Medium'])), 'Medium', 'Low'))
 
         self.df = self.df.reset_index(drop=True)
         self.df.insert(0, 'id', self.df.index+1)
