@@ -15,22 +15,7 @@ from sklearn.svm import OneClassSVM
 
 class A:
     def __init__(self):
-        self.df = pd.read_csv('c:/Users/anton/risk/credit.csv', encoding='utf-8-sig', engine='python')
-        self.df.columns = self.df.columns.str.replace('_', ' ', regex=True).str.lower().str.strip()
-
-        self.df = self.df.drop(columns=['loan grade', 'loan status', 'cb person default on file'])
-
-        self.df = self.df.rename(columns={'person age': 'age',
-                                'person income': 'income',
-                                'person home ownership': 'owner',
-                                'person emp length': 'length',
-                                'loan intent': 'intent',
-                                'loan amnt': 'amount',
-                                'loan int rate': 'interest',
-                                'loan percent income': 'percent',
-                                'cb person cred hist length': 'card'})
-
-        self.df.columns = self.df.columns.str.lower().str.strip()
+        self.df = pd.read_csv('c:/Users/anton/risk/draft.csv', encoding='utf-8-sig', engine='python')
 
         self.copy = self.df.copy()
 
@@ -64,96 +49,88 @@ class A:
         dbscan.fit(x_pca)
         db_label = dbscan.labels_
 
-        for score in self.scores:
-            s = score(x_pca, db_label)
-            print(f'{score.__name__}: {s}')
-        print()
-
         self.df['dbscan label'] = db_label
 
-        db_size = pd.Series(db_label).value_counts()
-        self.df['dbscan cluster size'] = pd.Series(db_label).map(db_size).values
+        self.df['dbscan label size'] = self.df['dbscan label'].map(self.df['dbscan label'].value_counts())
 
-        db_invert = self.df['dbscan cluster size'].max() - self.df['dbscan cluster size']
+        mm1 = MinMaxScaler()
+        mm0 = MinMaxScaler()
 
-        self.df['dbscan cluster score'] = self.min.fit_transform(db_invert.values.reshape(-1,1)).ravel()
+        self.df['dbscan confidence score'] = mm1.fit_transform(self.df['dbscan label size'].to_numpy().reshape(-1,1)).ravel()
 
-        top = self.df['dbscan cluster score'].quantile(0.75)
-        mi = self.df['dbscan cluster score'].quantile(0.25)
+        db_scale = 1 - self.df['dbscan confidence score']
 
-        self.df['dbscan severity level'] = np.where((self.df['dbscan cluster score'] >= top), 'High',
-                                             np.where((self.df['dbscan cluster score'] > mi), 'Medium', 'Low'))
+        self.df['dbscan severity score'] = mm0.fit_transform(db_scale.to_numpy().reshape(-1,1)).ravel()
 
-        op = OPTICS(min_samples=3, xi=0.9)
+        db_top = self.df['dbscan severity score'].quantile(0.75)
+        db_mid = self.df['dbscan severity score'].quantile(0.25)
+
+        self.df['dbscan severity level'] = np.select([self.df['dbscan severity score'] >= db_top,
+                                                      (self.df['dbscan severity score'] > db_mid) & (self.df['dbscan severity score'] < db_top)],['High', 'Medium'], default='Low')
+
+        op = OPTICS(min_samples = 3, xi=0.9)
 
         op.fit(x_pca)
         op_tics = op.labels_
 
         self.df['optics label'] = op_tics
 
-        for o in self.scores:
-            o_score = o(x_pca, op_tics)
-            print(f'{o.__name__}: {o_score}')
-        print()
-
         reach = op.reachability_.copy()
 
-        self.df['reachability cluster size'] = reach
+        self.df['reachability'] = reach
 
-        reach_convert = reach[np.isfinite(reach)].max()
-        reach = np.where(np.isinf(reach), reach_convert, reach)
+        max_reach = reach[np.isfinite(reach)].max()
 
-        invert_reach = reach.reshape(-1, 1)
+        inf_reach = np.where(np.isinf(reach), max_reach, reach)
 
-        reach_scale = self.min.fit_transform(invert_reach).ravel()
+        mm2 = MinMaxScaler()
 
-        self.df['optics reachability cluster size'] = reach
+        reach_scaled = mm2.fit_transform(inf_reach.reshape(-1,1)).ravel()
 
-        self.df['optics reachability scaled score'] = reach_scale
+        self.df['reachability confidence score'] = 1 - reach_scaled
 
-        hi = self.df['optics reachability scaled score'].quantile(0.75)
-        med = self.df['optics reachability scaled score'].quantile(0.25)
+        self.df['reachability severity score'] = reach_scaled
 
-        self.df['optics severity level'] = np.where((self.df['optics reachability scaled score'] >= hi), 'High',
-                                             np.where((self.df['optics reachability scaled score'] > med), 'Medium', 'Low'))
+        reach_max = self.df['reachability severity score'].quantile(0.75)
+        reach_med = self.df['reachability severity score'].quantile(0.25)
 
-        hd = hdbscan.HDBSCAN(min_samples=8, min_cluster_size= 7)
+        self.df['reachability severity level'] = np.select([self.df['reachability severity score'] >= reach_max,
+                                                             (self.df['reachability severity score'] > reach_med) & (self.df['reachability severity score'] < reach_max)],['High', 'Medium'], default='Low')
+
+        hd = hdbscan.HDBSCAN(min_samples=8, min_cluster_size=7)
         hd.fit(x_pca)
         hd_label = hd.labels_
-
-        for hd_score in self.scores:
-            h = hd_score(x_pca, hd_label)
-            print(f'{hd_score.__name__}: {h}')
-        print()
 
         self.df['hdbscan label'] = hd_label
 
         prob = hd.probabilities_.copy()
 
-        self.df['hdbscan probability'] = prob
+        self.df['probability confidence score'] = prob
 
-        h = self.df['hdbscan probability'].quantile(0.75)
-        m = self.df['hdbscan probability'].quantile(0.25)
+        hd_sever = 1 - self.df['probability confidence score']
 
-        self.df['hdbscan probability confidence'] = np.where((self.df['hdbscan probability'] >= h), 'High',
-                                                 np.where((self.df['hdbscan probability'] > m), 'Medium', 'Low'))
+        mm5 = MinMaxScaler()
+        self.df['probability severity score'] = mm5.fit_transform(hd_sever.to_numpy().reshape(-1,1)).ravel()
 
-        self.df['hdbscan probability severity score'] = 1 - self.df['hdbscan probability']
+        prob_max = self.df['probability severity score'].quantile(0.75)
+        prob_med = self.df['probability severity score'].quantile(0.25)
 
-        hp_max = self.df['hdbscan probability severity score'].quantile(0.75)
-        hp_med = self.df['hdbscan probability severity score'].quantile(0.25)
+        self.df['probability severity level'] = np.select([(self.df['probability severity score'] >= prob_max),
+                                                           (self.df['probability severity score'] > prob_med) & (self.df['probability severity score'] < prob_max)],['High', 'Medium'], default='Low')
 
-        self.df['hdbscan probability severity level'] = np.where(
-            self.df['hdbscan probability severity score'] >= hp_max, 'High',
-            np.where(self.df['hdbscan probability severity score'] > hp_med, 'Medium', 'Low'))
+        self.df['hdbscan outlier severity score'] = hd.outlier_scores_.copy()
 
-        self.df['hdbscan outlier score'] = hd.outlier_scores_.copy()
+        mm99 = MinMaxScaler()
+        self.df['hdbscan outlier severity score'] = mm99.fit_transform(
+            self.df['hdbscan outlier severity score'].to_numpy().reshape(-1, 1)
+        ).ravel()
 
-        top = self.df['hdbscan outlier score'].quantile(0.75)
-        middle = self.df['hdbscan outlier score'].quantile(0.25)
+        top = self.df['hdbscan outlier severity score'].quantile(0.75)
+        middle = self.df['hdbscan outlier severity score'].quantile(0.25)
 
-        self.df['hdbscan outlier severity level'] = np.where((self.df['hdbscan outlier score'] >= top), 'High',
-                                              np.where((self.df['hdbscan outlier score'] > middle), 'Medium', 'Low'))
+        self.df['hdbscan outlier severity level'] = np.select([(self.df['hdbscan outlier severity score'] >= top),
+                                                               (self.df['hdbscan outlier severity score'] > middle) & (self.df['hdbscan outlier severity score'] < top)],
+                                                              ['High', 'Medium'], default='Low')
 
         lof = LocalOutlierFactor(n_neighbors=100)
 
@@ -165,33 +142,30 @@ class A:
 
         self.df['local outlier factor score'] = neg_outlier
 
-        invert_local = neg_outlier.reshape(-1,1)
+        mm5 = MinMaxScaler()
 
-        local_scale = self.min.fit_transform(invert_local).ravel()
-
+        local_scale = mm5.fit_transform(neg_outlier.reshape(-1, 1)).ravel()
         self.df['local outlier severity score'] = 1 - local_scale
 
         local_max = self.df['local outlier severity score'].quantile(0.75)
         local_med = self.df['local outlier severity score'].quantile(0.25)
 
-        self.df['local outlier severity level'] = np.where((self.df['local outlier severity score'] >= local_max), 'High',
-                                            np.where((self.df['local outlier severity score'] > local_med), 'Medium', 'Low'))
+        self.df['local outlier severity level'] = np.select([self.df['local outlier severity score'] >= local_max,
+                                                             (self.df['local outlier severity score'] > local_med) & (self.df['local outlier severity score'] < local_max)],
+                                                            ['High', 'Medium'], default='Low')
 
-        self.df['density severity level'] = np.where(
-            (self.df['dbscan severity level'] == 'High') &
-            (self.df['optics severity level'] == 'High') &
-            (self.df['hdbscan probability severity level'] == 'High') &
-            (self.df['hdbscan outlier severity level'] == 'High') &
-            (self.df['local outlier severity level'] == 'High'),
-            'High',
-            np.where(
-                (self.df['dbscan severity level'].isin(['High', 'Medium'])) &
-                (self.df['optics severity level'].isin(['High', 'Medium'])) &
-                (self.df['hdbscan probability severity level'].isin(['High', 'Medium'])) &
-                (self.df['hdbscan outlier severity level'].isin(['High', 'Medium'])) &
-                (self.df['local outlier severity level'].isin(['High', 'Medium'])),
-                'Medium',
-                'Low'))
+        density = (self.df['dbscan severity score'] + self.df['reachability severity score'] + self.df['probability severity score'] + self.df['hdbscan outlier severity score'] + self.df['local outlier severity score']) / 5
+
+        mm6 = MinMaxScaler()
+
+        self.df['density severity score'] = mm6.fit_transform(density.to_numpy().reshape(-1,1)).ravel()
+
+        den_top = self.df['density severity score'].quantile(0.75)
+        den_mid = self.df['density severity score'].quantile(0.25)
+
+        self.df['density severity level'] = np.select([self.df['density severity score'] >= den_top,
+                                                             (self.df['density severity score'] > den_mid) & (
+                                                                         self.df['density severity score'] < den_top)],['High', 'Medium'], default='Low')
 
         iso = IsolationForest(n_estimators=100)
 
@@ -201,21 +175,32 @@ class A:
 
         iso_decision = iso.decision_function(x_pca)
 
-        self.df['isolation decision score'] = iso_decision
+        mm7 = MinMaxScaler()
 
-        invert_iso = iso_decision.reshape(-1, 1)
-        iso_min = self.min.fit_transform(invert_iso).ravel()
+        invert_iso = mm7.fit_transform(iso_decision.reshape(-1, 1)).ravel()
 
-        self.df['isolation severity score'] = 1 - iso_min
+        self.df['isolation confidence score'] = invert_iso
+
+        self.df['isolation severity score'] = 1 - invert_iso
 
         iso_max = self.df['isolation severity score'].quantile(0.75)
         iso_med = self.df['isolation severity score'].quantile(0.25)
 
-        self.df['isolation severity level'] = np.where((self.df['isolation severity score'] >= iso_max), 'High',
-                                                np.where((self.df['isolation severity score'] > iso_med), 'Medium', 'Low'))
+        self.df['isolation severity level'] = np.select([self.df['isolation severity score'] >= iso_max,
+                                                         (self.df['isolation severity score'] > iso_med) & (self.df['isolation severity score'] < iso_max)],
+                                                        ['High', 'Medium'], default='Low')
 
-        self.df['final density severity level'] = np.where((self.df['density severity level'] == 'High') & (self.df['isolation severity level'] == 'High'), 'High',
-                                                           np.where((self.df['density severity level'].isin(['High', 'Medium'])) & (self.df['isolation severity level'].isin(['High', 'Medium'])), 'Medium', 'Low'))
+        density_combine = (self.df['density severity score'] + self.df['isolation severity score']) / 2
+
+        mm8 = MinMaxScaler()
+
+        self.df['final density score'] = mm8.fit_transform(density_combine.to_numpy().reshape(-1,1)).ravel()
+
+        top_d = self.df['final density score'].quantile(0.75)
+        mid_d = self.df['final density score'].quantile(0.25)
+
+        self.df['final density level'] = np.select([self.df['final density score'] >= top_d,
+                                                    (self.df['final density score'] > mid_d) & (self.df['final density score'] < top_d)],['High', 'Medium'], default='Low')
 
         svm = OneClassSVM()
 
@@ -225,27 +210,34 @@ class A:
 
         svm_decision = svm.decision_function(x_pca)
 
-        self.df['svm decision score'] = svm_decision
+        mm9 = MinMaxScaler()
+        svm_scale = mm9.fit_transform(svm_decision.reshape(-1,1)).ravel()
 
-        svm_score = svm_decision.reshape(-1, 1)
-        svm_ravel = self.min.fit_transform(svm_score).ravel()
+        self.df['svm decision confidence score'] = svm_scale
 
-        svm_final = 1 - svm_ravel
+        self.df['svm decision severity score'] = 1 - svm_scale
 
-        self.df['svm severity score'] = svm_final
+        top_svm = self.df['svm decision severity score'].quantile(0.75)
+        mid_svm = self.df['svm decision severity score'].quantile(0.25)
 
-        svm_max = self.df['svm severity score'].quantile(0.75)
-        svm_med = self.df['svm severity score'].quantile(0.25)
+        self.df['svm severity level'] = np.select([self.df['svm decision severity score'] >= top_svm,
+                                                   (self.df['svm decision severity score'] > mid_svm) & (self.df['svm decision severity score']< top_svm)],['High', 'Medium'], default='Low')
 
-        self.df['svm severity level'] = np.where((self.df['svm severity score'] >= svm_max), 'High',
-                                          np.where((self.df['svm severity score'] > svm_med), 'Medium', 'Low'))
+        all_combine = (self.df['final density score'] + self.df['svm decision severity score']) / 2
+        mm11 = MinMaxScaler()
 
-        self.df['severity level'] = np.where((self.df['svm severity level'] == 'High') & (self.df['final density severity level'] == 'High'), 'High',
-                                             np.where((self.df['svm severity level'].isin(['High', 'Medium'])) & (self.df['final density severity level'].isin(['High', 'Medium'])), 'Medium', 'Low'))
+        self.df['final severity score'] = mm11.fit_transform(all_combine.to_numpy().reshape(-1,1)).ravel()
 
-        self.df = self.df.reset_index(drop=True)
-        self.df.insert(0, 'id', self.df.index+1)
+        top_final = self.df['final severity score'].quantile(0.75)
+        mid_final = self.df['final severity score'].quantile(0.25)
+
+        self.df['final severity level'] = np.select([self.df['final severity score'] >= top_final,
+                                                     (self.df['final severity score'] > mid_final) & (self.df['final severity score'] < top_final)],['High', 'Medium'], default='Low')
+
+
         print(self.df.head(5).to_string())
+        self.df = self.df.reset_index(drop=True)
+        self.df.insert(0, 'id', self.df.index + 1)
 
         #self.df.to_csv('c:/Users/anton/risk/credit_final.csv', index=False)
 
