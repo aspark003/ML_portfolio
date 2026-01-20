@@ -2,20 +2,26 @@ Risk Intelligence Platform — Unsupervised Anomaly Detection & Severity Scoring
 
 Overview
 
-This project is a full end‑to‑end risk intelligence and anomaly detection platform built in Python using modern machine‑learning techniques. 
-It is designed to ingest raw, messy business data, clean and engineer features, run multiple unsupervised anomaly detection models, and produce a single unified severity score for every record.
+This project is a full end‑to‑end risk intelligence and anomaly detection platform built in Python using modern machine‑learning techniques.
+It ingests raw, messy business data, cleans and engineers features, runs multiple unsupervised anomaly detection models, and produces a single unified severity score and risk level for every record.
 
-The system is model‑agnostic and can be applied to financial, operational, cybersecurity, compliance, or fraud‑style datasets.
+The system is model‑agnostic and can be applied to financial, operational, cybersecurity, compliance, or fraud-style datasets.
 
 What This Platform Does
 
-1. Ingests raw tabular data (numeric + categorical)
-2. Cleans and preprocesses using a production‑grade pipeline
-3. Applies dimensionality reduction (PCA)
-4. Runs multiple anomaly detection models
-5. Normalizes and fuses all model outputs
-6. Generates a final severity score and risk levels
-7. Exports results for BI dashboards and analytics
+Ingests raw tabular data (numeric + categorical)
+
+Cleans and preprocesses using a production‑grade pipeline
+
+Applies dimensionality reduction (PCA)
+
+Runs multiple anomaly detection models
+
+Normalizes and fuses all model outputs
+
+Generates a final severity score and risk levels
+
+Exports results for interactive BI dashboards
 
 Models Used
 
@@ -35,101 +41,116 @@ Each model produces its own anomaly signal which is normalized and converted int
 
 Severity Scoring Engine
 
-All models are fused into a single risk engine:
+All model outputs are fused into a single risk engine:
 
 Raw Model Scores
-      
-Min‑Max Normalization
-      
+
+Min-Max Normalization
+
 Severity Inversion (when needed)
-      
+
 Model Fusion (Density + Isolation + SVM)
-      
+
 Final Severity Score
-      
-Quantile Risk Levels
+
+Quantile-based Risk Levels
 
 
 Risk Levels
 
-High -- Top 25% 
-Medium -- Middle 50%                     |
+Critical -- Top 5% / Quantile 0.95
+High -- Top 25%  / Quantile 0.85
+Medium -- Middle 50% / Quantile 0.60                    |
 Low -- Bottom 25%                     |
 
 This ensures a stable and interpretable ranking system suitable for risk intelligence investigation workflows.
 
 Feature Engineering Pipeline
 
-A production‑ready preprocessing pipeline is used:
+Production-ready preprocessing pipeline handles:
 
 Numeric imputation (median)
-Categorical imputation (most frequent)
-Min‑Max scaling
-One‑hot encoding
-ColumnTransformer
 
-This ensures the platform can handle:
+Categorical imputation (most frequent)
+
+Min-Max scaling
+
+One-hot encoding (ColumnTransformer)
+
+It ensures robustness to:
 
 Missing values
+
 Mixed data types
-Dirty real‑world datasets
 
-Output
+Dirty real-world datasets
 
-The final output is a fully enriched dataset containing:
+Power BI Dashboard Integration
 
-Model labels
-Confidence scores
-Severity scores
-Risk levels
-Final risk severity score
-Final risk severity levels
+The platform integrates with an interactive Power BI dashboard, featuring:
 
-This output is designed for direct ingestion into BI tools such as Power BI.
+Risk level identifier slicer → → automatically update per selection
 
-Example Dashboard
+Full Automation Detection = KPI card
 
-The system integrates directly with a Power BI risk intelligence dashboard featuring:
-Risk level button
-Severity distribution donut charts
-Total exposure gauges
+Anomaly Detection = KPI card
 
-This enables analysts to move from macro risk posture → individual anomalous records in seconds.
+Risk Analytics Detection = KPI card
+
+This allows analysts to move from macro risk posture → individual anomalous records in seconds.
+
+KPI Card Setup:
+
+Value: Count of ID
+
+Trend axis: column corresponding to each KPI (risk detection level, density severity level, decision severity level)
+
+Target: Count of ID
+
+Slicer: one master slicer for risk levels, controlling all KPI cards
 
 Architecture
-Raw Data
-Preprocessing Pipeline
-PCA
-Anomaly Model Ensemble
-Severity Fusion Engine
-Risk Level
-Analytics & Dashboarding
+
+Raw Data → Preprocessing Pipeline → PCA → Anomaly Model Ensemble → Severity Fusion Engine → Risk Level → Analytics & Dashboarding
+
+
+GitHub: [https://github.com/aspark003/ML_portfolio](https://github.com/aspark003/ML_portfolio)
 
 Technologies
+
 Python 3.11+
+
 pandas, NumPy
-scikit‑learn
+
+scikit-learn
+
 HDBSCAN
+
 Power BI
 
 Use Cases
 
 Fraud detection
-Insider threat
+
+Insider threat detection
+
 Financial risk analytics
+
 Compliance monitoring
+
 Cybersecurity anomaly detection
+
 Operational risk
 
 Why This Matters
 
-Most anomaly systems rely on a single model. This platform uses model consensus, dramatically reducing false positives while improving detection of real risk.
+Most anomaly systems rely on a single model. This platform uses model consensus, reducing false positives and improving detection of real risk.
 
-This architecture mirrors how enterprise fraud, SOC, and compliance platforms operate in production environments.
+The architecture mirrors how enterprise fraud, SOC, and compliance platforms operate in production.
 
 Author
 
 Antonio Park
 Machine Learning Engineer — Risk & Anomaly Detection
 
-GitHub: [https://github.com/aspark003/ML_portfolio](https://github.com/aspark003/ML_portfolio)
+GitHub: https://github.com/aspark003/ML_portfolio
