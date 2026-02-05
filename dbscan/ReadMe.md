@@ -1,15 +1,23 @@
-# DBSCAN – Unsupervised Anomaly Detection
+-----DBSCAN – Unsupervised - Noise / Cluster
 
-This project explores **unsupervised anomaly detection** using **DBSCAN** on a csv file.
+This project explores **unsupervised anomaly detection** using **DBSCAN** on a CSV dataset.
 
-The goal is to understand:
-- DBSCAN identifies anomalies as *noise*
-- DBSCAN(eps=0.5, min_samples=6, metric='minkowski', p=2, algorithm='auto', n_jobs=-1)
-  - Higher then 0.5 merged all noise's to normal
-  - No hugh difference updating min_samples
-  - Manhattan / Euclidean = Not much difference
+The goal is to understand how DBSCAN behaves with respect to:
+- identifying anomalies as *noise*
+- sensitivity to `eps`, `min_samples`, and distance metrics
+
+----- Dependencies
+
+- pandas
+- numpy
+- scikit-learn
+- matplotlib
+
+----- Configuration used
+--------------PYTHON---------------
+DBSCAN(eps=0.5,min_samples=6,metric='minkowski',p=2,algorithm='auto',n_jobs=-1)
     
-## What’s implemented
+----- What’s implemented
 
 - Pandas / NumPy data handling
 - Preprocessing pipeline:
@@ -22,15 +30,29 @@ The goal is to understand:
   - cluster sizes
   - Noise vs normal behavior
 - Cluster validity metrics:
-  - Silhouette = 0.6247198968642527
-  - Calinski–Harabasz = 24636.995506993306
-  - Davies–Bouldin = 0.9722291403292819
+  - Silhouette = 0.6244500631237574
+  - Calinski–Harabasz = 24665.92423587026
+  - Davies–Bouldin = 0.5126475719931072
 
-## Key observations
-- DBSCAN produces **binary anomalies** (Noise vs Normal)
-- Changing distance metrics reshapes density neighborhoods
-- Increasing `eps` improves clustering scores but can absorb anomalies
-- Good clustering ≠ good anomaly detection
+----- Data summary (derived)
 
-This project focuses on **understanding DBSCAN behavior**, not building a production model.
+              Label  Label scaled       Points  Points scaled  Cluster  Cluster Scaled
+count  32581.000000  32581.000000    13.000000      13.000000     13.0            13.0
+mean       2.917805      0.326484  2506.230769       0.428025      1.0             0.0
+std        2.445062      0.203755  2391.676718       0.408624      0.0             0.0
+min       -1.000000      0.000000     1.000000       0.000000      1.0             0.0
+25%        1.000000      0.166667   509.000000       0.086793      1.0             0.0
+50%        2.000000      0.250000   620.000000       0.105758      1.0             0.0
+75%        4.000000      0.416667  5014.000000       0.856484      1.0             0.0
+max       11.000000      1.000000  5854.000000       1.000000      1.0             0.0
+
+  
+----- Key observations
+
+ -DBSCAN produces binary anomaly output (noise vs cluster)
+ -Distance metrics reshape density neighborhoods but may not change outcomes significantly
+ -Increasing eps improves clustering scores while reducing detected anomalies
+ -Strong clustering performance can conflict with anomaly detection goals
+
+------- This project focuses on understanding DBSCAN behavior, not building a production model -------
 
