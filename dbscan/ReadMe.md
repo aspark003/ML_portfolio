@@ -36,14 +36,8 @@ DBSCAN(eps=0.5,min_samples=6,metric='minkowski',p=2,algorithm='auto',n_jobs=-1)
 
 ----- Data summary (derived)
 - Label
-count  32581.000000  32581.000000 
-mean       2.917805      0.326484 
-std        2.445062      0.203755 
-min       -1.000000      0.000000 
-25%        1.000000      0.166667 
-50%        2.000000      0.250000 
-75%        4.000000      0.416667 
-max       11.000000      1.000000 
+  COUNT - 32581.000000
+  MEAN - 2.917805
 
   
 ----- Key observations
