@@ -35,9 +35,14 @@ DBSCAN(eps=0.5,min_samples=6,metric='minkowski',p=2,algorithm='auto',n_jobs=-1)
   - Davies–Bouldin = 0.5126475719931072
 
 ----- Data summary (derived)
-- Label
-  COUNT - 32581.000000
-  MEAN - 2.917805
+              Label  Label scaled       Points  Points scaled  Cluster  Cluster Scaled
+count  32581.000000  32581.000000    13.000000      13.000000     13.0            13.0
+
+mean       2.917805      0.326484  2506.230769       0.428025      1.0             0.0
+
+std        2.445062      0.203755  2391.676718       0.408624      0.0             0.0
+
+
 
   
 ----- Key observations
