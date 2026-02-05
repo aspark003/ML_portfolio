@@ -35,8 +35,7 @@ DBSCAN(eps=0.5,min_samples=6,metric='minkowski',p=2,algorithm='auto',n_jobs=-1)
   - Davies–Bouldin = 0.5126475719931072
 
 ----- Data summary (derived)
-
-              Label         Count 
+- Label
 count  32581.000000  32581.000000 
 mean       2.917805      0.326484 
 std        2.445062      0.203755 
