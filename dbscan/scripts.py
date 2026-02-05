@@ -29,6 +29,7 @@ class A:
 
             self.copy = self.copy.drop(columns=['person_age', 'person_income','person_emp_length','person_home_ownership', 'loan_grade'])
 
+
             self.num = self.copy.select_dtypes(include=['number']).columns
             self.obj = self.copy.select_dtypes(include=['object']).columns
 
@@ -67,7 +68,7 @@ class A:
 
             plt.figure(figsize=(10, 8))
             plt.scatter(label[label == -1], label[label == -1], c='red', s=20, label='Noise')
-            plt.scatter(label[label != -1], label[label != -1], c='green', s=10, label='Normal')
+            plt.scatter(label[label != -1], label[label != -1], c='green', s=10, label='Cluster')
             plt.legend()
             plt.xlabel('INDEX')
             plt.ylabel('VALUES')
@@ -78,7 +79,7 @@ class A:
 
             plt.figure(figsize=(10, 8))
             plt.scatter(points.index[points.index == -1], points[points.index == -1], c='red', s=30, label='Noise')
-            plt.scatter(points.index[points.index != -1], points[points.index != -1], c='green', s=10, label='Normal')
+            plt.scatter(points.index[points.index != -1], points[points.index != -1], c='green', s=10, label='Cluster')
             plt.xlabel('INDEX')
             plt.ylabel('VALUES')
             plt.legend()
@@ -92,7 +93,7 @@ class A:
 
             plt.figure(figsize=(10,8))
             plt.scatter(np.arange(len(c_index[c_index == -1])), c_value[c_index==-1], c='red', s=20, label='Noise')
-            plt.scatter(np.arange(len(c_index[c_index != -1])), c_value[c_index !=-1], c='green',s=10, label='Normal')
+            plt.scatter(np.arange(len(c_index[c_index != -1])), c_value[c_index !=-1], c='green',s=10, label='Cluster')
             plt.legend()
             plt.xlabel('INDEX')
             plt.ylabel('VALUE')
@@ -102,6 +103,19 @@ class A:
             for scores in self.scores:
                 s = scores(x_df, label)
                 print(f'{scores.__name__}: {s}')
+
+            label_scaled = pd.Series(MinMaxScaler().fit_transform(label.to_numpy().reshape(-1,1)).ravel())
+            points_scaled = pd.Series(MinMaxScaler().fit_transform(points.to_numpy().reshape(-1,1)).ravel())
+            cluster_scaled = pd.Series(MinMaxScaler().fit_transform(cluster.to_numpy().reshape(-1,1)).ravel())
+
+            db_signal = pd.DataFrame({'Label': label,
+                                      'Label scaled': label_scaled,
+                                      'Points': points,
+                                      'Points scaled': points_scaled,
+                                      'Cluster': cluster,
+                                      'Cluster Scaled': cluster_scaled})
+
+            print(db_signal.describe().to_string())
 
         except Exception as e:
             raise RuntimeError(f'invalid dbscan: {e}')
