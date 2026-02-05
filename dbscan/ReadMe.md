@@ -35,14 +35,16 @@ DBSCAN(eps=0.5,min_samples=6,metric='minkowski',p=2,algorithm='auto',n_jobs=-1)
   - Davies–Bouldin = 0.5126475719931072
 
 ----- Data summary (derived)
-    Label 
-    - count 32581.000000
-    - mean 2.917805
+              Label  Label scaled       Points  Points scaled  Cluster  Cluster Scaled
+count  32581.000000  32581.000000    13.000000      13.000000     13.0            13.0
+mean       2.917805      0.326484  2506.230769       0.428025      1.0             0.0
+std        2.445062      0.203755  2391.676718       0.408624      0.0             0.0
+min       -1.000000      0.000000     1.000000       0.000000      1.0             0.0
+25%        1.000000      0.166667   509.000000       0.086793      1.0             0.0
+50%        2.000000      0.250000   620.000000       0.105758      1.0             0.0
+75%        4.000000      0.416667  5014.000000       0.856484      1.0             0.0
+max       11.000000      1.000000  5854.000000       1.000000      1.0             0.0
     
-
-
-
-  
 ----- Key observations
 
  -DBSCAN produces binary anomaly output (noise vs cluster)
