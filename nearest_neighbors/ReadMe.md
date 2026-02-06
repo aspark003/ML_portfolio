@@ -33,7 +33,7 @@ NearestNeighbors(
 - Nearest neighbors index measures
 - Metric comparison
 
-## Data summary (Derived/Scaled)
+## Data summary (Distance/Indices)
 ```
        Distance: 0   Distance: 1   Distance: 2   Distance: 3   Distance: 4   Distance: 5
 count      32581.0  32581.000000  32581.000000  32581.000000  32581.000000  32581.000000
