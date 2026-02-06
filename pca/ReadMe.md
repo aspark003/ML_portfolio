@@ -1,11 +1,11 @@
 
 ## PCA – Variance Analysis & Inverse Reconstruction
 
-This project explores **unsupervised** using **PCA** on a CSV dataset.
+This project explores **unsupervised dimensionality analysis** using **PCA** on a CSV dataset.
 
 The goal in to explore how PCA redistributes variance, where the information drops, and how inverse PCA reconstructs featrues after dimensionality reduction.
 - pipeline
-  - Numeric + Categorical preprocessing (imputation, scaling, modeling)
+  - Numeric + Categorical preprocessing (imputation, scaling, encoding)
   - PCA with n_components = 0.9, svd_solver='auto', random_state=42
   - Variance, variance ratio, cumulative variance analysis
   - Inverse PCA reconstruction for diagnostics
@@ -30,7 +30,7 @@ PCA(
 - Original feature pairs vs inverse PCA feature pairs
 - Progressive tightening of reconstructed features
 
-## Data summary (derived)
+## Data summary (Derived/Scaled)
 ```
        variance  variance ratio    cumsum  cumsum ratio
 count  6.000000        6.000000  6.000000      6.000000
