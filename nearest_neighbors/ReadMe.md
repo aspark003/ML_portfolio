@@ -6,7 +6,7 @@ This project explores **unsupervised structure discovery** using **nearest neigh
 The goal is to understand distance behavior as a signal.
 - pipeline
   - Numeric + Categorical preprocessing (imputation, scaling, encoding)
-  - Distance and index extraction (kneighbors)
+  - Distance and index extraction (kneighbors())
   - Distance pair scatter diagnositics
   - Normalized statistical summaries
 
@@ -25,7 +25,6 @@ NearestNeighbors(
     p=1,
     algorithm='auto',
     leaf_size=30
-    random_state=42,
 )
 ```
 ## Key Visuals
@@ -61,6 +60,7 @@ max        1.000000      1.000000      1.000000      1.000000      1.000000     
 - Distance: 0 acts as a baseline anchor (self_distance)
 - Distance growth forms a stable geometric signal
 - Neighbors tighten as it moves from distance to distance
-- 
-This project focuses on **nearest neighbors distance signal**, not building a production model.
+- Metric choice (Euclidean vs Manhattan) shifts where the signal changes, not whether it exists
+  
+This project focuses on **interpreting nearest-nighbor distance geometry**, not building a production model.
 
