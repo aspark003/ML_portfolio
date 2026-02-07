@@ -94,7 +94,7 @@ class ABCD:
 
 
         except Exception as e:
-            raise RuntimeError(f'invalid optics: {e}')
+            raise RuntimeError(f'invalid nearest neighbor: {e}')
 
 
 
