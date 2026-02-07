@@ -157,7 +157,7 @@ class AB:
                                     'cumsum ratio': pd.Series(MinMaxScaler().fit_transform(c_sum_ratio.reshape(-1,1)).ravel())})
 
         except Exception as e:
-            raise RuntimeError(f'invalid nearest neighbors: {e}')
+            raise RuntimeError(f'invalid pca:: {e}')
 
 
 
