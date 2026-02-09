@@ -1,14 +1,13 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
-from sklearn.cluster import DBSCAN
+from sklearn.neighbors import NearestNeighbors
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
 from sklearn.impute import SimpleImputer
 import matplotlib.pyplot as plt
 
-class A:
+class ABC:
     def __init__(self):
         try:
             self.df = pd.read_csv('c:/Users/anton/risk/credit.csv', encoding='utf-8-sig', engine='python')
@@ -29,7 +28,7 @@ class A:
 
 
             self.num = self.copy.select_dtypes(include=['number']).columns
-            self.obj = self.copy.select_dtypes(include=['object']).columns
+            self.obj = self.copy.select_dtypes(include=['object', 'string']).columns
 
             self.mm = MinMaxScaler()
             self.ohe = OneHotEncoder(drop=None, handle_unknown='ignore', sparse_output=False)
@@ -46,8 +45,6 @@ class A:
             self.preprocessor = ColumnTransformer([('scaler', self.n_pipe, self.num),
                                                    ('encoder', self.o_pipe, self.obj)])
 
-            self.scores = [silhouette_score, calinski_harabasz_score, davies_bouldin_score]
-
             #k = pd.api.types.is_numeric_dtype(self.copy['person_income'])
 
         except Exception as e:
@@ -56,62 +53,45 @@ class A:
     def b(self):
         try:
             x = self.preprocessor.fit_transform(self.copy)
-            x_df = pd.DataFrame(x, columns=self.preprocessor.get_feature_names_out())
+            nn = NearestNeighbors(n_neighbors=6, metric='minkowski', p=1,algorithm='auto', leaf_size=30, n_jobs=-1)
+            nn.fit(x)
 
-            db_scan = DBSCAN(eps=0.5, min_samples=6, metric='minkowski', p=2, algorithm='auto', n_jobs=-1)
-
-            db_scan.fit(x_df)
-
-            label = pd.Series(db_scan.labels_)
-
-            points = pd.Series(label).value_counts()
-
-            plt.figure(figsize=(10, 8))
-            plt.scatter(points.index[points.index == -1], points[points.index == -1], c='red', s=40, label='Noise')
-            plt.scatter(points.index[points.index != -1], points[points.index != -1], c='green', s=30, label='Cluster')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUES')
-            plt.legend()
-            plt.title('POINTS')
-            plt.show()
-
-            cluster = pd.Series(points).value_counts()
-
-            c_index = pd.Series(points).index.to_numpy()
-            c_value = pd.Series(points).to_numpy()
+            distance, indices = nn.kneighbors(x)
 
             plt.figure(figsize=(10,8))
-            plt.scatter(np.arange(len(c_index[c_index == -1])), c_value[c_index==-1], c='red', s=40, label='Noise')
-            plt.scatter(np.arange(len(c_index[c_index != -1])), c_value[c_index !=-1], c='green',s=30, label='Cluster')
+            plt.scatter(distance[:,0], distance[:,1], c='red',s=20, label='0-1')
+            plt.scatter(distance[:,1], distance[:,2], c='green',s=20, label='1-2')
+            plt.scatter(distance[:,2], distance[:,3], c='blue', s=10, label='2-3')
+            plt.scatter(distance[:,3], distance[:,4], c='yellow',s=10, label='3-4')
+            plt.title('NEAREST NEIGHBOR DISTANCE MEASURES')
             plt.legend()
             plt.xlabel('INDEX')
             plt.ylabel('VALUE')
-            plt.title('CLUSTER')
             plt.show()
 
-            for scores in self.scores:
-                s = scores(x_df, label)
-                print(f'{scores.__name__}: {s}')
+            plt.figure(figsize=(10,8))
+            plt.scatter(indices[:, 0], indices[:, 1], c='red', s= 20, label='0-1')
+            plt.scatter(indices[:, 1], indices[:, 2], c='green', s=20, label='1-2')
+            plt.scatter(indices[:, 2], indices[:, 3], c='blue', s=10, label='2-3')
+            plt.scatter(indices[:, 3], indices[:, 4], c='yellow', s=10, label='3-4')
+            plt.title('NEAREST NEIGHBOR INDICES MEASURES')
+            plt.xlabel('INDEX')
+            plt.ylabel('VALUES')
+            plt.legend()
+            plt.show()
 
-            label_scaled = pd.Series(MinMaxScaler().fit_transform(label.to_numpy().reshape(-1,1)).ravel())
-            points_scaled = pd.Series(MinMaxScaler().fit_transform(points.to_numpy().reshape(-1,1)).ravel())
-            cluster_scaled = pd.Series(MinMaxScaler().fit_transform(cluster.to_numpy().reshape(-1,1)).ravel())
+            d_df = pd.DataFrame(MinMaxScaler().fit_transform(distance), columns=[f"Distance: {k}" for k in range(distance.shape[1])])
 
-            db_signal = pd.DataFrame({'Label': label,
-                                      'Label scaled': label_scaled,
-                                      'Points': points,
-                                      'Points scaled': points_scaled,
-                                      'Cluster': cluster,
-                                      'Cluster Scaled': cluster_scaled})
+            i_df = pd.DataFrame(MinMaxScaler().fit_transform(indices), columns=[f'Indices: {k}' for k in range(indices.shape[1])])
 
-            print(db_signal.describe().to_string())
+            print(d_df.describe().to_string())
+            print()
+            print(i_df.describe().to_string())
 
         except Exception as e:
             raise RuntimeError(f'invalid nearest neighbors: {e}')
 
 
-
-
 if __name__ == "__main__":
-    a = A()
-    a.b()
+    abc = ABC()
+    abc.b()
