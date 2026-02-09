@@ -1,27 +1,45 @@
-NEAREST NEIGHBORS / kneighbors
-This project explores unsupervised structure discovery using nearest neighbors on a CSV dataset.
+## NEAREST NEIGHBORS / kneighbors
 
-The goal is to understand distance behavior as a signal.
+This project explores **unsupervised structure discovery** using **nearest neighbors** on a CSV dataset.
 
-pipeline
+The goal is to understand **distance behavior as a signal**.
 
-Numeric + Categorical preprocessing: imputation, scaling, encoding
+---
 
-NearestNeighbors fit and kneighbors() extraction
+## Pipeline
 
-Distance pair scatter diagnostics (distance vs distance)
+- **Numeric + Categorical preprocessing**
+  - SimpleImputer (mean + indicator)
+  - MinMaxScaler
+  - OneHotEncoder
+- **NearestNeighbors**
+  - `fit`
+  - `kneighbors()` extraction
+- **Diagnostics**
+  - Distance pair scatter (distance vs distance)
+  - Normalized statistical summaries for distances and neighbor indices
 
-Normalized statistical summaries for distances and neighbor indices
+---
 
-Dependencies
-pandas
-numpy
-scikit-learn
-matplotlib
+## Dependencies
 
-Configuration used
-python
-NearestNeighbors(n_neighbors=6, metric='minkowski',p=1,algorithm='auto',leaf_size=30,n_jobs=-1)
+- pandas  
+- numpy  
+- scikit-learn  
+- matplotlib  
+
+---
+
+## Configuration used
+```python
+NearestNeighbors(
+    n_neighbors=6,
+    metric='minkowski',
+    p=1,
+    algorithm='auto',
+    leaf_size=30,
+    n_jobs=-1
+)
 Key Visuals
 Nearest neighbors distance measures (pairwise distance scatter)
 
@@ -29,8 +47,8 @@ Nearest neighbors index measures (neighbor index scatter)
 
 Normalized distance and index summary tables
 
-Data summary (Distance/Indices)
-
+Data summary (Distance / Indices)
+Distances
        Distance: 0   Distance: 1   Distance: 2   Distance: 3   Distance: 4   Distance: 5
 count      32581.0  32581.000000  32581.000000  32581.000000  32581.000000  32581.000000
 mean           0.0      0.074130      0.088639      0.098019      0.086721      0.090165
@@ -40,7 +58,7 @@ min            0.0      0.000000      0.000000      0.000000      0.000000      
 50%            0.0      0.060433      0.074099      0.082033      0.070367      0.073692
 75%            0.0      0.094511      0.107353      0.117319      0.105896      0.109478
 max            0.0      1.000000      1.000000      1.000000      1.000000      1.000000
-
+Indices
          Indices: 0    Indices: 1    Indices: 2    Indices: 3    Indices: 4    Indices: 5
 count  32581.000000  32581.000000  32581.000000  32581.000000  32581.000000  32581.000000
 mean       0.499915      0.496047      0.491692      0.490091      0.487982      0.487911
@@ -50,29 +68,44 @@ min        0.000000      0.000000      0.000000      0.000000      0.000000     
 50%        0.499693      0.492234      0.483287      0.479831      0.475429      0.472006
 75%        0.749908      0.741789      0.737561      0.737306      0.734614      0.734207
 max        1.000000      1.000000      1.000000      1.000000      1.000000      1.000000
-
 Key observations
 Distance: 0 is the self-distance baseline (always 0 after scaling).
 
-Distance growth across neighbor ranks forms a stable geometric signal after MinMax scaling.
+Distance growth across neighbor ranks forms a stable geometric signal.
 
-Tight neighbor bands (small mean and low std) indicate local homogeneity; wider bands indicate more spread in local neighborhoods.
+Tight neighbor bands indicate local homogeneity.
 
-Many zero distances in higher neighbor ranks indicate duplicate or extremely similar rows after preprocessing.
+Wider bands indicate spread in local neighborhoods.
 
-Indices distributions (normalized) show neighbor index spread; medians near 0.5 reflect uniform sampling ordering after scaling.
+Zero distances at higher ranks indicate duplicates or near-duplicates after preprocessing.
 
-Metric choice (Manhattan / p=1) affects absolute distance values but not the qualitative neighbor ordering used for diagnostics.
+Normalized index distributions show uniform ordering (medians near 0.5).
 
-Use the distance and index summaries to detect duplicates, dense pockets, and where local geometry changes — this is exploratory, not a production model.
+Manhattan distance (p=1) shifts magnitude, not neighbor ordering.
 
-Implementation notes (what the code uses)
-Preprocessing: SimpleImputer(strategy='mean', add_indicator=True) for numeric; SimpleImputer(strategy='constant', fill_value='missing') + OneHotEncoder(handle_unknown='ignore', sparse_output=False) for categorical; MinMaxScaler for final normalization.
+Implementation notes
+Preprocessing
 
-NearestNeighbors: kneighbors() returns distance and indices arrays used for plotting and summary.
+Numeric: SimpleImputer(strategy='mean', add_indicator=True)
 
-Plots: scatter of distance pairs distance vs distance and index pairs indices vs indices.
+Categorical: SimpleImputer(strategy='constant', fill_value='missing')
 
-Normalization: MinMaxScaler applied to distance and index matrices before describe().
+Encoding: OneHotEncoder(handle_unknown='ignore', sparse_output=False)
 
-This project focuses on understanding nearest-neighbor behavior, not building a production model.
+Scaling: MinMaxScaler
+
+NearestNeighbors
+
+kneighbors() returns distance and index arrays
+
+Plots
+
+Distance pairs: distance vs distance
+
+Index pairs: indices vs indices
+
+Normalization
+
+MinMaxScaler applied before summary statistics
+
+This project is exploratory and focuses on nearest-neighbor geometry, not production modeling.
