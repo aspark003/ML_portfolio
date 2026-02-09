@@ -1,152 +1,226 @@
-# Risk Intelligence Platform  
-## Unsupervised Anomaly Detection & Severity Scoring Engine
+Multi-Model Risk Detection – Unsupervised – Density & Decision Fusion
 
-## Overview
+This project explores unsupervised anomaly detection and risk scoring on a CSV dataset using a combination of density-based and decision-based models, followed by score normalization and fusion.
 
-This project is a **full end-to-end risk intelligence platform** built in Python using modern machine learning techniques.  
-It ingests raw, messy tabular data, performs robust preprocessing and feature engineering, applies multiple unsupervised anomaly detection models, and produces a **unified severity score and risk level** for each record.
+The goal is to:
 
-The platform is **model-agnostic** and applicable to financial, operational, cybersecurity, compliance, and fraud-oriented datasets.
+detect outliers / rare observations without labels
 
----
+compare how different unsupervised models behave
 
-## What This Platform Does
+combine model outputs into a single interpretable risk signal
 
-- Ingests raw tabular data (numeric + categorical)
-- Cleans and preprocesses data using a production-grade pipeline
-- Applies dimensionality reduction (PCA)
-- Executes an ensemble of unsupervised anomaly detection models
-- Normalizes and fuses model outputs into a single severity signal
-- Assigns quantile-based risk levels
-- Exports results for interactive BI dashboards
+Models Used
 
----
+Density-based
 
-## Models Used
+DBSCAN
 
-This platform implements an ensemble of industry-standard unsupervised detection techniques:
+OPTICS
 
-| Model | Purpose |
-|------|--------|
-| DBSCAN | Density-based clustering and noise detection |
-| OPTICS | Reachability-based density modeling |
-| HDBSCAN | Stability-based clustering with probability scoring |
-| HDBSCAN Outlier Score | Outlier ranking within clusters |
-| Local Outlier Factor (LOF) | Local density deviation |
-| Isolation Forest | Tree-based isolation of anomalies |
-| One-Class SVM | Boundary-based anomaly detection |
+HDBSCAN
 
-Each model generates an independent anomaly signal that is normalized and incorporated into the severity engine.
+Decision-based
 
----
+Local Outlier Factor (LOF)
 
-## Severity Scoring Engine
+Isolation Forest
 
-All model outputs are fused into a single risk scoring pipeline:
+One-Class SVM
 
-1. Raw model scores  
-2. Min–Max normalization  
-3. Score inversion (where applicable)  
-4. Model fusion (density + isolation + boundary signals)  
-5. Final severity score  
-6. Quantile-based risk level assignment  
+Dependencies
 
-This produces a **stable, interpretable ranking** suitable for investigation and prioritization workflows.
+pandas
 
----
+numpy
 
-## Risk Levels
+scikit-learn
 
-| Risk Level | Quantile |
-|----------|---------|
-| Critical | Top 5% (≥ 0.95) |
-| High | Top 25% (≥ 0.85) |
-| Medium | Middle 50% (≥ 0.60) |
-| Low | Bottom 25% |
+hdbscan
 
-This structure ensures consistent prioritization across datasets and refresh cycles.
+Configuration Used
+Dimensionality Reduction
+PCA(n_components=0.9, svd_solver='auto', random_state=42)
 
----
+DBSCAN
+DBSCAN(eps=0.2, min_samples=7, metric='euclidean', n_jobs=-1)
 
-## Feature Engineering Pipeline
+OPTICS
+OPTICS(min_samples=3, xi=0.05, metric='euclidean')
 
-The preprocessing pipeline is designed for **real-world data robustness** and includes:
+HDBSCAN
+HDBSCAN(
+    min_samples=8,
+    min_cluster_size=7,
+    cluster_selection_method='eom',
+    metric='euclidean'
+)
 
-- Numeric imputation (median)
-- Categorical imputation (most frequent)
-- Min–Max scaling
-- One-hot encoding using `ColumnTransformer`
+Local Outlier Factor
+LocalOutlierFactor(n_neighbors=100, metric='euclidean')
 
-The pipeline is resilient to:
-- Missing values
-- Mixed data types
-- Noisy and incomplete datasets
+Isolation Forest
+IsolationForest(n_estimators=100, random_state=42)
 
----
+One-Class SVM
+OneClassSVM(kernel='rbf', gamma='scale')
 
-## Power BI Dashboard Integration
+What’s Implemented
+Data Loading
 
-The platform exports analytics-ready outputs for Power BI, enabling interactive risk exploration.
+CSV ingestion using pandas
 
-Dashboard features include:
-- Master risk-level slicer controlling all visuals
-- KPI cards for:
-  - Full automation detection
-  - Anomaly detection
-  - Risk analytics detection
-- Trend axes per severity signal
-- Drill-down from aggregate risk posture to individual records
+Original dataframe preserved for interpretation
 
-This allows analysts to move from **macro risk visibility to individual anomalies in seconds**.
+Preprocessing Pipeline
 
----
+Numerical features
 
-## Architecture
+Median imputation
 
-Raw Data
-→ Preprocessing Pipeline
-→ PCA
-→ Anomaly Model Ensemble
-→ Severity Fusion Engine
-→ Risk Level Assignment
-→ Analytics & Dashboarding
+Min-Max scaling
 
+Categorical features
 
----
+Most-frequent imputation
 
-## Technologies
+One-Hot Encoding (drop='first', unknown-safe)
 
-- Python 3.11+
-- pandas, NumPy
-- scikit-learn
-- HDBSCAN
-- Power BI
+Implemented using:
 
----
+Pipeline
 
-## Use Cases
+ColumnTransformer
 
-- Fraud detection
-- Insider threat detection
-- Financial risk analytics
-- Compliance monitoring
-- Cybersecurity anomaly detection
-- Operational risk analysis
+Feature Space Preparation
 
----
+Preprocessing outputs a dense feature matrix
 
-## Why This Matters
+PCA reduces dimensionality while retaining 90% variance
 
-Most anomaly detection systems rely on a **single model**, leading to brittle results and high false positives.  
-This platform uses **model consensus**, improving robustness, stability, and real-world applicability.
+All models operate in PCA space
 
-The architecture mirrors how **enterprise fraud, SOC, and compliance platforms** operate in production environments.
+Model Outputs
 
----
+Each model produces:
 
-## Author
+a raw label (cluster / inlier / outlier)
 
-**Antonio Park**  
-Machine Learning Engineer — Risk & Anomaly Detection  
+a continuous severity score scaled to [0, 1]
 
-GitHub: https://github.com/aspark003/ML_portfolio
+a severity level based on quantiles:
+
+Low
+
+Medium
+
+High
+
+Critical (for fused outputs)
+
+Fusion Logic
+Density Anomaly Fusion
+
+Average of:
+
+DBSCAN severity score
+
+OPTICS reachability severity score
+
+HDBSCAN outlier severity score
+
+Output:
+
+density anomaly score
+
+density severity level
+
+Decision-Level Fusion
+
+Average of:
+
+LOF severity score
+
+Isolation Forest severity score
+
+One-Class SVM severity score
+
+Output:
+
+decision severity score
+
+decision severity level
+
+Final Risk Detection Fusion
+
+Average of:
+
+Density anomaly score
+
+Decision severity score
+
+Final outputs:
+
+risk detection score
+
+risk detection level
+
+Severity Thresholding
+
+Severity levels are quantile-based, not fixed thresholds:
+
+Medium ≈ 60th percentile
+
+High ≈ 85th percentile
+
+Critical ≈ 95th percentile
+
+This makes the system:
+
+adaptive to dataset size
+
+robust to scale differences
+
+usable across domains
+
+Output Summary (Derived)
+
+The final dataframe includes:
+
+cluster labels (DBSCAN / OPTICS / HDBSCAN)
+
+individual model severity scores & levels
+
+density fusion scores
+
+decision fusion scores
+
+final risk detection score
+
+final risk detection level
+
+sequential id for traceability
+
+Key Observations
+
+No single unsupervised model is sufficient on its own
+
+Density-based models capture local structure
+
+Decision-based models capture global deviation
+
+Fusion stabilizes noisy individual scores
+
+Quantile-based severity improves interpretability
+
+High clustering quality does not always imply good anomaly detection
+
+Scope & Intent
+
+This project focuses on:
+
+understanding unsupervised anomaly behavior
+
+comparing model perspectives
+
+building a diagnostic risk signal
