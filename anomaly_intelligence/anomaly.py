@@ -45,8 +45,6 @@ class A:
         self.scores = [silhouette_score, calinski_harabasz_score, davies_bouldin_score]
 
     def b(self):
-
-        # PCA on transformed features
         pca = PCA(n_components=0.9, svd_solver='auto', random_state=42)
         x_pca = pca.fit_transform(self.X)
 
@@ -54,31 +52,20 @@ class A:
         dbscan = DBSCAN(eps=0.2, min_samples=7, metric='euclidean', n_jobs=-1)
         dbscan.fit(x_pca)
         db_label = dbscan.labels_
-
-        # attach DBSCAN labels to original dataframe copy
         self.df['dbscan label'] = db_label
-
-        # ---- FIX: do not treat noise (-1) like a normal "cluster size"
-        # Cluster sizes excluding noise
         vc = self.df['dbscan label'].value_counts(dropna=False)
         self.df['dbscan label size'] = self.df['dbscan label'].map(vc).fillna(0).astype(int)
-
-        # Size-based "confidence" for non-noise points only
+        
         non_noise_mask = (self.df['dbscan label'] != -1)
 
         self.df['dbscan confidence score'] = 0.0
         if non_noise_mask.any():
             mm1 = MinMaxScaler()
             self.df.loc[non_noise_mask, 'dbscan confidence score'] = mm1.fit_transform(
-                self.df.loc[non_noise_mask, 'dbscan label size'].to_numpy().reshape(-1, 1)
-            ).ravel()
+                self.df.loc[non_noise_mask, 'dbscan label size'].to_numpy().reshape(-1, 1)).ravel()
 
-        # Severity: noise points are highest severity; otherwise inverse of confidence
         self.df['dbscan severity score'] = np.where(
-            non_noise_mask,
-            1.0 - self.df['dbscan confidence score'].to_numpy(),
-            1.0
-        )
+            non_noise_mask,1.0 - self.df['dbscan confidence score'].to_numpy(),1.0)
 
         db_top = self.df['dbscan severity score'].quantile(0.75)
         db_mid = self.df['dbscan severity score'].quantile(0.25)
@@ -86,11 +73,8 @@ class A:
         self.df['dbscan severity level'] = np.select(
             [self.df['dbscan severity score'] >= db_top,
              (self.df['dbscan severity score'] > db_mid) & (self.df['dbscan severity score'] < db_top)],
-            ['High', 'Medium'],
-            default='Low'
-        )
+            ['High', 'Medium'],default='Low')
 
-        # OPTICS on PCA space
         op = OPTICS(min_samples=3, xi=0.05, metric='euclidean')
         op.fit(x_pca)
         op_tics = op.labels_
@@ -105,7 +89,6 @@ class A:
         else:
             reach_replace = np.nan_to_num(reach, nan=0.0, posinf=0.0, neginf=0.0)
 
-        # If any NaNs remain, replace with median
         if np.isnan(reach_replace).any():
             reach_replace = np.nan_to_num(reach_replace, nan=np.nanmedian(reach_replace))
 
@@ -153,8 +136,7 @@ class A:
         self.df['hdbscan outlier severity level'] = np.select(
             [(self.df['hdbscan outlier severity score'] >= top),
              (self.df['hdbscan outlier severity score'] > middle) & (self.df['hdbscan outlier severity score'] < top)],
-            ['High', 'Medium'],
-            default='Low')
+            ['High', 'Medium'],default='Low')
 
         anomaly_scale = (
             self.df['dbscan severity score'].fillna(0.0)
@@ -172,8 +154,7 @@ class A:
             [self.df['density anomaly score'] >= db_op_hd_critical,
              self.df['density anomaly score'] >= db_op_hd_max,
              self.df['density anomaly score'] >= db_op_hd_med],
-            ['Critical', 'High', 'Medium'],
-            default='Low')
+            ['Critical', 'High', 'Medium'],default='Low')
 
         n_samples = x_pca.shape[0]
         n_neighbors = 100
@@ -216,7 +197,6 @@ class A:
             [self.df['isolation severity score'] >= iso_max,
              (self.df['isolation severity score'] > iso_med) & (self.df['isolation severity score'] < iso_max)],
             ['High', 'Medium'],default='Low')
-
 
         svm = OneClassSVM(kernel='rbf', gamma='scale')
         svm_predict = svm.fit_predict(x_pca)
@@ -273,8 +253,6 @@ class A:
         self.df = self.df.reset_index(drop=True)
         self.df.insert(0, 'id', self.df.index + 1)
         #print(self.df.head(3).to_string())
-
-        # Uncomment to write results
         # self.df.to_csv('c:/Users/anton/risk/credit_final.csv', index=False)
 
 
