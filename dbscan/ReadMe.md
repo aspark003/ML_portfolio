@@ -14,14 +14,7 @@ The goal is to understand how DBSCAN behaves with respect to:
 
 ## Configuration used
 ```python
-DBSCAN(
-    eps=0.5,
-    min_samples=6,
-    metric='minkowski',
-    p=2,
-    algorithm='auto',
-    n_jobs=-1
-)
+DBSCAN(eps=0.5, min_samples=6,metric='minkowski',p=2,algorithm='auto', n_jobs=-1)
 What’s implemented
 Pandas/NumPy data loading and cleanup
 
