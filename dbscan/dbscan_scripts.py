@@ -22,12 +22,10 @@ class A:
             self.copy['loan_grade'] = self.copy['loan_grade'].astype(object)
             self.copy['loan_amnt'] = self.copy['loan_amnt'].astype(float)
             self.copy['loan_int_rate'] = self.copy['loan_int_rate'].astype(float)
-            self.copy['loan_status'] = self.copy['loan_status'].astype(bool)
             self.copy['loan_percent_income'] = self.copy['loan_percent_income'].astype(float)
-            self.copy['cb_person_default_on_file'] = self.copy['cb_person_default_on_file'].astype(bool)
             self.copy['cb_person_cred_hist_length'] = self.copy['cb_person_cred_hist_length'].astype(int)
 
-            self.copy = self.copy.drop(columns=['person_age', 'person_income','person_emp_length','person_home_ownership', 'loan_grade'])
+            self.copy = self.copy.drop(columns=['person_age', 'person_income','person_emp_length','person_home_ownership', 'loan_grade', 'loan_status','cb_person_default_on_file'])
 
 
             self.num = self.copy.select_dtypes(include=['number']).columns
@@ -66,20 +64,11 @@ class A:
 
             label = pd.Series(db_scan.labels_)
 
-            plt.figure(figsize=(10, 8))
-            plt.scatter(label[label == -1], label[label == -1], c='red', s=20, label='Noise')
-            plt.scatter(label[label != -1], label[label != -1], c='green', s=10, label='Cluster')
-            plt.legend()
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUES')
-            plt.title('LABEL')
-            plt.show()
-
             points = pd.Series(label).value_counts()
 
             plt.figure(figsize=(10, 8))
-            plt.scatter(points.index[points.index == -1], points[points.index == -1], c='red', s=30, label='Noise')
-            plt.scatter(points.index[points.index != -1], points[points.index != -1], c='green', s=10, label='Cluster')
+            plt.scatter(points.index[points.index == -1], points[points.index == -1], c='red', s=40, label='Noise')
+            plt.scatter(points.index[points.index != -1], points[points.index != -1], c='green', s=30, label='Cluster')
             plt.xlabel('INDEX')
             plt.ylabel('VALUES')
             plt.legend()
@@ -92,8 +81,8 @@ class A:
             c_value = pd.Series(points).to_numpy()
 
             plt.figure(figsize=(10,8))
-            plt.scatter(np.arange(len(c_index[c_index == -1])), c_value[c_index==-1], c='red', s=20, label='Noise')
-            plt.scatter(np.arange(len(c_index[c_index != -1])), c_value[c_index !=-1], c='green',s=10, label='Cluster')
+            plt.scatter(np.arange(len(c_index[c_index == -1])), c_value[c_index==-1], c='red', s=40, label='Noise')
+            plt.scatter(np.arange(len(c_index[c_index != -1])), c_value[c_index !=-1], c='green',s=30, label='Cluster')
             plt.legend()
             plt.xlabel('INDEX')
             plt.ylabel('VALUE')
@@ -119,6 +108,8 @@ class A:
 
         except Exception as e:
             raise RuntimeError(f'invalid dbscan: {e}')
+
+
 
 
 if __name__ == "__main__":
