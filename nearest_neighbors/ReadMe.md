@@ -5,7 +5,7 @@ The goal is to understand distance behavior as a signal.
 
 pipeline
 
-Numeric + Categorical preprocessing: SimpleImputer (mean + indicator), MinMaxScaler, OneHotEncoder
+Numeric + Categorical preprocessing: imputation, scaling, encoding
 
 NearestNeighbors fit and kneighbors() extraction
 
@@ -15,23 +15,13 @@ Normalized statistical summaries for distances and neighbor indices
 
 Dependencies
 pandas
-
 numpy
-
 scikit-learn
-
 matplotlib
 
 Configuration used
 python
-NearestNeighbors(
-    n_neighbors=6,
-    metric='minkowski',
-    p=1,
-    algorithm='auto',
-    leaf_size=30,
-    n_jobs=-1
-)
+NearestNeighbors(n_neighbors=6, metric='minkowski',p=1,algorithm='auto',leaf_size=30,n_jobs=-1)
 Key Visuals
 Nearest neighbors distance measures (pairwise distance scatter)
 
@@ -40,7 +30,7 @@ Nearest neighbors index measures (neighbor index scatter)
 Normalized distance and index summary tables
 
 Data summary (Distance/Indices)
-Code
+
        Distance: 0   Distance: 1   Distance: 2   Distance: 3   Distance: 4   Distance: 5
 count      32581.0  32581.000000  32581.000000  32581.000000  32581.000000  32581.000000
 mean           0.0      0.074130      0.088639      0.098019      0.086721      0.090165
@@ -60,10 +50,11 @@ min        0.000000      0.000000      0.000000      0.000000      0.000000     
 50%        0.499693      0.492234      0.483287      0.479831      0.475429      0.472006
 75%        0.749908      0.741789      0.737561      0.737306      0.734614      0.734207
 max        1.000000      1.000000      1.000000      1.000000      1.000000      1.000000
+
 Key observations
 Distance: 0 is the self-distance baseline (always 0 after scaling).
 
-Distance growth across neighbor ranks (0→1→2→...) forms a stable geometric signal after MinMax scaling.
+Distance growth across neighbor ranks forms a stable geometric signal after MinMax scaling.
 
 Tight neighbor bands (small mean and low std) indicate local homogeneity; wider bands indicate more spread in local neighborhoods.
 
@@ -80,8 +71,8 @@ Preprocessing: SimpleImputer(strategy='mean', add_indicator=True) for numeric; S
 
 NearestNeighbors: kneighbors() returns distance and indices arrays used for plotting and summary.
 
-Plots: scatter of distance pairs (distance[:,k] vs distance[:,k+1]) and index pairs (indices[:,k] vs indices[:,k+1]).
+Plots: scatter of distance pairs distance vs distance and index pairs indices vs indices.
 
 Normalization: MinMaxScaler applied to distance and index matrices before describe().
 
-This 
+This project focuses on understanding nearest-neighbor behavior, not building a production model.
