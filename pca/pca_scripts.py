@@ -22,12 +22,10 @@ class AB:
             self.copy['loan_grade'] = self.copy['loan_grade'].astype(object)
             self.copy['loan_amnt'] = self.copy['loan_amnt'].astype(float)
             self.copy['loan_int_rate'] = self.copy['loan_int_rate'].astype(float)
-            self.copy['loan_status'] = self.copy['loan_status'].astype(bool)
             self.copy['loan_percent_income'] = self.copy['loan_percent_income'].astype(float)
-            self.copy['cb_person_default_on_file'] = self.copy['cb_person_default_on_file'].astype(bool)
             self.copy['cb_person_cred_hist_length'] = self.copy['cb_person_cred_hist_length'].astype(int)
 
-            self.copy = self.copy.drop(columns=['person_age', 'person_income','person_emp_length','person_home_ownership', 'loan_grade'])
+            self.copy = self.copy.drop(columns=['person_age', 'person_income','person_emp_length','person_home_ownership', 'loan_grade', 'loan_status','cb_person_default_on_file'])
 
 
             self.num = self.copy.select_dtypes(include=['number']).columns
@@ -156,8 +154,10 @@ class AB:
                                     'cumsum': pd.Series(MinMaxScaler().fit_transform(c_sum.reshape(-1,1)).ravel()),
                                     'cumsum ratio': pd.Series(MinMaxScaler().fit_transform(c_sum_ratio.reshape(-1,1)).ravel())})
 
+            print(v_c_sum.describe())
+
         except Exception as e:
-            raise RuntimeError(f'invalid pca:: {e}')
+            raise RuntimeError(f'invalid PCA: {e}')
 
 
 
