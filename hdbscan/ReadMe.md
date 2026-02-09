@@ -68,17 +68,19 @@ min      0.010000      0.010000     0.020000     1.000000
 50%     12.174695      9.000000    15.000000    18.000000
 75%     15.300000     11.500000    18.000000    36.000000
 max     25.000000     20.000000    25.000000   120.000000
+
 Key observations
-Black dash (lambda_val) marks the extraction cutoff for a selected cluster; it is the representative λ used to extract that cluster.
 
-Long red vertical bars indicate clusters with high persistence and therefore more stable, meaningful groups.
+lambda_val is the extraction cutoff for a selected cluster; it is the representative value used to extract that cluster.
 
-Lone black dashes or very short bars typically correspond to tiny clusters or singletons and are usually outliers or noise.
+lambda_start → lambda_end (the vertical bar in the condensed tree) shows the persistence interval for a cluster; longer intervals indicate more stable clusters.
 
-Higher λ values correspond to denser, more persistent structure.
+child_size is the cluster size; larger child_size usually means a more meaningful cluster.
 
-Lower λ values (near 0) usually indicate low persistence and noise.
+Very short persistence intervals or child_size == 1 typically correspond to tiny clusters or singletons and are usually outliers or noise.
 
-approximate_predict recovers labels and probabilities for new points; compare probabilities_ and approx_prob to assess assignment confidence.
+Use probabilities_ and outlier_scores_ to assess point-level confidence and anomaly strength.
+
+approximate_predict returns approx_label and approx_prob for new points; compare probabilities_ with approx_prob to evaluate assignment confidence.
 
 
