@@ -107,7 +107,7 @@ class A:
             print(db_signal.describe().to_string())
 
         except Exception as e:
-            raise RuntimeError(f'invalid dbscan: {e}')
+            raise RuntimeError(f'invalid nearest neighbors: {e}')
 
 
 
