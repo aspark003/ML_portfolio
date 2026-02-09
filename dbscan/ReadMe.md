@@ -28,7 +28,7 @@ DBSCAN fit on the transformed feature matrix
 
 Visualizations:
 
-cluster label -> number of points (noise vs clusters)
+cluster label - number of points (noise vs clusters)
 
 cluster size distribution (how many clusters have the same size)
 
