@@ -32,14 +32,7 @@ The goal is to understand **distance behavior as a signal**.
 
 ## Configuration used
 ```python
-NearestNeighbors(
-    n_neighbors=6,
-    metric='minkowski',
-    p=1,
-    algorithm='auto',
-    leaf_size=30,
-    n_jobs=-1
-)
+NearestNeighbors(n_neighbors=6,metric='minkowski',p=1,algorithm='auto', leaf_size=30,n_jobs=-1)
 Key Visuals
 Nearest neighbors distance measures (pairwise distance scatter)
 
