@@ -12,6 +12,7 @@ from sklearn.impute import SimpleImputer
 import hdbscan
 from sklearn.neighbors import LocalOutlierFactor
 
+
 class A:
     def __init__(self):
         self.df = pd.read_csv('c:/Users/anton/risk/draft.csv', encoding='utf-8-sig', engine='python')
@@ -56,12 +57,28 @@ class A:
 
         # attach DBSCAN labels to original dataframe copy
         self.df['dbscan label'] = db_label
-        self.df['dbscan label size'] = self.df['dbscan label'].map(self.df['dbscan label'].value_counts()).fillna(0).astype(int)
 
-        mm1 = MinMaxScaler()
-        self.df['dbscan confidence score'] = mm1.fit_transform(self.df['dbscan label size'].to_numpy().reshape(-1,1)).ravel()
-        db_scale = 1 - self.df['dbscan confidence score']
-        self.df['dbscan severity score'] = db_scale
+        # ---- FIX: do not treat noise (-1) like a normal "cluster size"
+        # Cluster sizes excluding noise
+        vc = self.df['dbscan label'].value_counts(dropna=False)
+        self.df['dbscan label size'] = self.df['dbscan label'].map(vc).fillna(0).astype(int)
+
+        # Size-based "confidence" for non-noise points only
+        non_noise_mask = (self.df['dbscan label'] != -1)
+
+        self.df['dbscan confidence score'] = 0.0
+        if non_noise_mask.any():
+            mm1 = MinMaxScaler()
+            self.df.loc[non_noise_mask, 'dbscan confidence score'] = mm1.fit_transform(
+                self.df.loc[non_noise_mask, 'dbscan label size'].to_numpy().reshape(-1, 1)
+            ).ravel()
+
+        # Severity: noise points are highest severity; otherwise inverse of confidence
+        self.df['dbscan severity score'] = np.where(
+            non_noise_mask,
+            1.0 - self.df['dbscan confidence score'].to_numpy(),
+            1.0
+        )
 
         db_top = self.df['dbscan severity score'].quantile(0.75)
         db_mid = self.df['dbscan severity score'].quantile(0.25)
@@ -80,7 +97,7 @@ class A:
         self.df['optics label'] = op_tics
 
         reach = op.reachability_.copy()
-        # Replace infinite reachability with max finite value, then with median if needed
+
         finite_mask = np.isfinite(reach)
         if finite_mask.any():
             max_reach = np.nanmax(reach[finite_mask])
@@ -95,7 +112,7 @@ class A:
         self.df['reachability'] = reach_replace
 
         mm2 = MinMaxScaler()
-        reach_scaled = mm2.fit_transform(reach_replace.reshape(-1,1)).ravel()
+        reach_scaled = mm2.fit_transform(reach_replace.reshape(-1, 1)).ravel()
         self.df['optics reachability severity score'] = reach_scaled
 
         reach_max = self.df['optics reachability severity score'].quantile(0.75)
@@ -105,10 +122,9 @@ class A:
             [self.df['optics reachability severity score'] >= reach_max,
              (self.df['optics reachability severity score'] > reach_med) & (self.df['optics reachability severity score'] < reach_max)],
             ['High', 'Medium'],
-            default='Low'
-        )
+            default='Low')
 
-        # HDBSCAN on PCA space
+
         hd = hdbscan.HDBSCAN(min_samples=8, min_cluster_size=7, cluster_selection_method='eom', metric='euclidean')
         hd.fit(x_pca)
         hd_label = hd.labels_
@@ -121,7 +137,15 @@ class A:
                 outlier_scores = 1.0 - prob
             else:
                 outlier_scores = np.zeros(len(self.df))
-        self.df['hdbscan outlier severity score'] = outlier_scores
+
+        outlier_scores = np.asarray(outlier_scores, dtype=float)
+        if np.all(np.isfinite(outlier_scores)) and (np.nanmax(outlier_scores) - np.nanmin(outlier_scores) > 0):
+            mm_h = MinMaxScaler()
+            outlier_scores_scaled = mm_h.fit_transform(outlier_scores.reshape(-1, 1)).ravel()
+        else:
+            outlier_scores_scaled = np.zeros(len(self.df), dtype=float)
+
+        self.df['hdbscan outlier severity score'] = outlier_scores_scaled
 
         top = self.df['hdbscan outlier severity score'].quantile(0.75)
         middle = self.df['hdbscan outlier severity score'].quantile(0.25)
@@ -130,18 +154,15 @@ class A:
             [(self.df['hdbscan outlier severity score'] >= top),
              (self.df['hdbscan outlier severity score'] > middle) & (self.df['hdbscan outlier severity score'] < top)],
             ['High', 'Medium'],
-            default='Low'
-        )
+            default='Low')
 
-        # Density anomaly fusion (DBSCAN + OPTICS + HDBSCAN)
         anomaly_scale = (
             self.df['dbscan severity score'].fillna(0.0)
             + self.df['optics reachability severity score'].fillna(0.0)
-            + self.df['hdbscan outlier severity score'].fillna(0.0)
-        ) / 3.0
+            + self.df['hdbscan outlier severity score'].fillna(0.0)) / 3.0
 
         mm22 = MinMaxScaler()
-        self.df['density anomaly score'] = mm22.fit_transform(anomaly_scale.to_numpy().reshape(-1,1)).ravel()
+        self.df['density anomaly score'] = mm22.fit_transform(anomaly_scale.to_numpy().reshape(-1, 1)).ravel()
 
         db_op_hd_critical = self.df['density anomaly score'].quantile(0.95)
         db_op_hd_max = self.df['density anomaly score'].quantile(0.85)
@@ -152,18 +173,23 @@ class A:
              self.df['density anomaly score'] >= db_op_hd_max,
              self.df['density anomaly score'] >= db_op_hd_med],
             ['Critical', 'High', 'Medium'],
-            default='Low'
-        )
+            default='Low')
 
-        # Local Outlier Factor
-        lof = LocalOutlierFactor(n_neighbors=100, metric='euclidean', novelty=False)
+        n_samples = x_pca.shape[0]
+        n_neighbors = 100
+        if n_samples <= 2:
+            n_neighbors = 1
+        else:
+            n_neighbors = min(n_neighbors, n_samples - 1)
+
+        lof = LocalOutlierFactor(n_neighbors=n_neighbors, metric='euclidean', novelty=False)
         lof_predict = lof.fit_predict(x_pca)
         self.df['local outlier factor label'] = lof_predict
 
         neg_outlier = lof.negative_outlier_factor_.copy()
         scaled_neg_outlier = -neg_outlier
         mm5 = MinMaxScaler()
-        self.df['local outlier severity score'] = mm5.fit_transform(scaled_neg_outlier.reshape(-1,1)).ravel()
+        self.df['local outlier severity score'] = mm5.fit_transform(scaled_neg_outlier.reshape(-1, 1)).ravel()
 
         local_max = self.df['local outlier severity score'].quantile(0.75)
         local_med = self.df['local outlier severity score'].quantile(0.25)
@@ -171,17 +197,15 @@ class A:
         self.df['local outlier severity level'] = np.select(
             [self.df['local outlier severity score'] >= local_max,
              (self.df['local outlier severity score'] > local_med) & (self.df['local outlier severity score'] < local_max)],
-            ['High', 'Medium'],
-            default='Low'
-        )
+            ['High', 'Medium'],default='Low')
 
-        # Isolation Forest
+
         iso = IsolationForest(n_estimators=100, max_samples='auto', random_state=42)
         pre_iso = iso.fit_predict(x_pca)
         self.df['isolation label'] = pre_iso
 
         iso_decision = iso.decision_function(x_pca)
-        invert_iso = - iso_decision
+        invert_iso = -iso_decision
         mm7 = MinMaxScaler()
         self.df['isolation severity score'] = mm7.fit_transform(invert_iso.reshape(-1, 1)).ravel()
 
@@ -191,39 +215,33 @@ class A:
         self.df['isolation severity level'] = np.select(
             [self.df['isolation severity score'] >= iso_max,
              (self.df['isolation severity score'] > iso_med) & (self.df['isolation severity score'] < iso_max)],
-            ['High', 'Medium'],
-            default='Low'
-        )
+            ['High', 'Medium'],default='Low')
 
-        # One-Class SVM
+
         svm = OneClassSVM(kernel='rbf', gamma='scale')
         svm_predict = svm.fit_predict(x_pca)
         self.df['svm label'] = svm_predict
 
         decision_svm = svm.decision_function(x_pca)
-        invert_decision = - decision_svm
+        invert_decision = -decision_svm
         mm9 = MinMaxScaler()
-        self.df['svm severity score'] = mm9.fit_transform(invert_decision.reshape(-1,1)).ravel()
+        self.df['svm severity score'] = mm9.fit_transform(invert_decision.reshape(-1, 1)).ravel()
 
         top_svm = self.df['svm severity score'].quantile(0.75)
         mid_svm = self.df['svm severity score'].quantile(0.25)
 
         self.df['svm severity level'] = np.select(
             [self.df['svm severity score'] >= top_svm,
-             (self.df['svm severity score'] > mid_svm) & (self.df['svm severity score']< top_svm)],
-            ['High', 'Medium'],
-            default='Low'
-        )
+             (self.df['svm severity score'] > mid_svm) & (self.df['svm severity score'] < top_svm)],
+            ['High', 'Medium'],default='Low')
 
-        # Decision-level fusion (LOF + Isolation + SVM)
         decision_scores = (
             self.df['local outlier severity score'].fillna(0.0)
             + self.df['isolation severity score'].fillna(0.0)
-            + self.df['svm severity score'].fillna(0.0)
-        ) / 3.0
+            + self.df['svm severity score'].fillna(0.0)) / 3.0
 
         mm11 = MinMaxScaler()
-        self.df['decision severity score'] = mm11.fit_transform(decision_scores.to_numpy().reshape(-1,1)).ravel()
+        self.df['decision severity score'] = mm11.fit_transform(decision_scores.to_numpy().reshape(-1, 1)).ravel()
 
         critical_final = self.df['decision severity score'].quantile(0.95)
         top_final = self.df['decision severity score'].quantile(0.85)
@@ -233,18 +251,14 @@ class A:
             [self.df['decision severity score'] >= critical_final,
              self.df['decision severity score'] >= top_final,
              self.df['decision severity score'] >= mid_final],
-            ['Critical', 'High', 'Medium'],
-            default='Low'
-        )
+            ['Critical', 'High', 'Medium'],default='Low')
 
-        # Final detection fusion
         detection_score = (
             self.df['density anomaly score'].fillna(0.0)
-            + self.df['decision severity score'].fillna(0.0)
-        ) / 2.0
+            + self.df['decision severity score'].fillna(0.0)) / 2.0
 
         mm15 = MinMaxScaler()
-        self.df['risk detection score'] = mm15.fit_transform(detection_score.to_numpy().reshape(-1,1)).ravel()
+        self.df['risk detection score'] = mm15.fit_transform(detection_score.to_numpy().reshape(-1, 1)).ravel()
 
         risk_critical = self.df['risk detection score'].quantile(0.95)
         risk_max = self.df['risk detection score'].quantile(0.85)
@@ -254,13 +268,11 @@ class A:
             [self.df['risk detection score'] >= risk_critical,
              self.df['risk detection score'] >= risk_max,
              self.df['risk detection score'] >= risk_med],
-            ['Critical', 'High', 'Medium'],
-            default='Low'
-        )
+            ['Critical', 'High', 'Medium'],default='Low')
 
         self.df = self.df.reset_index(drop=True)
         self.df.insert(0, 'id', self.df.index + 1)
-        print(self.df.head(3).to_string())
+        #print(self.df.head(3).to_string())
 
         # Uncomment to write results
         # self.df.to_csv('c:/Users/anton/risk/credit_final.csv', index=False)
