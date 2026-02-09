@@ -22,13 +22,10 @@ class ABCDE:
             self.copy['loan_grade'] = self.copy['loan_grade'].astype(object)
             self.copy['loan_amnt'] = self.copy['loan_amnt'].astype(float)
             self.copy['loan_int_rate'] = self.copy['loan_int_rate'].astype(float)
-            self.copy['loan_status'] = self.copy['loan_status'].astype(bool)
             self.copy['loan_percent_income'] = self.copy['loan_percent_income'].astype(float)
-            self.copy['cb_person_default_on_file'] = self.copy['cb_person_default_on_file'].astype(bool)
             self.copy['cb_person_cred_hist_length'] = self.copy['cb_person_cred_hist_length'].astype(int)
 
-            self.copy = self.copy.drop(columns=['person_age', 'person_income','person_emp_length','person_home_ownership', 'loan_grade'])
-
+            self.copy = self.copy.drop(columns=['person_age', 'person_income','person_emp_length','person_home_ownership', 'loan_grade', 'loan_status','cb_person_default_on_file'])
 
             self.num = self.copy.select_dtypes(include=['number']).columns
             self.obj = self.copy.select_dtypes(include=['object', 'string']).columns
@@ -50,104 +47,74 @@ class ABCDE:
 
             self.scores = [silhouette_score, calinski_harabasz_score, davies_bouldin_score]
 
-            #k = pd.api.types.is_numeric_dtype(self.copy['person_income'])
-
         except Exception as e:
-            raise RuntimeError(f'invalid init:{e}')
+            raise RuntimeError(f'invalid init: {e}')
 
     def b(self):
         try:
-
             self.copy = self.copy.sample(frac=0.2, random_state=42)
             x = self.preprocessor.fit_transform(self.copy)
 
-            hdb = HDBSCAN(min_cluster_size=6,min_samples=3,metric="minkowski",p=2)
+            hdb = HDBSCAN(min_cluster_size=6, min_samples=5, metric='minkowski', p=2,
+                          cluster_selection_method='eom', prediction_data=True)
 
             hdb.fit(x)
             label = hdb.labels_
 
-            la = pd.Series(label).to_numpy()
+            for score_func in self.scores:
+                s = score_func(x, label)
+                print(f'{score_func.__name__}: {s}')
 
-            plt.figure(figsize=(10, 8))
-            plt.scatter(la[la == -1], la[la == -1], c='red', s=40, label='Noise', marker='x')
-            plt.scatter(la[la != -1], la[la != -1], c='green', s=30, label='Cluster', marker='o')
-            plt.title('HDBSCAN Cluster Labels (Noise vs Cluster)')
+            plt.figure(figsize=(10,8))
+            plt.scatter(x[label==-1,0], x[label==-1,1], c='red', s=50, label='Noise')
+            plt.scatter(x[label!=-1,0], x[label!=-1,1], c='green', s=20, label='Clustered')
             plt.legend()
-            plt.xlabel('Cluster Label')
-            plt.ylabel('Cluster Label')
+            plt.xlabel('Feature 0')
+            plt.ylabel('Feature 1')
+            plt.title('HDBSCAN - First two dimensions (limited view)')
             plt.show()
 
-            points = pd.Series(label).value_counts()
+            condensed_tree = hdb.condensed_tree_
 
-            p_index = points.index.to_numpy()
-            p_value = points.to_numpy()
+            condensed_df = condensed_tree.to_pandas()
 
-            p_len = np.arange(len(p_index))
+            print(condensed_df.describe())
 
-            plt.figure(figsize=(10, 8))
-            plt.scatter(p_len[p_index == -1], p_value[p_index == -1], c='red', s=40, label='Noise')
-            plt.scatter(p_len[p_index != -1], p_value[p_index != -1], c='green', s=30, label='Cluster')
-            plt.legend()
-            plt.xlabel('Label Index')
-            plt.ylabel('Number of Points')
-            plt.title('HDBSCAN Cluster Sizes (Noise vs Cluster)')
+
+            condensed_tree.plot()
+            plt.title('Condensed Tree - Full Hierarchy')
             plt.show()
 
-            cluster = pd.Series(points).value_counts()
-            c_index = pd.Series(cluster).index.to_numpy()
-            c_value = pd.Series(cluster).to_numpy()
-
-            plt.figure()
-            plt.scatter(np.arange(len(c_index[c_index == -1])), c_value[c_index == -1], c='red', label='Noise', s=40)
-            plt.scatter(np.arange(len(c_index[c_index != -1])), c_value[c_index != -1], c='green', s=30,
-                        label='Cluster')
-            plt.title('HDBSCAN Cluster Counts (Noise vs Cluster)')
-            plt.xlabel('Label Index')
-            plt.ylabel('Number of Points')
-            plt.legend()
+            condensed_tree.plot(select_clusters=True, selection_palette='dark')
+            plt.title('Condensed Tree - Selected Clusters Highlighted')
             plt.show()
 
-            lpc = pd.DataFrame({'label': pd.Series(label),
-                                'points': pd.Series(points),
-                                'cluster': pd.Series(cluster)})
+            prob = hdb.probabilities_
+            out = hdb.outlier_scores_
 
-            print(lpc.describe())
+            approx_labels, approx_probs = approximate_predict(hdb, x)
 
-            probabilities = hdb.probabilities_
+            approx_outlier = approx_labels[label==-1]
+            approx_prob_outlier = approx_probs[label==-1]
 
-            indices = np.arange(len(probabilities))
 
-            plt.figure(figsize=(10, 8))
-            plt.scatter(indices[la == -1], probabilities[la == -1], c='red', s=40, label='Noise', marker='x')
-            plt.scatter(indices[la != -1], probabilities[la != -1], c='green', s=30, label='Cluster', marker='o')
-            plt.title('HDBSCAN Membership Probabilities')
-            plt.xlabel('INDEX')
-            plt.ylabel('Membership Probability')
-            plt.legend()
-            plt.show()
+            hd_signal = pd.DataFrame({
+                'label': label,
+                'probability': prob,
+                'outlier_score': out,
+                'approx_label': approx_labels,
+                'approx_prob': approx_probs
+            })
 
-            outlier_scores = hdb.outlier_scores_
 
-            plt.figure(figsize=(10, 8))
-            plt.scatter(indices[la == -1], outlier_scores[la == -1], c='red', s=40, label='Noise', marker='x')
-            plt.scatter(indices[la != -1], outlier_scores[la != -1], c='green', s=30, label='Cluster', marker='o')
-            plt.title('HDBSCAN Outlier Scores')
-            plt.xlabel('INDEX')
-            plt.ylabel('Outlier Score')
-            plt.legend()
-            plt.show()
+            approx_signal = pd.DataFrame({'approximate labels': approx_outlier,
+                                          'approximate prob': approx_prob_outlier})
 
-            po_df = pd.DataFrame({'probability': probabilities,
-                                  'indices': indices})
-
-            print(po_df.describe())
+            print(approx_signal.describe().to_string())
 
 
         except Exception as e:
             raise RuntimeError(f'invalid hdbscan: {e}')
-
-
-
 
 if __name__ == "__main__":
     abcd = ABCDE()
