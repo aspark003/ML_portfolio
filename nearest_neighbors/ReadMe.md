@@ -1,82 +1,87 @@
-## HDBSCAN / Condensed Tree Clustering
+NEAREST NEIGHBORS / kneighbors
+This project explores unsupervised structure discovery using nearest neighbors on a CSV dataset.
 
-This project explores **unsupervised structure discovery** using **HDBSCAN** on a CSV dataset.
+The goal is to understand distance behavior as a signal.
 
-The goal is to **extract stable clusters** and interpret **persistence across density levels** as a signal.
+pipeline
 
----
+Numeric + Categorical preprocessing: SimpleImputer (mean + indicator), MinMaxScaler, OneHotEncoder
 
-## Pipeline
+NearestNeighbors fit and kneighbors() extraction
 
-- **Numeric + Categorical preprocessing**
-  - Imputation
-  - Scaling
-  - Encoding
-- **HDBSCAN clustering**
-  - `fit`
-  - `approximate_predict`
-- **Condensed tree extraction and diagnostics**
-  - Pandas export
-  - Hierarchy and selection plots
-- **Cluster quality and outlier analysis**
-  - `probabilities_`
-  - `outlier_scores_`
-  - `child_size`
+Distance pair scatter diagnostics (distance vs distance)
 
----
+Normalized statistical summaries for distances and neighbor indices
 
-## Dependencies
+Dependencies
+pandas
 
-- pandas  
-- numpy  
-- scikit-learn  
-- matplotlib  
-- hdbscan  
+numpy
 
----
+scikit-learn
 
-## Configuration used
-```python
-HDBSCAN(
-    min_cluster_size=10,
-    min_samples=5,
+matplotlib
+
+Configuration used
+python
+NearestNeighbors(
+    n_neighbors=6,
     metric='minkowski',
-    p=2,
-    cluster_selection_method='eom',
-    prediction_data=True
+    p=1,
+    algorithm='auto',
+    leaf_size=30,
+    n_jobs=-1
 )
 Key Visuals
-2D scatter of first two transformed features (noise vs clustered)
+Nearest neighbors distance measures (pairwise distance scatter)
 
-Condensed tree — full hierarchy
+Nearest neighbors index measures (neighbor index scatter)
 
-Condensed tree — selected clusters highlighted
+Normalized distance and index summary tables
 
-Summary tables for:
+Data summary (Distance/Indices)
+Code
+       Distance: 0   Distance: 1   Distance: 2   Distance: 3   Distance: 4   Distance: 5
+count      32581.0  32581.000000  32581.000000  32581.000000  32581.000000  32581.000000
+mean           0.0      0.074130      0.088639      0.098019      0.086721      0.090165
+std            0.0      0.060757      0.061892      0.064104      0.063052      0.063065
+min            0.0      0.000000      0.000000      0.000000      0.000000      0.000000
+25%            0.0      0.036163      0.050704      0.058475      0.048211      0.051072
+50%            0.0      0.060433      0.074099      0.082033      0.070367      0.073692
+75%            0.0      0.094511      0.107353      0.117319      0.105896      0.109478
+max            0.0      1.000000      1.000000      1.000000      1.000000      1.000000
 
-condensed tree DataFrame
-
-approximate_predict outputs
-
-Data summary (Condensed tree example)
-       lambda_val  lambda_start  lambda_end  child_size
-count   50.000000     50.000000    50.000000   50.000000
-mean    12.174695      8.912345    15.432100    24.560000
-std      3.512345      2.987654     4.123456    18.234567
-min      0.010000      0.010000     0.020000     1.000000
-25%      9.200000      6.500000    12.000000     8.000000
-50%     12.174695      9.000000    15.000000    18.000000
-75%     15.300000     11.500000    18.000000    36.000000
-max     25.000000     20.000000    25.000000   120.000000
+         Indices: 0    Indices: 1    Indices: 2    Indices: 3    Indices: 4    Indices: 5
+count  32581.000000  32581.000000  32581.000000  32581.000000  32581.000000  32581.000000
+mean       0.499915      0.496047      0.491692      0.490091      0.487982      0.487911
+std        0.288660      0.285050      0.284879      0.285108      0.285245      0.284481
+min        0.000000      0.000000      0.000000      0.000000      0.000000      0.000000
+25%        0.249939      0.252072      0.244759      0.244796      0.241014      0.242679
+50%        0.499693      0.492234      0.483287      0.479831      0.475429      0.472006
+75%        0.749908      0.741789      0.737561      0.737306      0.734614      0.734207
+max        1.000000      1.000000      1.000000      1.000000      1.000000      1.000000
 Key observations
-Black dash (lambda_val) marks the extraction cutoff for a selected cluster; it is the representative density level used to extract that cluster.
+Distance: 0 is the self-distance baseline (always 0 after scaling).
 
-Long red vertical bars indicate clusters with high persistence and therefore more stable, meaningful groups.
+Distance growth across neighbor ranks (0→1→2→...) forms a stable geometric signal after MinMax scaling.
 
-Lone black dashes or very short bars typically correspond to tiny clusters or singletons and are usually outliers or noise.
+Tight neighbor bands (small mean and low std) indicate local homogeneity; wider bands indicate more spread in local neighborhoods.
 
-Higher lambda values correspond to denser, more persistent structure.
+Many zero distances in higher neighbor ranks indicate duplicate or extremely similar rows after preprocessing.
 
-Lower lambda values (near 0) usually indicate low persistence and noise.
+Indices distributions (normalized) show neighbor index spread; medians near 0.5 reflect uniform sampling ordering after scaling.
 
-approximate_predict recovers labels and probabilities for new points; compare probabilities_ and approx_prob to assess assignment confidence.
+Metric choice (Manhattan / p=1) affects absolute distance values but not the qualitative neighbor ordering used for diagnostics.
+
+Use the distance and index summaries to detect duplicates, dense pockets, and where local geometry changes — this is exploratory, not a production model.
+
+Implementation notes (what the code uses)
+Preprocessing: SimpleImputer(strategy='mean', add_indicator=True) for numeric; SimpleImputer(strategy='constant', fill_value='missing') + OneHotEncoder(handle_unknown='ignore', sparse_output=False) for categorical; MinMaxScaler for final normalization.
+
+NearestNeighbors: kneighbors() returns distance and indices arrays used for plotting and summary.
+
+Plots: scatter of distance pairs (distance[:,k] vs distance[:,k+1]) and index pairs (indices[:,k] vs indices[:,k+1]).
+
+Normalization: MinMaxScaler applied to distance and index matrices before describe().
+
+This 
