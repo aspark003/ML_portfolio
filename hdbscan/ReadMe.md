@@ -73,7 +73,7 @@ Key observations
 
 lambda_val is the extraction cutoff for a selected cluster; it is the representative value used to extract that cluster.
 
-lambda_start → lambda_end (the vertical bar in the condensed tree) shows the persistence interval for a cluster; longer intervals indicate more stable clusters.
+lambda_start to lambda_end (the vertical bar in the condensed tree) shows the persistence interval for a cluster; longer intervals indicate more stable clusters.
 
 child_size is the cluster size; larger child_size usually means a more meaningful cluster.
 
@@ -82,5 +82,7 @@ Very short persistence intervals or child_size == 1 typically correspond to tiny
 Use probabilities_ and outlier_scores_ to assess point-level confidence and anomaly strength.
 
 approximate_predict returns approx_label and approx_prob for new points; compare probabilities_ with approx_prob to evaluate assignment confidence.
+
+This project focuses on **understanding HDBSCAN behavior**, not building a production model.
 
 
