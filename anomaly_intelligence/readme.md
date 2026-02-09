@@ -43,12 +43,7 @@ DBSCAN(eps=0.2, min_samples=7, metric='euclidean', n_jobs=-1)
 OPTICS
 OPTICS(min_samples=3, xi=0.05, metric='euclidean')
 HDBSCAN
-HDBSCAN(
-    min_samples=8,
-    min_cluster_size=7,
-    cluster_selection_method='eom',
-    metric='euclidean'
-)
+HDBSCAN(min_samples=8,min_cluster_size=7,cluster_selection_method='eom',metric='euclidean')
 Local Outlier Factor
 LocalOutlierFactor(n_neighbors=100, metric='euclidean')
 Isolation Forest
@@ -190,14 +185,10 @@ Robust to missing values
 
 Handles mixed data types
 
-Parallelized where supported
-
 Deterministic preprocessing and scoring
 
 Deployment Notes
 Suitable for batch processing
-
-Can be scheduled (cron / Airflow / Prefect)
 
 Output integrates cleanly with:
 
@@ -229,6 +220,6 @@ multi-model consensus scoring
 
 interpretable severity levels
 
-production-grade preprocessing and fusion
+production-grade preprocessing
 
 It is designed to be deployed, monitored, and extended, not just explored.
