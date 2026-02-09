@@ -37,14 +37,8 @@ The goal is to **extract stable clusters** and interpret **persistence across de
 
 ## Configuration used
 ```python
-HDBSCAN(
-    min_cluster_size=10,
-    min_samples=5,
-    metric='minkowski',
-    p=2,
-    cluster_selection_method='eom',
-    prediction_data=True
-)
+HDBSCAN(min_cluster_size=10,min_samples=5,metric='minkowski',p=2,cluster_selection_method='eom',prediction_data=True)
+
 Key Visuals
 2D scatter of first two transformed features (noise vs clustered)
 
