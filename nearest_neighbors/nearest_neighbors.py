@@ -58,35 +58,19 @@ class ABC:
 
             distance, indices = nn.kneighbors(x)
 
-            plt.figure(figsize=(10,8))
-            plt.scatter(distance[:,0], distance[:,1], c='red',s=20, label='0-1')
-            plt.scatter(distance[:,1], distance[:,2], c='green',s=20, label='1-2')
-            plt.scatter(distance[:,2], distance[:,3], c='blue', s=10, label='2-3')
-            plt.scatter(distance[:,3], distance[:,4], c='yellow',s=10, label='3-4')
-            plt.title('NEAREST NEIGHBOR DISTANCE MEASURES')
-            plt.legend()
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUE')
-            plt.show()
+            label = np.arange(len(distance))
 
             plt.figure(figsize=(10,8))
-            plt.scatter(indices[:, 0], indices[:, 1], c='red', s= 20, label='0-1')
-            plt.scatter(indices[:, 1], indices[:, 2], c='green', s=20, label='1-2')
-            plt.scatter(indices[:, 2], indices[:, 3], c='blue', s=10, label='2-3')
-            plt.scatter(indices[:, 3], indices[:, 4], c='yellow', s=10, label='3-4')
-            plt.title('NEAREST NEIGHBOR INDICES MEASURES')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUES')
-            plt.legend()
+            plt.scatter(label, indices[:,-1], c='red')
+            plt.xlabel('POINT INDEX')
+            plt.ylabel('K_NEIGHBORS INDEX')
+            plt.title('K_NN NEIGHBORS STRUCTURE')
             plt.show()
 
-            d_df = pd.DataFrame(MinMaxScaler().fit_transform(distance), columns=[f"Distance: {k}" for k in range(distance.shape[1])])
 
-            i_df = pd.DataFrame(MinMaxScaler().fit_transform(indices), columns=[f'Indices: {k}' for k in range(indices.shape[1])])
+            print(pd.DataFrame(distance, columns=[f'Distance: {i+1}' for i in range(distance.shape[1])]).describe().to_string())
+            print(pd.DataFrame(indices, columns=[f'Indices: {i+1}' for i in range(indices.shape[1])]).describe().to_string())
 
-            print(d_df.describe().to_string())
-            print()
-            print(i_df.describe().to_string())
 
         except Exception as e:
             raise RuntimeError(f'invalid nearest neighbors: {e}')
