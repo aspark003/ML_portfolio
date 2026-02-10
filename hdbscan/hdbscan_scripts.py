@@ -55,7 +55,7 @@ class ABCDE:
             #self.copy = self.copy.sample(frac=0.4, random_state=42)
             x = self.preprocessor.fit_transform(self.copy)
 
-            hdb = HDBSCAN(min_cluster_size=5, min_samples=10)
+            hdb = HDBSCAN(min_cluster_size=2, min_samples=15, metric='minkowski', p=1)
 
             label = hdb.fit_predict(x)
 
