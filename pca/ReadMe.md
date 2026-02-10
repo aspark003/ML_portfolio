@@ -2,21 +2,22 @@
 
 This project explores **unsupervised dimensionality analysis** using **PCA** on a CSV dataset.
 
-The goal is to see how PCA **redistributes variance**, where information drops off, and how **inverse PCA** reconstructs features after reduction.
+The goal is to understand how PCA **redistributes variance**, where information drops off across components, and how **inverse PCA** reconstructs original features after dimensionality reduction.
 
 ---
 
 ## Pipeline
 
 - **Numeric + Categorical preprocessing**
-  - Imputation
-  - Scaling
-  - Encoding
+  - Mean imputation (+ missing indicator)
+  - Min–Max scaling
+  - One-hot encoding for categorical features
 
 - **Diagnostics**
-  - Component variance + variance ratio
-  - Cumulative variance + cumulative ratio
-  - Inverse PCA reconstruction comparisons
+  - Explained variance ratio per component
+  - Cumulative explained variance
+  - Component (loading) pair comparisons
+  - Inverse PCA reconstruction vs original feature space
 
 ---
 
@@ -30,36 +31,86 @@ The goal is to see how PCA **redistributes variance**, where information drops o
 ---
 
 ## Configuration used
+
 ```python
-PCA(n_components=0.9,svd_solver='auto',random_state=42)
+PCA(n_components=0.9,svd_solver='auto')
+
+This configuration retains the minimum number of components required to explain ~90% of total variance.
+
 Key Visuals
-Variance vs variance ratio per component
+Explained variance ratio vs cumulative variance
 
-Cumulative variance vs cumulative variance ratio
+Shows rapid variance capture in early components
 
-Original feature pairs vs inverse PCA feature pairs
+Later components contribute progressively less information
 
-Progressive tightening of reconstructed features
+PCA component (loading) pair comparisons
 
-Data summary (Derived / Scaled)
-       variance  variance ratio    cumsum  cumsum ratio
-count  6.000000        6.000000  6.000000      6.000000
-mean   0.614996        0.614996  0.556512      0.556512
-std    0.386121        0.386121  0.383144      0.383144
-min    0.000000        0.000000  0.000000      0.000000
-25%    0.398703        0.398703  0.311460      0.311460
-50%    0.755298        0.755298  0.603557      0.603557
-75%    0.863480        0.863480  0.839287      0.839287
-max    1.000000        1.000000  1.000000      1.000000
-Key observations
-PCA uses variance during fit(); reported variance values are diagnostic outputs.
+Visual comparison of feature contributions across principal components
 
-Inverse PCA restores feature shape but cannot restore discarded variance.
+Highlights which features dominate specific variance directions
 
-Earlier components preserve the largest variance; later components contribute less.
+Inverse PCA vs original feature pairs
 
-Inverse PCA reconstructs the best approximation using only retained variance.
+Feature-space comparison of original data vs PCA-reconstructed data
 
-PCA is lossy by design; inverse reconstruction is a controlled way to see where information is removed.
+Demonstrates how retained variance constrains reconstructed values
 
-This project focuses on understanding PCA behavior, not building a production model.
+Data Summary (Derived / Scaled)
+Explained variance diagnostics
+       variance ratio  cumulative
+count        6.000000    6.000000
+mean         0.150150    0.586024
+std          0.040868    0.272033
+min          0.085058    0.190900
+25%          0.127257    0.412037
+50%          0.165000    0.619426
+75%          0.176450    0.786795
+max          0.190900    0.900901
+Interpretation:
+
+Roughly 6 components are sufficient to reach ~90% explained variance
+
+Variance contribution decays steadily after the first few components
+
+PCA scores (x_pca) summary
+PC means ≈ 0 across all components
+Standard deviation decreases with component index
+Later PCs have tighter distributions
+Interpretation:
+
+PCA centering worked correctly
+
+Earlier PCs carry most of the spread (variance)
+
+Later PCs represent finer-grained structure
+
+PCA component loadings summary
+Component loadings show:
+- Strong dominance of a subset of features in early components
+- Later components capture weaker, more localized variance
+Interpretation:
+
+PCA axes are not uniformly influenced by all features
+
+A small number of encoded / numeric features dominate major variance directions
+
+Key Observations
+PCA uses variance maximization during fit(); reported variance ratios are diagnostic outputs.
+
+Earlier components preserve the majority of global structure.
+
+Later components contribute diminishing variance and finer detail.
+
+Inverse PCA reconstructs data in the original feature space, but:
+
+only using variance retained by selected components
+
+discarded variance cannot be recovered
+
+Reconstruction plots show progressive tightening of values around dominant patterns.
+
+PCA is lossy by design; inverse reconstruction provides a controlled way to visualize what information is removed.
+
+Scope
+This project focuses on understanding PCA behavior and diagnostics, including variance redistribution and reconstruction effects.
