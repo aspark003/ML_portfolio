@@ -5,7 +5,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 import matplotlib.pyplot as plt
-from hdbscan import HDBSCAN, approximate_predict
+from hdbscan import HDBSCAN
 from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
 
 class ABCDE:
