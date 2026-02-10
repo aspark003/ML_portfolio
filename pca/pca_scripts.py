@@ -54,107 +54,54 @@ class AB:
     def b(self):
         try:
 
-            pipe = Pipeline([('preprocessor', self.preprocessor),
-                             ('pca', PCA(n_components=0.9, svd_solver='auto',random_state=42))])
+            x= self.preprocessor.fit_transform(self.copy)
+            pca = PCA(n_components=0.9)
 
-            x = pipe.named_steps['preprocessor'].fit_transform(self.copy)
-            x_pca = pipe.named_steps['pca'].fit_transform(x)
+            x_pca = pca.fit_transform(x)
 
-            variance = pipe.named_steps['pca'].explained_variance_
-            variance_ratio = pipe.named_steps['pca'].explained_variance_ratio_
+            variance_ratio = pca.explained_variance_ratio_
+            cumsum = np.cumsum(variance_ratio)
 
-            c_sum = np.cumsum(variance)
-            c_sum_ratio = np.cumsum(variance_ratio)
-
-            v_index = pd.Series(variance).index.to_numpy()
-            v_value = pd.Series(variance).to_numpy()
-
-            vr_index = pd.Series(variance_ratio).index.to_numpy()
-            vr_value = pd.Series(variance_ratio).to_numpy()
-
-            c_index = pd.Series(c_sum).index.to_numpy()
-            c_value = pd.Series(c_sum).to_numpy()
-
-            cr_index = pd.Series(c_sum_ratio).index.to_numpy()
-            cr_value = pd.Series(c_sum_ratio).to_numpy()
+            v = np.arange(len(variance_ratio))
 
             plt.figure(figsize=(10,8))
-            plt.scatter(v_index, v_value, c='red', s=40,label='Variance')
-            plt.scatter(v_index, vr_value, c='green', s=40,label='Variance ratio')
+            plt.scatter(v, variance_ratio, c='red',s=40, label='VARIANCE RATIO')
+            plt.scatter(v, cumsum, c='green', s=30, label='CUMULATIVE')
+            plt.title('VARIANCE RATIO VS CUMULATIVE')
+            plt.xlabel('VARIANCE INDEX')
+            plt.ylabel('VALUES')
             plt.legend()
-            plt.title('VARIANCE / VARIANCE RATIO')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUE')
             plt.show()
+
+            component = pca.components_
+            len_com = np.arange(len(component))
 
             plt.figure(figsize=(10,8))
-            plt.scatter(c_index, c_value,c='red', s=40, label='Cumsum (Variance)')
-            plt.scatter(c_index, cr_value, c='green', s=40, label='Cumsum (Variance ratio)')
-            plt.legend()
-            plt.title('CUMSUM (VARIANCE) / CUMSUM (VARIANCE RATIO)')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUE')
+            plt.scatter(component[:,0], component[:,1], c='red', s=40)
+            plt.scatter(component[:,1], component[:,2], c='green',s=30)
+            plt.xlabel('FEATURE 0')
+            plt.ylabel('FEATURES 1')
+            plt.title('PCA PAIR COMPARISONS')
             plt.show()
 
-            inverse_pipe = Pipeline([('preprocessor', self.preprocessor),
-                                     ('pca', PCA(n_components=0.9, svd_solver='auto', random_state=42))])
-
-            i_x = inverse_pipe.named_steps['preprocessor'].fit_transform(self.copy)
-            i_pca = inverse_pipe.named_steps['pca'].fit_transform(i_x)
-
-            inverse_xpca = inverse_pipe.named_steps['pca'].inverse_transform(i_pca)
+            inverse_pca = pca.inverse_transform(x_pca)
 
             plt.figure(figsize=(10,8))
-            plt.scatter(i_x[:,0], i_x[:,1], c='red', s=40, label='Original')
-            plt.scatter(inverse_xpca[:,0], inverse_xpca[:,1], c='green', s=30, label='Inverse PCA')
+            plt.scatter(inverse_pca[:,0], inverse_pca[:,3], c='red', s=50, label='INVERSE PCA')
+            plt.scatter(x[:,0], x[:,3], c='green', s=30, label='ORIGINAL X')
+            plt.xlabel('FEATURE 0 - 3')
+            plt.ylabel('FEATURES 0 - 3')
+            plt.title('INVERSE PCA VS ORIGINAL X')
             plt.legend()
-            plt.title('ORIGINAL FEATURES 0 - 1 INVERSE FEATURES')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUES')
             plt.show()
 
-            plt.figure(figsize=(10, 8))
-            plt.scatter(i_x[:,2], i_x[:,3], c='red', s=40, label='Original')
-            plt.scatter(inverse_xpca[:,2], inverse_xpca[:,3], c='green', s=30, label='Inverse PCA')
-            plt.legend()
-            plt.title('ORIGINAL FEATURES 2 - 3 INVERSE FEATURES')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUES')
-            plt.show()
+            vc_signal = pd.DataFrame({'variance ratio': variance_ratio,
+                                      'cumulative': cumsum})
+            print(vc_signal.describe())
 
-            plt.figure(figsize=(10, 8))
-            plt.scatter(i_x[:, 4], i_x[:, 5], c='red', s=40, label='Original')
-            plt.scatter(inverse_xpca[:, 4], inverse_xpca[:, 5], c='green', s=30, label='Inverse PCA')
-            plt.legend()
-            plt.title('ORIGINAL FEATURES 4 - 5 INVERSE FEATURES')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUES')
-            plt.show()
+            print(pd.DataFrame(x_pca, columns= [f'PC:{i+1}' for i in range(x_pca.shape[1])]).describe().to_string())
 
-            plt.figure(figsize=(10, 8))
-            plt.scatter(i_x[:, 6], i_x[:, 7], c='red', s=40, label='Original')
-            plt.scatter(inverse_xpca[:, 6], inverse_xpca[:, 7], c='green', s=30, label='Inverse PCA')
-            plt.legend()
-            plt.title('ORIGINAL FEATURES 6 - 7 INVERSE FEATURES')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUES')
-            plt.show()
-
-            plt.figure(figsize=(10, 8))
-            plt.scatter(i_x[:, 8], i_x[:, 9], c='red', s=40, label='Original')
-            plt.scatter(inverse_xpca[:, 8], inverse_xpca[:, 9], c='green', s=30, label='Inverse PCA')
-            plt.legend()
-            plt.title('ORIGINAL FEATURES 8 - 9 INVERSE FEATURES')
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUES')
-            plt.show()
-
-            v_c_sum = pd.DataFrame({'variance': pd.Series(MinMaxScaler().fit_transform(variance.reshape(-1,1)).ravel()),
-                                    'variance ratio': pd.Series(MinMaxScaler().fit_transform(variance_ratio.reshape(-1,1)).ravel()),
-                                    'cumsum': pd.Series(MinMaxScaler().fit_transform(c_sum.reshape(-1,1)).ravel()),
-                                    'cumsum ratio': pd.Series(MinMaxScaler().fit_transform(c_sum_ratio.reshape(-1,1)).ravel())})
-
-            print(v_c_sum.describe())
+            print(pd.DataFrame(component, columns=[f' COMPONENT:{i+1}' for i in range(component.shape[1])]).describe().to_string())
 
         except Exception as e:
             raise RuntimeError(f'invalid PCA: {e}')
