@@ -116,4 +116,5 @@ matplotlib
 
 Scope
 
-This project focuses on observing DBSCAN behavior and diagnostics.
+This project focuses on observing DBSCAN behavior and diagnostics..
+
