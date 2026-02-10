@@ -1,69 +1,119 @@
-# DBSCAN – Unsupervised – Noise / Clusters
+DBSCAN – Unsupervised – Noise / Clusters
 
-This project explores **unsupervised clustering** (and **noise detection**) using **DBSCAN** on a CSV dataset.
+This project explores unsupervised clustering and noise detection using DBSCAN on a mixed-type CSV dataset.
 
 The goal is to understand how DBSCAN behaves with respect to:
-- identifying **noise points** (`label = -1`)
-- sensitivity to `eps`, `min_samples`, and distance metric choice
 
-## Dependencies
-- pandas
-- numpy
-- scikit-learn
-- matplotlib
+identifying noise points (label = -1)
 
-## Configuration used
-```python
-DBSCAN(eps=0.5, min_samples=6,metric='minkowski',p=2,algorithm='auto', n_jobs=-1)
-What’s implemented
-Pandas/NumPy data loading and cleanup
+forming connected components under a fixed distance scale
 
-Preprocessing pipeline:
+sensitivity to eps, min_samples, and distance metric choice
 
-numeric: SimpleImputer(mean + indicator) + MinMaxScaler
+The emphasis is diagnostic and behavioral, not production modeling.
 
-categorical: SimpleImputer(constant) + OneHotEncoder
+Pipeline
+Data preprocessing
 
-DBSCAN fit on the transformed feature matrix
+Numeric features
 
-Visualizations:
+Mean imputation (+ missing indicator)
 
-cluster label - number of points (noise vs clusters)
+Min–Max scaling
 
-cluster size distribution (how many clusters have the same size)
+Categorical features
 
-Cluster validity metrics:
+Constant-value imputation ("missing")
 
-silhouette_score: 0.6244500631237574
+One-hot encoding (handle_unknown='ignore')
 
-calinski_harabasz_score: 24665.92423587026
+Implemented using Pipeline and ColumnTransformer for reproducibility.
 
-davies_bouldin_score: 0.5126475719931072
+Clustering (DBSCAN)
 
-Key Visuals
-Label counts (cluster id vs points; -1 highlighted as noise)
+Configuration used:
 
-Cluster-size distribution (frequency of cluster sizes)
+DBSCAN(eps=0.5,min_samples=6,metric='minkowski',p=2,algorithm='auto',n_jobs=-1)
 
-Data summary (derived)
-              Label  Label scaled       Points  Points scaled  Cluster  Cluster Scaled
-count  32581.000000  32581.000000    13.000000      13.000000     13.0            13.0
-mean       2.917805      0.326484  2506.230769       0.428025      1.0             0.0
-std        2.445062      0.203755  2391.676718       0.408624      0.0             0.0
-min       -1.000000      0.000000     1.000000       0.000000      1.0             0.0
-25%        1.000000      0.166667   509.000000       0.086793      1.0             0.0
-50%        2.000000      0.250000   620.000000       0.105758      1.0             0.0
-75%        4.000000      0.416667  5014.000000       0.856484      1.0             0.0
-max       11.000000      1.000000  5854.000000       1.000000      1.0             0.0
-Key observations
-DBSCAN outputs cluster labels plus a noise label (-1).
+Key characteristics:
 
-Noise detection is not binary overall; it is multi-cluster + noise.
+Single-scale, density-connected clustering
 
-Increasing eps typically reduces noise and merges clusters.
+Hard assignments only (cluster ID or noise)
 
-Increasing min_samples typically increases noise and removes small clusters.
+No hierarchy, persistence, or confidence scores
 
-Strong clustering metrics can conflict with the goal of detecting many anomalies.
+Diagnostics & Analysis
+Cluster size distribution
 
-This project focuses on observing DBSCAN behavior and diagnostics, not building a production model.
+A scatter plot of cluster label (sorted) vs cluster size highlights:
+
+A single noise label (-1) with small cardinality
+
+Several large connected components
+
+Multiple small clusters that are equally valid under DBSCAN
+
+This plot represents the entire structural output of DBSCAN at the chosen eps.
+
+Cluster validity metrics (context only)
+silhouette_score:        0.6232959411289837
+calinski_harabasz_score: 4883.568224775606
+davies_bouldin_score:     0.8110642656289275
+
+Interpretation:
+
+Clusters are geometrically compact and reasonably separated
+
+Metrics ignore density stability and noise behavior
+
+Scores are conditional on the chosen eps and sample
+
+Label distribution summary
+
+Summary statistics over cluster labels:
+
+count    6516.000000
+mean        4.380909
+std         2.666140
+min        -1.000000
+25%         1.000000
+50%         5.000000
+75%         6.000000
+max        11.000000
+
+Notes:
+
+Label values are categorical identifiers, not ordinal quantities
+
+Mean and standard deviation have no semantic meaning
+
+Presence of -1 confirms noise detection
+
+Maximum label indicates 12 clusters at this scale
+
+Key Observations
+
+DBSCAN produces multi-cluster + noise, not binary noise detection
+
+All clusters are treated as equally valid once formed
+
+Increasing eps merges clusters and reduces noise
+
+Increasing min_samples increases noise and removes small clusters
+
+Strong geometric metrics can conflict with anomaly-detection goals
+
+Dependencies
+
+pandas
+
+numpy
+
+scikit-learn
+
+matplotlib
+
+Scope
+
+This project focuses on observing DBSCAN behavior and diagnostics.
