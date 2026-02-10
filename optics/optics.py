@@ -64,7 +64,7 @@ class ABCD:
 
             r = np.isfinite(reach)
 
-            r_max = np.isfinite(reach).max()
+            r_max = np.nanmax(reach[np.isfinite(reach)])
 
             reach_replace = np.where(r, reach, r_max)
 
@@ -76,13 +76,15 @@ class ABCD:
 
             ro = r_reach[o_order]
 
+            r_len = np.arange(len(r_reach))
+
             plt.figure(figsize=(10, 8))
-            plt.scatter(r_reach.index, r_reach[o_order.index], c='red', s=100, label='Ordering')
-            plt.plot(r_reach[o_order.index], linestyle='--', marker='o', c='green', label='Reachability')
-            plt.title('ORDERING / REACHABILITY')
+            plt.scatter(np.arange(len(ro)), ro.values, c='red', s=10, label='Reachability (ordered)')
+            plt.plot(np.arange(len(ro)), ro.values, linestyle='--', marker='o', markersize=2, c='green')
+            plt.title('OPTICS Reachability Plot')
             plt.legend()
-            plt.xlabel('INDEX')
-            plt.ylabel('VALUE')
+            plt.xlabel('Ordering position')
+            plt.ylabel('Reachability distance')
             plt.show()
 
             o_df = pd.DataFrame({'reachability': pd.Series(MinMaxScaler().fit_transform(reach_replace.reshape(-1,1)).ravel()),
