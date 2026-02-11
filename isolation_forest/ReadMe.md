@@ -1,16 +1,17 @@
 Isolation Forest / Unsupervised Anomaly Detection
 This project explores unsupervised anomaly detection using Isolation Forest on a mixed‑type credit dataset.
 
-The focus is on understanding how anomaly scores are generated, interpreting decision‑function behavior, verifying separation between normal observations and noise, and analyzing the structure of the score distribution rather than building a production-ready model.
+The focus is on extracting anomaly signals, understanding decision‑function behavior, verifying separation between normal observations and noise, and analyzing score distribution structure rather than building a production‑ready model.
 
 Overview
-Isolation Forest is applied after a full preprocessing pipeline (numeric + categorical). The analysis emphasizes:
+Isolation Forest is applied after a full preprocessing pipeline (numeric + categorical).
+The analysis emphasizes:
 
 How random recursive partitioning isolates anomalies
 
-Separation between core (normal) points and anomalous points
+Separation between normal points and anomalous points
 
-Point‑level anomaly strength using decision scores
+Point‑level anomaly strength via decision scores
 
 How Isolation Forest behaves under extremely small subsample sizes (max_samples=5)
 
@@ -31,11 +32,13 @@ Because this implementation uses very small subsamples, trees are extremely shal
 Pipeline
 Data preprocessing
 Numeric features
+
 Median imputation (+ missing indicator)
 
 Min–Max scaling
 
 Categorical features
+
 Constant‑value imputation ("missing")
 
 One‑hot encoding (handle_unknown='ignore')
@@ -64,8 +67,6 @@ labels_
 decision_function() scores
 
 Diagnostics & Analysis
-The following diagnostics are produced:
-
 1️⃣ Decision Function Separation
 Scatter of sample index vs decision score.
 
@@ -110,7 +111,7 @@ min       -1.000000                 -0.079209
 50%        1.000000                  0.035272
 75%        1.000000                  0.050739
 max        1.000000                  0.089961
-Interpretation:
+Interpretation
 
 Majority of scores fall in the positive region
 
@@ -131,7 +132,7 @@ min        -0.079209           1.000000
 50%         0.034799           1.000000
 75%         0.050394           1.000000
 max         0.089961          10.000000
-Interpretation:
+Interpretation
 
 Most decision scores appear only once
 
