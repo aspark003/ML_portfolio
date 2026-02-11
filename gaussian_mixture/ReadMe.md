@@ -29,8 +29,8 @@ The analysis emphasizes:
 - Each sample receives:
   - A log-density score  
   - A probability distribution over components  
-- Higher log-density → stronger density region  
-- Lower log-density → weaker density region  
+- Higher log-density - stronger density region  
+- Lower log-density - weaker density region  
 - Density is interpreted as a continuous spectrum  
 
 ---
