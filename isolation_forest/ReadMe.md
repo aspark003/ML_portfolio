@@ -1,4 +1,4 @@
-# Isolation Forest / Unsupervised Anomaly Detection
+# Isolation Forest 
 
 This project explores **unsupervised anomaly detection** using **Isolation Forest** on a mixed-type credit dataset.
 
