@@ -26,11 +26,11 @@ The analysis emphasizes:
 
 - The model learns a decision boundary around the majority of data  
 - `predict()` returns:
-  - `+1` → inlier (normal)
-  - `-1` → outlier (anomaly)
+  - `+1` - inlier (normal)
+  - `-1` - outlier (anomaly)
 - `decision_function()`:
-  - Positive → inside boundary  
-  - Negative → outside boundary  
+  - Positive - inside boundary  
+  - Negative - outside boundary  
 - `score_samples()` returns the raw scoring values before threshold shift  
 
 ---
