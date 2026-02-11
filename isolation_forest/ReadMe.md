@@ -1,21 +1,36 @@
-Isolation Forest / Unsupervised Anomaly Detection
-This project explores unsupervised anomaly detection using Isolation Forest on a mixed‑type credit dataset.
+Here is your content properly formatted in Markdown:
 
-The focus is on extracting anomaly signals, understanding decision‑function behavior, verifying separation between normal observations and noise, and analyzing score distribution structure rather than building a production‑ready model.
+Isolation Forest / Unsupervised Anomaly Detection
+
+This project explores unsupervised anomaly detection using Isolation Forest on a mixed-type credit dataset.
+
+The focus is on:
+
+Extracting anomaly signals
+
+Understanding decision-function behavior
+
+Verifying separation between normal observations and noise
+
+Analyzing score distribution structure
+
+This is not a production-ready model, but an exploration of Isolation Forest mechanics.
 
 Overview
+
 Isolation Forest is applied after a full preprocessing pipeline (numeric + categorical).
+
 The analysis emphasizes:
 
 How random recursive partitioning isolates anomalies
 
 Separation between normal points and anomalous points
 
-Point‑level anomaly strength via decision scores
+Point-level anomaly strength via decision scores
 
-How Isolation Forest behaves under extremely small subsample sizes (max_samples=5)
+Behavior under extremely small subsample sizes (max_samples=5)
 
-Key ideas:
+Key Ideas
 
 Anomalies require fewer splits to isolate
 
@@ -27,28 +42,32 @@ score < 0 → anomaly
 
 score ≥ 0 → normal
 
-Because this implementation uses very small subsamples, trees are extremely shallow, producing highly granular and near‑unique anomaly scores.
+Because this implementation uses very small subsamples, trees are extremely shallow, producing highly granular and near-unique anomaly scores.
 
 Pipeline
-Data preprocessing
-Numeric features
+1. Data Preprocessing
+Numeric Features
 
 Median imputation (+ missing indicator)
 
 Min–Max scaling
 
-Categorical features
+Categorical Features
 
-Constant‑value imputation ("missing")
+Constant-value imputation ("missing")
 
-One‑hot encoding (handle_unknown='ignore')
+One-hot encoding (handle_unknown='ignore')
 
-Implemented using ColumnTransformer and Pipeline for reproducibility.
+Implemented using:
 
-Anomaly Detection (Isolation Forest)
-Configuration used:
+ColumnTransformer
 
-python
+Pipeline
+
+for reproducibility.
+
+2. Anomaly Detection (Isolation Forest)
+Configuration
 IsolationForest(
     n_estimators=100,
     max_samples=5,
@@ -56,7 +75,8 @@ IsolationForest(
     random_state=42,
     n_jobs=-1
 )
-Key steps:
+
+Key Steps
 
 fit_predict on the transformed feature matrix
 
@@ -68,9 +88,10 @@ decision_function() scores
 
 Diagnostics & Analysis
 1️⃣ Decision Function Separation
-Scatter of sample index vs decision score.
 
-Highlights:
+Scatter of sample index vs. decision score.
+
+Highlights
 
 Clear separation between normal (label = 1) and anomalies (label = -1)
 
@@ -79,9 +100,10 @@ Threshold at 0 behaves as expected
 Score range reflects shallow tree depth and high randomness
 
 2️⃣ Score Frequency Distribution
+
 Unique decision values and their frequency.
 
-Highlights:
+Highlights
 
 Most scores are unique
 
@@ -91,10 +113,12 @@ Negative tail corresponds to strongest anomalies
 
 Results
 Dataset Summary
-Total samples: 32,581  
+
+Total samples: 32,581
+
 Contamination: 10%
 
-Labels:
+Labels
 
 1 → normal
 
@@ -111,6 +135,7 @@ min       -1.000000                 -0.079209
 50%        1.000000                  0.035272
 75%        1.000000                  0.050739
 max        1.000000                  0.089961
+
 Interpretation
 
 Majority of scores fall in the positive region
@@ -132,17 +157,19 @@ min        -0.079209           1.000000
 50%         0.034799           1.000000
 75%         0.050394           1.000000
 max         0.089961          10.000000
+
 Interpretation
 
 Most decision scores appear only once
 
 Maximum frequency of 10 indicates occasional identical path lengths
 
-Distribution is right‑shifted (normal region) with a sparse negative tail
+Distribution is right-shifted (normal region) with a sparse negative tail
 
 High uniqueness is expected with shallow trees (max_samples=5)
 
 Interpretation Notes
+
 The threshold at 0 cleanly separates normal from anomalous observations
 
 max_samples=5 produces extremely shallow trees → high randomness and high score uniqueness
@@ -151,18 +178,30 @@ Positive region represents the dominant normal population
 
 Negative tail captures the strongest anomalies
 
-Score structure aligns with theoretical expectations for small‑subsample Isolation Forests
+Score structure aligns with theoretical expectations for small-subsample Isolation Forests
 
 Dependencies
+
 pandas
 
 numpy
 
-scikit‑learn
+scikit-learn
 
 matplotlib
 
 Scope
+
 This project is intentionally exploratory.
 
-The goal is to understand Isolation Forest mechanics, interpret anomaly score behavior, visualize score structure and separation, and build intuition around tree‑based isolation — not to tune or deploy a production model.
+The goal is to:
+
+Understand Isolation Forest mechanics
+
+Interpret anomaly score behavior
+
+Visualize score structure and separation
+
+Build intuition around tree-based isolation
+
+It does not aim to tune or deploy a production model.
