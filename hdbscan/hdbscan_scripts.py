@@ -56,8 +56,8 @@ class ABCDE:
             x = self.preprocessor.fit_transform(self.copy)
 
             hdb = HDBSCAN(min_cluster_size=2, min_samples=15, metric='minkowski', p=1)
-
-            label = hdb.fit_predict(x)
+            hdb.fit(x)
+            label = hdb.labels_
 
             for scores in self.scores:
                 s = scores(x, label)
