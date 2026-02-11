@@ -233,4 +233,4 @@ The rendered figures in `hdbscan_plot.pdf` confirm:
 
 This project is intentionally **exploratory**.
 
-The goal is to **understand HDBSCAN behavior and diagnostics**, interpret stability and uncertainty signals, and build intuition around density-based clustering — not to tune or deploy a production model.
+The goal is to **understand HDBSCAN behavior and diagnostics**, interpret stability and uncertainty signals, and build intuition around density-based clustering — not a production model.
