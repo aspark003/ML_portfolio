@@ -9,8 +9,6 @@ The focus is on:
 - Verifying separation between normal observations and noise  
 - Analyzing score distribution structure  
 
-This is **not** a production-ready model, but an exploration of Isolation Forest mechanics.
-
 ---
 
 ## Overview
@@ -27,7 +25,7 @@ The analysis emphasizes:
 ### Key Ideas
 
 - Anomalies require fewer splits to isolate  
-- Shorter path length → more anomalous  
+- Shorter path length - Noise 
 - `decision_function()` shifts scores so:
   - `score < 0` → anomaly  
   - `score ≥ 0` → normal  
@@ -38,7 +36,7 @@ Because this implementation uses **very small subsamples**, trees are extremely 
 
 # Pipeline
 
-## 1. Data Preprocessing
+## Data Preprocessing
 
 ### Numeric Features
 
@@ -59,18 +57,12 @@ for reproducibility.
 
 ---
 
-## 2. Anomaly Detection (Isolation Forest)
+## Anomaly Detection (Isolation Forest)
 
 ### Configuration
 
 ```python
-IsolationForest(
-    n_estimators=100,
-    max_samples=5,
-    contamination=0.10,
-    random_state=42,
-    n_jobs=-1
-)
+IsolationForest(n_estimators=200,max_samples=10,contamination=0.10,random_state=42,n_jobs=-1)
 Key Steps
 fit_predict on the transformed feature matrix
 
@@ -81,7 +73,7 @@ labels_
 decision_function() scores
 
 Diagnostics & Analysis
-1️⃣ Decision Function Separation
+Decision Function Separation
 Scatter of sample index vs. decision score.
 
 Highlights
@@ -91,7 +83,7 @@ Threshold at 0 behaves as expected
 
 Score range reflects shallow tree depth and high randomness
 
-2️⃣ Score Frequency Distribution
+Score Frequency Distribution
 Unique decision values and their frequency.
 
 Highlights
@@ -108,12 +100,12 @@ Total samples: 32,581
 Contamination: 10%
 
 Labels
-1 → normal
+1 - normal
 
--1 → anomaly
+-1 - anomaly
 
 Decision Function Summary
-Code
+
        sample index  decision function scores
 count  32581.000000              32581.000000
 mean       0.800068                  0.032961
@@ -133,7 +125,7 @@ Numeric separation around 0 is clean and stable
 Label distribution matches the 10% contamination setting
 
 Score Distribution Summary
-Code
+
        unique values  count observation
 count   29331.000000       29331.000000
 mean        0.032437           1.110804
@@ -150,12 +142,12 @@ Maximum frequency of 10 indicates occasional identical path lengths
 
 Distribution is right-shifted (normal region) with a sparse negative tail
 
-High uniqueness is expected with shallow trees (max_samples=5)
+High uniqueness is expected with shallow trees (max_samples=10)
 
 Interpretation Notes
 The threshold at 0 cleanly separates normal from anomalous observations
 
-max_samples=5 produces extremely shallow trees → high randomness and high score uniqueness
+max_samples=10 produces extremely shallow trees - high randomness and high score uniqueness
 
 Positive region represents the dominant normal population
 
@@ -173,7 +165,6 @@ scikit-learn
 matplotlib
 
 Scope
-This project is intentionally exploratory.
 
 The goal is to:
 
@@ -185,4 +176,4 @@ Visualize score structure and separation
 
 Build intuition around tree-based isolation
 
-It does not aim to tune or deploy a production model.
+This is **not** a production-ready model, but an exploration of Isolation Forest mechanics.
