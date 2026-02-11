@@ -59,8 +59,9 @@ class A:
             x = self.preprocessor.fit_transform(self.copy)
 
             db_scan = DBSCAN(eps=0.5, min_samples=6, metric='minkowski', p=2, algorithm='auto', n_jobs=-1)
-
-            label = db_scan.fit_predict(x)
+            db_scan.fit(x)
+            
+            label = db_scan.labels_
 
             l, v = np.unique(label, return_counts=True)
 
