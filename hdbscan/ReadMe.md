@@ -114,7 +114,7 @@ These should be interpreted cautiously, especially in the presence of noise labe
 
 * **probabilities_**
 
-  * Mean close to 1.0 → strong cluster confidence for most points
+  * Mean close to 1.0 - strong cluster confidence for most points
 * **outlier_scores_**
 
   * Heavy-tailed distribution → small set of strong anomalies
@@ -124,7 +124,7 @@ These should be interpreted cautiously, especially in the presence of noise labe
 * **cluster_persistence_**
 
   * Higher persistence → more stable and meaningful clusters
-  * Zero or near-zero persistence → weak or transient clusters
+  * Zero or near-zero persistence - weak or transient clusters
 
 ---
 
