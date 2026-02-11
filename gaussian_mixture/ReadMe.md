@@ -76,11 +76,11 @@ min             14.541979             1.000000
 75%             42.676317             1.000000
 max             47.315675             3.000000
 Interpretation
-Left tail (~14–30) → weakest density
+Left tail (~14–30) - weakest density
 
-Central mass (~36–43) → dominant density region
+Central mass (~36–43) - dominant density region
 
-Very high uniqueness → expected in continuous models
+Very high uniqueness - expected in continuous models
 
 Maximum identical frequency = 3 (rare duplication)
 
