@@ -83,7 +83,7 @@ class ABCDEF:
 
             #print(self.copy.head(1).to_string())
         except Exception as e:
-            raise RuntimeError(f'isolation forest: {e}')
+            raise RuntimeError(f'invalid isolation forest: {e}')
 
 
 if __name__ == "__main__":
