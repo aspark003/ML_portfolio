@@ -29,8 +29,8 @@ The analysis emphasizes:
 
 **Classification rule:**
 
-- Score < offset → outlier
-- Score ≥ offset → inlier
+- Score < offset - outlier
+- Score > offset - inlier
 
 ## Pipeline
 
@@ -58,13 +58,7 @@ for reproducibility.
 ### Configuration
 
 ```python
-LocalOutlierFactor(
-    n_neighbors=5,
-    contamination=0.10,
-    metric='minkowski',
-    p=1,
-    leaf_size=30
-)
+LocalOutlierFactor(n_neighbors=5,contamination=0.10,metric='minkowski',p=1,leaf_size=30)
 Distance Metric
 
 p=1 → Manhattan distance
@@ -99,14 +93,14 @@ Strong outliers extend into lower tail
 Score spread reflects density variation
 
 Classification Visualization
-Pythonplt.scatter(np.argsort(l_x[l_x > offset]), l_x[l_x > offset], marker='x')
+plt.scatter(np.argsort(l_x[l_x > offset]), l_x[l_x > offset], marker='x')
 plt.scatter(np.argsort(l_x[l_x < offset]), l_x[l_x < offset], marker='o')
 Interpretation:
 
 Sorted scores improve visual clarity
 Threshold (offset_) separates groups
-Red (x) → inliers
-Green (o) → outliers
+Red (x) - inliers
+Green (o) - outliers
 
 This clearly shows the density-based separation.
 Results
