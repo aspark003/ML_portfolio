@@ -1,5 +1,3 @@
-Here is your updated README, rewritten for Local Outlier Factor, keeping the same structure and format style.
-
 Local Outlier Factor (LOF)
 
 This project explores unsupervised anomaly detection using Local Outlier Factor (LOF) on a mixed-type credit dataset.
@@ -34,7 +32,7 @@ LOF compares each point’s local density to its neighbors
 
 negative_outlier_factor_ provides the anomaly score
 
-More negative values → stronger outliers
+More negative values indicate stronger outliers
 
 offset_ is used as the classification threshold
 
@@ -95,7 +93,7 @@ Interpretation:
 
 X-axis → LOF score
 
-Y-axis → Frequency (how many samples share that score)
+Y-axis → Frequency (count of identical scores)
 
 Most scores appear once (continuous values)
 
@@ -130,13 +128,9 @@ Interpretation:
 
 Sorted scores improve visual clarity
 
-Threshold (offset_) separates groups
+offset_ separates inliers from outliers
 
-Red (x) → inliers
-
-Green (o) → outliers
-
-This clearly shows the density-based separation.
+Marker separation shows density-based classification
 
 Results
 
